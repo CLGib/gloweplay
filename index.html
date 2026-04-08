@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GLOWE PLAY — Where Ideas Come to Life</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF9EC;
+    --cream-deep: #FFEFC9;
+    --ink: #1B2440;
+    --ink-soft: #34406A;
+    --coral: #FF6B35;       /* bright orange */
+    --coral-deep: #E54E1B;
+    --bay: #2BB3D9;         /* sky blue */
+    --bay-deep: #1A8AB0;
+    --sun: #FFD23F;         /* sunny yellow */
+    --sun-deep: #F5B800;
+    --plum: #7B5FE0;        /* friendly purple */
+    --pink: #FF8A4C;        /* warm orange accent */
+    --mint: #6FE0B5;        /* mint green */
+    --line: rgba(27, 36, 64, 0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Nunito', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.55;
+    font-size: 17px;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.32;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .wrap {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 2;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Fredoka', system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+  }
+
+  .marker {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    padding: 26px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+  .logo-mark {
+    width: 42px; height: 42px;
+    background: var(--ink);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    color: var(--sun);
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    position: relative;
+  }
+  .logo-mark::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1.5px dashed var(--ink);
+    animation: spin 14s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .logo span.tag {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    color: var(--coral);
+    font-size: 18px;
+    margin-left: -4px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .nav-links a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .nav-links a:hover { color: var(--coral); }
+  .nav-cta {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 12px 22px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover { background: var(--coral); transform: translateY(-2px); }
+
+  @media (max-width: 800px) { .nav-links { display: none; } }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 30px 0 90px;
+    position: relative;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--cream-deep);
+    border: 1.5px solid var(--ink);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--coral);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.6; }
+  }
+
+  .hero h1 {
+    font-size: clamp(54px, 9vw, 144px);
+    max-width: 14ch;
+    margin-bottom: 36px;
+    line-height: 0.92;
+  }
+  .hero h1 .ital {
+    
+    font-weight: 400;
+  }
+  .hero h1 .glow {
+    color: var(--coral);
+    position: relative;
+    display: inline-block;
+  }
+  .hero h1 .glow::after {
+    content: '';
+    position: absolute;
+    left: -2%; right: -2%;
+    bottom: 8%;
+    height: 16px;
+    background: var(--sun);
+    z-index: -1;
+    border-radius: 6px;
+    transform: skewX(-8deg);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 60px;
+    align-items: end;
+  }
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  .hero-sub {
+    font-size: 21px;
+    max-width: 46ch;
+    color: var(--ink-soft);
+    margin-bottom: 36px;
+  }
+
+  .hero-bullets {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    margin-bottom: 40px;
+  }
+  .hero-bullets li {
+    border: 1.5px solid var(--ink);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.25s;
+    background: var(--cream);
+  }
+  .hero-bullets li:hover {
+    background: var(--ink);
+    color: var(--cream);
+    transform: rotate(-2deg);
+  }
+
+  .hero-cta-row {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--coral);
+    color: var(--cream);
+    border: none;
+    padding: 20px 36px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 6px 0 var(--ink);
+    transition: all 0.2s;
+  }
+  .btn-primary:hover {
+    transform: translateY(2px);
+    box-shadow: 0 4px 0 var(--ink);
+    background: var(--coral-deep);
+  }
+  .btn-secondary {
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-secondary:hover { color: var(--coral); }
+
+  /* hero card with letter stack preview */
+  .hero-card {
+    position: relative;
+    aspect-ratio: 4/5;
+    background: var(--ink);
+    border-radius: 28px;
+    border: 2px solid var(--ink);
+    box-shadow: 14px 14px 0 var(--coral);
+    overflow: hidden;
+    transform: rotate(2deg);
+    padding: 36px 32px;
+    color: var(--cream);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .hero-card-tag {
+    position: absolute;
+    top: -18px;
+    left: -18px;
+    background: var(--sun);
+    border: 2px solid var(--ink);
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    transform: rotate(-6deg);
+    z-index: 3;
+  }
+  .stack-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--sun);
+    margin-bottom: 24px;
+  }
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .stack-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(250, 244, 230, 0.3);
+  }
+  .stack-row .letter {
+    font-family: 'Fredoka', sans-serif;
+    
+    font-size: 38px;
+    font-weight: 600;
+    line-height: 1;
+    width: 40px;
+  }
+  .stack-row:nth-child(1) .letter { color: var(--coral); }
+  .stack-row:nth-child(2) .letter { color: var(--sun); }
+  .stack-row:nth-child(3) .letter { color: var(--pink); }
+  .stack-row:nth-child(4) .letter { color: #7FD4DC; }
+  .stack-row:nth-child(5) .letter { color: var(--sun); }
+  .stack-row .word {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .stack-row .desc {
+    font-size: 12px;
+    color: rgba(250, 244, 230, 0.6);
+    margin-left: auto;
+  }
+  .hero-card-foot {
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    color: var(--sun);
+    text-align: right;
+  }
+
+  /* ─── MARQUEE ─── */
+  .marquee {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 22px 0;
+    overflow: hidden;
+    border-radius: 999px;
+    border: 2px solid var(--ink);
+    margin: 0 0 80px;
+    position: relative;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 48px;
+    white-space: nowrap;
+    animation: scroll 30s linear infinite;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 28px;
+    
+    font-weight: 500;
+  }
+  .marquee-track span { display: flex; align-items: center; gap: 48px; }
+  .marquee-track .star { color: var(--coral); font-style: normal; }
+  @keyframes scroll {
+    to { transform: translateX(-50%); }
+  }
+
+  /* ─── SECTION HEADERS ─── */
+  .section { padding: 90px 0; position: relative; }
+  .section-num {
+    font-family: 'Fredoka', sans-serif;
+    
+    font-size: 14px;
+    color: var(--coral);
+    margin-bottom: 12px;
+    display: block;
+    font-weight: 500;
+  }
+  .section-title {
+    font-size: clamp(40px, 5.5vw, 80px);
+    max-width: 18ch;
+    margin-bottom: 24px;
+  }
+  .section-title em {
+    
+    color: var(--coral);
+  }
+  .section-lead {
+    font-size: 19px;
+    max-width: 58ch;
+    color: var(--ink-soft);
+  }
+
+  /* ─── PHILOSOPHY ─── */
+  .philosophy {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 36px;
+    margin: 40px 0;
+    padding: 110px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .philosophy::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 440px; height: 440px;
+    background: var(--coral);
+    border-radius: 50%;
+  }
+  .philosophy::after {
+    content: '';
+    position: absolute;
+    top: -70px; right: -70px;
+    width: 340px; height: 340px;
+    background: var(--sun);
+    border-radius: 50%;
+  }
+  .phil-inner { position: relative; z-index: 2; max-width: 760px; }
+  .philosophy .section-num { color: var(--sun); }
+  .philosophy h2 { color: var(--cream); font-size: clamp(40px, 5vw, 72px); max-width: 18ch; margin-bottom: 28px; }
+  .philosophy h2 em { color: var(--coral);  }
+  .philosophy p { font-size: 20px; color: rgba(250, 244, 230, 0.85); margin-bottom: 20px; max-width: 56ch; }
+  @media (max-width: 700px) { .philosophy { padding: 70px 32px; } }
+
+  /* ─── FRAMEWORK ─── */
+  .framework-intro {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 60px;
+    align-items: end;
+    margin-bottom: 70px;
+  }
+  @media (max-width: 900px) { .framework-intro { grid-template-columns: 1fr; gap: 30px; } }
+
+  .letters {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .letter-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 1fr 60px;
+    gap: 32px;
+    align-items: start;
+    padding: 40px 0;
+    border-top: 1.5px solid var(--ink);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+  .letter-row:last-child { border-bottom: 1.5px solid var(--ink); }
+  .letter-row:hover { padding-left: 20px; }
+  .letter-row:hover .big-letter {
+    transform: scale(1.05) rotate(-3deg);
+  }
+  .letter-row:hover .row-arrow {
+    transform: translateX(8px);
+    color: var(--coral);
+  }
+
+  .big-letter {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    
+    font-size: 140px;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: left center;
+  }
+  .letter-row:nth-child(1) .big-letter { color: var(--coral); }
+  .letter-row:nth-child(2) .big-letter { color: var(--bay); }
+  .letter-row:nth-child(3) .big-letter { color: var(--plum); }
+  .letter-row:nth-child(4) .big-letter { color: var(--sun-deep); }
+  .letter-row:nth-child(5) .big-letter { color: var(--coral-deep); }
+
+  .letter-content h3 {
+    font-size: 32px;
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .letter-content p {
+    font-size: 16px;
+    color: var(--ink-soft);
+  }
+
+  .letter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-content: start;
+  }
+  .letter-tags span {
+    border: 1.5px solid var(--ink);
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--cream);
+  }
+
+  .row-arrow {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 36px;
+    
+    color: var(--ink);
+    transition: all 0.3s;
+    align-self: center;
+  }
+
+  @media (max-width: 900px) {
+    .letter-row {
+      grid-template-columns: 100px 1fr;
+      gap: 20px;
+    }
+    .big-letter { font-size: 84px; }
+    .letter-tags, .row-arrow { display: none; }
+  }
+
+  /* ─── PROGRAMS ─── */
+  .programs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 60px;
+  }
+  @media (max-width: 900px) { .programs { grid-template-columns: 1fr; } }
+
+  .program-card {
+    border: 2px solid var(--ink);
+    border-radius: 28px;
+    padding: 44px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .program-card.afterschool {
+    background: var(--bay);
+    color: var(--cream);
+  }
+  .program-card.summer {
+    background: var(--coral);
+    color: var(--cream);
+  }
+  .program-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 14px;
+  }
+  .program-card h3 {
+    font-size: 46px;
+    margin-bottom: 8px;
+  }
+  .program-card .ages {
+    font-family: 'Caveat', cursive;
+    font-size: 26px;
+    margin-bottom: 28px;
+    opacity: 0.9;
+  }
+  .program-card ul {
+    list-style: none;
+    margin-bottom: 32px;
+  }
+  .program-card li {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(250, 244, 230, 0.25);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 16px;
+  }
+  .program-card li::before {
+    content: '→';
+    font-family: 'Fredoka', sans-serif;
+    
+    font-size: 22px;
+    color: var(--sun);
+  }
+  .program-card.summer li::before { color: var(--cream); }
+  .program-card li:last-child { border-bottom: none; }
+
+  /* ─── PILOT / WAITLIST ─── */
+  .pilot {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 36px;
+    padding: 90px 60px;
+    margin: 40px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  @media (max-width: 900px) { .pilot { grid-template-columns: 1fr; padding: 60px 32px; gap: 40px; } }
+
+  .pilot .section-num { color: var(--sun); }
+  .pilot h2 { color: var(--cream); font-size: clamp(40px, 5vw, 64px); margin-bottom: 24px; max-width: 14ch; }
+  .pilot h2 em { color: var(--sun);  }
+  .pilot p { color: rgba(250, 244, 230, 0.8); font-size: 17px; max-width: 50ch; margin-bottom: 28px; }
+
+  .perks { list-style: none; }
+  .perks li {
+    padding: 16px 0;
+    border-top: 1px solid rgba(250, 244, 230, 0.2);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 16px;
+  }
+  .perks li:last-child { border-bottom: 1px solid rgba(250, 244, 230, 0.2); }
+  .perks .check {
+    width: 22px; height: 22px;
+    background: var(--sun);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .form-card {
+    background: var(--cream);
+    color: var(--ink);
+    border-radius: 24px;
+    padding: 40px;
+  }
+  .form-card h3 { font-size: 28px; margin-bottom: 6px; }
+  .form-sub { color: var(--ink-soft); font-size: 14px; margin-bottom: 28px; }
+  .field { margin-bottom: 18px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+    color: var(--ink-soft);
+  }
+  .field input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    transition: all 0.2s;
+  }
+  .field input:focus {
+    outline: none;
+    background: var(--cream-deep);
+    border-color: var(--coral);
+  }
+  .form-card .btn-primary {
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  /* ─── DEMO DAY BANNER ─── */
+  .demo-day {
+    text-align: center;
+    padding: 120px 0;
+    position: relative;
+  }
+  .demo-day .marker {
+    color: var(--coral);
+    font-size: 32px;
+    display: block;
+    margin-bottom: 20px;
+    transform: rotate(-3deg);
+  }
+  .demo-day h2 {
+    font-size: clamp(56px, 10vw, 160px);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    margin-bottom: 30px;
+  }
+  .demo-day h2 .underline {
+    text-decoration: underline;
+    text-decoration-color: var(--sun);
+    text-decoration-thickness: 12px;
+    text-underline-offset: 12px;
+  }
+  .demo-day p {
+    font-size: 21px;
+    max-width: 50ch;
+    margin: 0 auto;
+    color: var(--ink-soft);
+  }
+
+  /* ─── FAQ ─── */
+  .faq-list { margin-top: 60px; max-width: 820px; }
+  .faq-item {
+    border-top: 1.5px solid var(--ink);
+    padding: 28px 0;
+  }
+  .faq-item:last-child { border-bottom: 1.5px solid var(--ink); }
+  .faq-item h4 { font-size: 24px; margin-bottom: 10px; font-weight: 500; }
+  .faq-item p { color: var(--ink-soft); font-size: 16px; max-width: 60ch; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 80px 0 50px;
+    border-top: 1.5px solid var(--ink);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+  @media (max-width: 800px) { .footer-grid { grid-template-columns: 1fr; gap: 36px; } }
+  .footer-grid h4 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+    color: var(--ink-soft);
+  }
+  .footer-grid a, .footer-grid p {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .footer-grid a:hover { color: var(--coral); }
+  .footer-tagline {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    max-width: 16ch;
+  }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--ink-soft);
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">
+      <div class="logo-mark">G</div>
+      GLOWE PLAY <span class="tag">/ mobile</span>
+    </div>
+    <div class="nav-links">
+      <a href="#framework">Framework</a>
+      <a href="#programs">Programs</a>
+      <a href="#pilot">Pilot</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">Pilot Launching in Mobile, AL</div>
+    <h1>Where ideas come to <span class="glow">life.</span></h1>
+
+    <div class="hero-grid">
+      <div>
+        <p class="hero-sub">GLOWE PLAY is a hands-on framework that helps kids turn ideas into real projects — through technology, entrepreneurship, and the kind of creative work that doesn't fit on a worksheet.</p>
+
+        <ul class="hero-bullets">
+          <li>🌱 Grow Ideas</li>
+          <li>💻 Learn Tech</li>
+          <li>🎨 Own Creativity</li>
+          <li>🤝 Work Together</li>
+          <li>🚀 Execute Projects</li>
+        </ul>
+
+        <div class="hero-cta-row">
+          <a href="#waitlist" class="btn-primary">Join the Waitlist →</a>
+          <a href="#framework" class="btn-secondary">See the framework</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-card-tag">★ Founding Cohort</div>
+        <div>
+          <div class="stack-label">— The Framework</div>
+          <div class="stack">
+            <div class="stack-row"><div class="letter">G</div><div class="word">Grow Ideas</div><div class="desc">think</div></div>
+            <div class="stack-row"><div class="letter">L</div><div class="word">Learn Tech</div><div class="desc">tools</div></div>
+            <div class="stack-row"><div class="letter">O</div><div class="word">Own Creativity</div><div class="desc">design</div></div>
+            <div class="stack-row"><div class="letter">W</div><div class="word">Work Together</div><div class="desc">team</div></div>
+            <div class="stack-row"><div class="letter">E</div><div class="word">Execute</div><div class="desc">build</div></div>
+          </div>
+        </div>
+        <div class="hero-card-foot">play with purpose ↓</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>GROW <em class="star">✦</em> LEARN <em class="star">✦</em> OWN <em class="star">✦</em> WORK <em class="star">✦</em> EXECUTE <em class="star">✦</em> GROW <em class="star">✦</em> LEARN <em class="star">✦</em> OWN <em class="star">✦</em> WORK <em class="star">✦</em> EXECUTE <em class="star">✦</em></span>
+      <span>GROW <em class="star">✦</em> LEARN <em class="star">✦</em> OWN <em class="star">✦</em> WORK <em class="star">✦</em> EXECUTE <em class="star">✦</em> GROW <em class="star">✦</em> LEARN <em class="star">✦</em> OWN <em class="star">✦</em> WORK <em class="star">✦</em> EXECUTE <em class="star">✦</em></span>
+    </div>
+  </div>
+
+  <!-- PHILOSOPHY -->
+  <section class="philosophy">
+    <div class="phil-inner">
+      <span class="section-num">01 — The philosophy</span>
+      <h2>Kids don't just <em>learn</em> about ideas. They <em>build</em> them.</h2>
+      <p>Learning should be active, creative, and fun. At GLOWE PLAY, students gain the confidence to create their own future through technology, entrepreneurship, and hands-on projects.</p>
+      <p>It's not coding camp. It's not test prep. It's a place where curious kids become builders.</p>
+    </div>
+  </section>
+
+  <!-- FRAMEWORK -->
+  <section class="section" id="framework">
+    <div class="framework-intro">
+      <div>
+        <span class="section-num">02 — The framework</span>
+        <h2 class="section-title">Five letters. One <em>method</em> that actually works.</h2>
+      </div>
+      <p class="section-lead">GLOWE PLAY is the backbone of every program. Each letter is a real skill kids practice — and a real step from "I have an idea" to "look what I built."</p>
+    </div>
+
+    <div class="letters">
+
+      <div class="letter-row">
+        <div class="big-letter">G</div>
+        <div class="letter-content">
+          <h3>Grow Ideas</h3>
+          <p>Kids learn to think like innovators — brainstorming, identifying problems, imagining solutions, and turning a spark into a project.</p>
+        </div>
+        <div class="letter-tags">
+          <span>Invention challenges</span>
+          <span>Idea workshops</span>
+          <span>Startup brainstorms</span>
+        </div>
+        <div class="row-arrow">→</div>
+      </div>
+
+      <div class="letter-row">
+        <div class="big-letter">L</div>
+        <div class="letter-content">
+          <h3>Learn Technology</h3>
+          <p>Students explore AI tools, website builders, digital design, and coding concepts — focused on creation, never just consumption.</p>
+        </div>
+        <div class="letter-tags">
+          <span>AI tools</span>
+          <span>Website builders</span>
+          <span>Digital design</span>
+          <span>Code basics</span>
+        </div>
+        <div class="row-arrow">→</div>
+      </div>
+
+      <div class="letter-row">
+        <div class="big-letter">O</div>
+        <div class="letter-content">
+          <h3>Own Your Creativity</h3>
+          <p>Every student is encouraged to express their own ideas — designing brands, logos, and product concepts that feel like theirs.</p>
+        </div>
+        <div class="letter-tags">
+          <span>Brand design</span>
+          <span>Logos</span>
+          <span>Product concepts</span>
+          <span>Independent thinking</span>
+        </div>
+        <div class="row-arrow">→</div>
+      </div>
+
+      <div class="letter-row">
+        <div class="big-letter">W</div>
+        <div class="letter-content">
+          <h3>Work Together</h3>
+          <p>Innovation rarely happens alone. Students build in small teams, learning collaboration, leadership, and how to solve problems with other humans.</p>
+        </div>
+        <div class="letter-tags">
+          <span>Team projects</span>
+          <span>Collaboration</span>
+          <span>Leadership</span>
+        </div>
+        <div class="row-arrow">→</div>
+      </div>
+
+      <div class="letter-row">
+        <div class="big-letter">E</div>
+        <div class="letter-content">
+          <h3>Execute the Idea</h3>
+          <p>The most important step. Kids actually build and launch — websites, marketing, pricing, and a final pitch to a real audience.</p>
+        </div>
+        <div class="letter-tags">
+          <span>Build websites</span>
+          <span>Create marketing</span>
+          <span>Price ideas</span>
+          <span>Demo Day</span>
+        </div>
+        <div class="row-arrow">→</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DEMO DAY BANNER -->
+  <section class="demo-day">
+    <span class="marker">— and every program ends with —</span>
+    <h2>Demo <span class="underline">Day.</span></h2>
+    <p>Where every kid presents what they built — to friends, family, and real local business owners. Because finishing is the skill nobody teaches.</p>
+  </section>
+
+  <!-- PROGRAMS -->
+  <section class="section" id="programs">
+    <span class="section-num">03 — Program options</span>
+    <h2 class="section-title">Pick the format that fits your <em>family.</em></h2>
+
+    <div class="programs">
+      <div class="program-card afterschool">
+        <div class="program-label">Afterschool</div>
+        <h3>Innovation Lab</h3>
+        <div class="ages">— for ages 8 to 14</div>
+        <ul>
+          <li>90-minute weekly sessions</li>
+          <li>Small group, high attention</li>
+          <li>Project-based, not lecture</li>
+          <li>Ends with Demo Day</li>
+        </ul>
+        <a href="#waitlist" class="btn-primary" style="background: var(--sun); color: var(--ink); box-shadow: 0 6px 0 var(--cream);">Join Waitlist →</a>
+      </div>
+      <div class="program-card summer">
+        <div class="program-label">Summer</div>
+        <h3>Innovators Camp</h3>
+        <div class="ages">— one immersive week</div>
+        <ul>
+          <li>Develop a real startup idea</li>
+          <li>Build & ship a website</li>
+          <li>Design marketing & brand</li>
+          <li>Pitch to a live audience</li>
+        </ul>
+        <a href="#waitlist" class="btn-primary" style="background: var(--ink); color: var(--cream); box-shadow: 0 6px 0 var(--cream);">Join Waitlist →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PILOT / WAITLIST -->
+  <section class="pilot" id="pilot">
+    <div>
+      <span class="section-num">04 — The pilot</span>
+      <h2>Be part of the <em>founding</em> group.</h2>
+      <p>We're launching our first GLOWE PLAY pilot in Mobile this season — and inviting a small group of founding families to help shape it.</p>
+      <ul class="perks">
+        <li><span class="check">✓</span> Early access before public enrollment</li>
+        <li><span class="check">✓</span> Discounted founding-family tuition</li>
+        <li><span class="check">✓</span> Direct input on the curriculum we build</li>
+        <li><span class="check">✓</span> Lifetime founding member recognition</li>
+      </ul>
+    </div>
+
+    <div class="form-card" id="waitlist">
+      <h3>Join the Founding Families List</h3>
+      <p class="form-sub">No spam. Just updates as we launch.</p>
+      <div class="field">
+        <label for="pname">Parent Name</label>
+        <input id="pname" type="text" placeholder="Your name" />
+      </div>
+      <div class="field">
+        <label for="pemail">Email Address</label>
+        <input id="pemail" type="email" placeholder="you@email.com" />
+      </div>
+      <div class="field">
+        <label for="cage">Child's Age</label>
+        <input id="cage" type="text" placeholder="e.g. 10" />
+      </div>
+      <div class="field">
+        <label for="cschool">School (optional)</label>
+        <input id="cschool" type="text" placeholder="e.g. ACES Academy" />
+      </div>
+      <button class="btn-primary">Join the Founding Families List →</button>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <span class="section-num">05 — Questions</span>
+    <h2 class="section-title">Things parents <em>usually</em> ask.</h2>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <h4>What ages is this for?</h4>
+        <p>Programs initially focus on kids ages 8 to 14. We may expand age ranges based on founding family feedback.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Does my child need coding experience?</h4>
+        <p>Not at all. GLOWE PLAY focuses on creativity, entrepreneurship, and modern AI tools that make building approachable for total beginners.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Where will programs be held?</h4>
+        <p>We're partnering with schools, community spaces, and learning centers across Mobile. Specific locations will be confirmed with founding families first.</p>
+      </div>
+      <div class="faq-item">
+        <h4>When does it start?</h4>
+        <p>Pilot programs are planned to launch soon. Founding families will be the first to know dates and locations.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <p class="footer-tagline">GLOWE PLAY. Play with purpose.</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="mailto:hello@gloweplay.com">hello@gloweplay.com</a>
+        <p>Mobile, Alabama</p>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 GLOWE PLAY</span>
+      <span>Pilot launching soon ✦</span>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
