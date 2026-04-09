@@ -420,45 +420,25 @@
   .philosophy h2 em { color: var(--coral);  }
   .philosophy p { font-size: 20px; color: rgba(250, 244, 230, 0.85); margin-bottom: 20px; max-width: 56ch; }
 
-  /* Tablet: pull decorative circles further into the corner so they clip more, less overlap with headline */
+  /* Narrow screens: hide circle decorations — orange <em> on coral/yellow was unreadable */
   @media (max-width: 900px) {
-    .philosophy::before {
-      top: -100px;
-      right: -140px;
-      width: 340px;
-      height: 340px;
-    }
+    .philosophy::before,
     .philosophy::after {
-      top: -55px;
-      right: -95px;
-      width: 240px;
-      height: 240px;
+      display: none;
+    }
+    .philosophy {
+      padding: 56px 24px 64px;
     }
   }
 
-  /* Phone: move decoration below the text block so coral <em> never sits on yellow/coral */
   @media (max-width: 768px) {
     .wrap {
       padding: 0 20px;
     }
     .philosophy {
-      padding: 52px 20px 120px;
+      padding: 52px 20px 56px;
       border-radius: 24px;
       margin: 20px 0;
-    }
-    .philosophy::before {
-      top: auto;
-      bottom: -70px;
-      right: -50px;
-      width: 220px;
-      height: 220px;
-    }
-    .philosophy::after {
-      top: auto;
-      bottom: -20px;
-      right: -20px;
-      width: 160px;
-      height: 160px;
     }
     .philosophy h2 {
       max-width: none;
