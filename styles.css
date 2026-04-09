@@ -398,34 +398,13 @@
     position: relative;
     overflow: hidden;
   }
-  .philosophy::before {
-    content: '';
-    position: absolute;
-    top: -120px; right: -120px;
-    width: 440px; height: 440px;
-    background: var(--coral);
-    border-radius: 50%;
-  }
-  .philosophy::after {
-    content: '';
-    position: absolute;
-    top: -70px; right: -70px;
-    width: 340px; height: 340px;
-    background: var(--sun);
-    border-radius: 50%;
-  }
-  .phil-inner { position: relative; z-index: 2; max-width: 760px; }
+  .phil-inner { position: relative; max-width: 760px; }
   .philosophy .section-num { color: var(--sun); }
   .philosophy h2 { color: var(--cream); font-size: clamp(40px, 5vw, 72px); max-width: 18ch; margin-bottom: 28px; }
   .philosophy h2 em { color: var(--coral);  }
   .philosophy p { font-size: 20px; color: rgba(250, 244, 230, 0.85); margin-bottom: 20px; max-width: 56ch; }
 
-  /* Narrow screens: hide circle decorations — orange <em> on coral/yellow was unreadable */
   @media (max-width: 900px) {
-    .philosophy::before,
-    .philosophy::after {
-      display: none;
-    }
     .philosophy {
       padding: 56px 24px 64px;
     }
