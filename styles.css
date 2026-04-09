@@ -284,20 +284,6 @@
     flex-direction: column;
     justify-content: space-between;
   }
-  .hero-card-tag {
-    position: absolute;
-    top: -18px;
-    left: -18px;
-    background: var(--sun);
-    border: 2px solid var(--ink);
-    padding: 10px 16px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink);
-    transform: rotate(-6deg);
-    z-index: 3;
-  }
   .stack-label {
     font-size: 12px;
     font-weight: 600;
@@ -433,7 +419,55 @@
   .philosophy h2 { color: var(--cream); font-size: clamp(40px, 5vw, 72px); max-width: 18ch; margin-bottom: 28px; }
   .philosophy h2 em { color: var(--coral);  }
   .philosophy p { font-size: 20px; color: rgba(250, 244, 230, 0.85); margin-bottom: 20px; max-width: 56ch; }
-  @media (max-width: 700px) { .philosophy { padding: 70px 32px; } }
+
+  /* Tablet: pull decorative circles further into the corner so they clip more, less overlap with headline */
+  @media (max-width: 900px) {
+    .philosophy::before {
+      top: -100px;
+      right: -140px;
+      width: 340px;
+      height: 340px;
+    }
+    .philosophy::after {
+      top: -55px;
+      right: -95px;
+      width: 240px;
+      height: 240px;
+    }
+  }
+
+  /* Phone: move decoration below the text block so coral <em> never sits on yellow/coral */
+  @media (max-width: 768px) {
+    .wrap {
+      padding: 0 20px;
+    }
+    .philosophy {
+      padding: 52px 20px 120px;
+      border-radius: 24px;
+      margin: 20px 0;
+    }
+    .philosophy::before {
+      top: auto;
+      bottom: -70px;
+      right: -50px;
+      width: 220px;
+      height: 220px;
+    }
+    .philosophy::after {
+      top: auto;
+      bottom: -20px;
+      right: -20px;
+      width: 160px;
+      height: 160px;
+    }
+    .philosophy h2 {
+      max-width: none;
+      font-size: clamp(32px, 9vw, 52px);
+    }
+    .philosophy p {
+      font-size: 18px;
+    }
+  }
 
   /* ─── FRAMEWORK ─── */
   .framework-intro {

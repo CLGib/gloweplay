@@ -1,6 +1,6 @@
-# GLOWE PLAY
+# Glowe Play
 
-Landing page for **GLOWE PLAY** — an afterschool and summer program in Mobile, Alabama where kids turn ideas into real projects.
+Landing page for **Glowe Play** — an afterschool and summer program in Mobile, Alabama where kids turn ideas into real projects.
 
 **Tagline:** Play with purpose.
 
@@ -10,7 +10,7 @@ Landing page for **GLOWE PLAY** — an afterschool and summer program in Mobile,
 
 ## The Framework
 
-GLOWE PLAY is built around five steps:
+Glowe Play is built around five steps:
 
 - **G** — Grow Ideas
 - **L** — Learn Technology
