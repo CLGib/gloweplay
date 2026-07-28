@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Badge admin — Glowe Play</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=4" />
+<style> body.auth-pending .app-wrap { visibility: hidden; } </style>
+</head>
+<body class="auth-pending">
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo"><a href="index.html"><div class="logo-mark">G</div> Glowe Play <span class="tag">/ admin</span></a></div>
+    <div class="nav-right">
+      <a href="dashboard.html" class="nav-login">Family</a>
+      <span class="dash-user" id="dash-user"></span>
+      <button class="nav-cta" id="signout-btn" type="button">Sign out</button>
+    </div>
+  </div>
+</nav>
+
+<main class="app-wrap">
+  <!-- Not authorised -->
+  <div id="denied" hidden>
+    <div class="family-head"><span class="hero-eyebrow">Admin</span><h1>Admins only</h1></div>
+    <p class="section-lead">This area is for Glowe Play admins. If that's you, add yourself in Supabase:<br>
+      <code>insert into public.admins (user_id) select id from auth.users where email = 'you@example.com';</code></p>
+    <p style="margin-top:18px"><a href="dashboard.html" class="btn-outline">← Back to your family</a></p>
+  </div>
+
+  <!-- List -->
+  <div id="list-view" hidden>
+    <div class="admin-top">
+      <div class="family-head" style="margin:0"><span class="hero-eyebrow">Badge admin</span><h1>Badges</h1></div>
+      <button class="btn-primary" id="new-badge" type="button">＋ New badge</button>
+    </div>
+    <div class="app-error" id="list-error" hidden></div>
+    <div class="badge-table" id="badge-table"></div>
+  </div>
+
+  <!-- Editor -->
+  <div id="edit-view" hidden>
+    <a href="#" class="legal-back" id="cancel-edit">← All badges</a>
+    <div class="edit-grid">
+      <form id="badge-form" class="edit-form" novalidate>
+        <h2 class="edit-h" id="edit-title">New badge</h2>
+
+        <div class="row2">
+          <div class="auth-field"><label for="f-line1">Title line 1</label><input id="f-line1" required placeholder="Campfire" /></div>
+          <div class="auth-field"><label for="f-line2">Title line 2</label><input id="f-line2" placeholder="Explorer" /></div>
+        </div>
+        <div class="row2">
+          <div class="auth-field"><label for="f-slug">Slug (stable id)</label><input id="f-slug" placeholder="campfire-explorer" /></div>
+          <div class="auth-field"><label for="f-type">Type</label>
+            <select id="f-type"><option value="milestone">Milestone</option><option value="adventure" selected>Adventure</option><option value="tradition">Yearly Tradition</option></select>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="auth-field"><label for="f-emoji">Fallback icon (emoji)</label><input id="f-emoji" maxlength="4" placeholder="⛺" /></div>
+          <div class="auth-field"><label for="f-verb">Ribbon verb</label><input id="f-verb" placeholder="Completed" /></div>
+        </div>
+
+        <div class="auth-field"><label for="f-desc">Description / caption</label><input id="f-desc" placeholder="Build a fort, tell stories, make memories." /></div>
+
+        <div class="auth-field"><label for="f-how">What earns this badge (one step per line)</label>
+          <textarea id="f-how" rows="3" placeholder="Build the coziest fort&#10;Snap a photo&#10;Earn your badge"></textarea></div>
+
+        <fieldset class="auth-field media-set">
+          <legend>Media collected</legend>
+          <label class="chk"><input type="checkbox" value="photo" class="f-media" checked> 📷 Photo</label>
+          <label class="chk"><input type="checkbox" value="video" class="f-media"> 🎥 Video</label>
+          <label class="chk"><input type="checkbox" value="voice" class="f-media"> 🎙 Voice memo</label>
+          <label class="chk"><input type="checkbox" value="drawing" class="f-media"> 🎨 Drawing</label>
+          <label class="chk"><input type="checkbox" value="text" class="f-media"> ✍️ Written answer</label>
+        </fieldset>
+
+        <div class="row2">
+          <div class="auth-field"><label for="f-template">Book page template</label>
+            <select id="f-template"><option value="portrait">Portrait</option><option value="photo-spotlight">Photo Spotlight</option><option value="quote">Quote</option><option value="collage">Collage</option></select>
+          </div>
+          <div class="auth-field"><label for="f-accent">Accent</label>
+            <select id="f-accent"><option value="auto">Auto (by type)</option><option value="#4EA8DE">Teal</option><option value="#F4C542">Gold</option><option value="#F25F5C">Red</option><option value="#5CB85C">Green</option></select>
+          </div>
+        </div>
+
+        <div class="auth-field"><label for="f-scene">Art direction for the badge image (scene)</label>
+          <textarea id="f-scene" rows="2" placeholder="a glowing yellow tent beside a campfire with pine trees under a starry night sky"></textarea></div>
+
+        <div class="row2">
+          <div class="auth-field"><label for="f-sort">Sort order</label><input id="f-sort" type="number" value="0" /></div>
+          <div class="auth-field"><label class="chk" style="margin-top:26px"><input type="checkbox" id="f-active" checked> Active (visible to families)</label></div>
+        </div>
+
+        <div class="edit-actions">
+          <button type="submit" class="btn-primary" id="save-badge">Save badge</button>
+          <button type="button" class="btn-outline" id="delete-badge" hidden>Delete</button>
+        </div>
+        <p class="auth-msg" id="form-msg" role="alert" aria-live="polite"></p>
+      </form>
+
+      <aside class="edit-preview">
+        <h3>Badge image</h3>
+        <div class="badge-art" id="art-preview"><span id="art-empty">No image yet</span></div>
+        <button type="button" class="btn-primary blue" id="gen-badge">✨ Generate badge image</button>
+        <p class="art-note">Uses the Gemini generator (Edge Function) with the Glowe Play badge style rules. Requires the function deployed &amp; <code>GEMINI_API_KEY</code> set.</p>
+        <div class="auth-field" style="margin-top:14px"><label for="f-image">…or paste an image URL</label><input id="f-image" placeholder="https://…/badge.png" /></div>
+        <p class="auth-msg" id="gen-msg" role="alert" aria-live="polite"></p>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/app.js"></script>
+<script>
+  (function () {
+    var client = GLOWE.makeClient();
+    if (!client) { window.location.replace('login.html'); return; }
+    var cfg = window.GLOWE_SUPABASE;
+    var token = null, editingId = null;
+
+    client.auth.getSession().then(function (res) {
+      var session = res.data && res.data.session;
+      if (!session) { window.location.replace('login.html'); return; }
+      token = session.access_token;
+      document.getElementById('dash-user').textContent = session.user ? session.user.email : '';
+      return client.from('admins').select('user_id').eq('user_id', session.user.id).maybeSingle();
+    }).then(function (res) {
+      document.body.classList.remove('auth-pending');
+      if (!res || !res.data) { document.getElementById('denied').hidden = false; return; }
+      document.getElementById('list-view').hidden = false;
+      loadBadges();
+    });
+    client.auth.onAuthStateChange(function (_e, s) { if (!s) window.location.replace('login.html'); });
+    document.getElementById('signout-btn').addEventListener('click', function () {
+      client.auth.signOut().then(function () { window.location.replace('login.html'); });
+    });
+
+    // ── List ──
+    function typePill(t) { return '<span class="tpill t-' + t + '">' + t + '</span>'; }
+    function row(b) {
+      var art = b.image_url
+        ? '<img class="bt-art" src="' + GLOWE.esc(b.image_url) + '" alt="" />'
+        : '<span class="bt-emoji">' + GLOWE.esc(b.icon_emoji || '⭐') + '</span>';
+      return '<button class="bt-row" data-id="' + GLOWE.esc(b.id) + '" type="button">' +
+        art +
+        '<span class="bt-name"><strong>' + GLOWE.esc(b.line1) + ' ' + GLOWE.esc(b.line2) + '</strong>' + typePill(b.type) + '</span>' +
+        '<span class="bt-meta">' + (b.is_active ? '● live' : '○ hidden') + ' · #' + (b.sort_order||0) + '</span>' +
+        '<span class="bt-go">Edit →</span></button>';
+    }
+    function loadBadges() {
+      client.from('badges').select('*').order('sort_order', { ascending: true }).then(function (res) {
+        var err = document.getElementById('list-error');
+        if (res.error) { err.hidden = false; err.textContent = 'Could not load badges. Run supabase/badges.sql in Supabase, then refresh. (' + res.error.message + ')'; return; }
+        err.hidden = true;
+        var list = res.data || [];
+        document.getElementById('badge-table').innerHTML = list.length ? list.map(row).join('') : '<p class="section-lead">No badges yet — create your first one.</p>';
+        document.querySelectorAll('.bt-row').forEach(function (el) { el.addEventListener('click', function () { openEditor(el.getAttribute('data-id')); }); });
+      });
+    }
+
+    // ── Editor ──
+    var listView = document.getElementById('list-view'), editView = document.getElementById('edit-view');
+    function showList() { editView.hidden = true; listView.hidden = false; }
+    function setMedia(arr) {
+      document.querySelectorAll('.f-media').forEach(function (c) { c.checked = (arr || []).indexOf(c.value) !== -1; });
+    }
+    function getMedia() { return Array.prototype.filter.call(document.querySelectorAll('.f-media'), function (c) { return c.checked; }).map(function (c) { return c.value; }); }
+    function setArt(url) {
+      var p = document.getElementById('art-preview');
+      p.innerHTML = url ? '<img src="' + GLOWE.esc(url) + '" alt="badge preview" />' : '<span id="art-empty">No image yet</span>';
+      document.getElementById('f-image').value = url || '';
+    }
+    function fillForm(b) {
+      b = b || {};
+      document.getElementById('edit-title').textContent = b.id ? 'Edit badge' : 'New badge';
+      document.getElementById('f-line1').value = b.line1 || '';
+      document.getElementById('f-line2').value = b.line2 || '';
+      document.getElementById('f-slug').value = b.id || '';
+      document.getElementById('f-slug').readOnly = !!b.id;
+      document.getElementById('f-type').value = b.type || 'adventure';
+      document.getElementById('f-emoji').value = b.icon_emoji || '';
+      document.getElementById('f-verb').value = b.verb || 'Completed';
+      document.getElementById('f-desc').value = b.description || '';
+      document.getElementById('f-how').value = (b.how_to_earn || []).join('\n');
+      setMedia(b.media || ['photo']);
+      document.getElementById('f-template').value = b.template || 'portrait';
+      document.getElementById('f-accent').value = b.accent || 'auto';
+      document.getElementById('f-scene').value = b.scene_prompt || '';
+      document.getElementById('f-sort').value = b.sort_order != null ? b.sort_order : 0;
+      document.getElementById('f-active').checked = b.is_active !== false;
+      setArt(b.image_url || '');
+      document.getElementById('delete-badge').hidden = !b.id;
+      document.getElementById('form-msg').className = 'auth-msg';
+      document.getElementById('gen-msg').className = 'auth-msg';
+    }
+    function openEditor(id) {
+      editingId = id || null;
+      if (!id) { fillForm({}); listView.hidden = true; editView.hidden = false; return; }
+      client.from('badges').select('*').eq('id', id).single().then(function (res) {
+        if (res.error) return;
+        fillForm(res.data); listView.hidden = true; editView.hidden = false;
+      });
+    }
+    function slugify(s) { return String(s || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+    function collect() {
+      var line1 = document.getElementById('f-line1').value.trim();
+      var line2 = document.getElementById('f-line2').value.trim();
+      var slug = document.getElementById('f-slug').value.trim() || slugify(line1 + '-' + line2);
+      var steps = document.getElementById('f-how').value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+      return {
+        id: slug, line1: line1, line2: line2,
+        type: document.getElementById('f-type').value,
+        icon_emoji: document.getElementById('f-emoji').value.trim() || '⭐',
+        verb: document.getElementById('f-verb').value.trim() || 'Completed',
+        description: document.getElementById('f-desc').value.trim(),
+        how_to_earn: steps, media: getMedia(),
+        template: document.getElementById('f-template').value,
+        accent: document.getElementById('f-accent').value,
+        scene_prompt: document.getElementById('f-scene').value.trim(),
+        sort_order: parseInt(document.getElementById('f-sort').value, 10) || 0,
+        is_active: document.getElementById('f-active').checked,
+        image_url: document.getElementById('f-image').value.trim() || null,
+        updated_at: new Date().toISOString()
+      };
+    }
+
+    document.getElementById('new-badge').addEventListener('click', function () { openEditor(null); });
+    document.getElementById('cancel-edit').addEventListener('click', function (e) { e.preventDefault(); showList(); loadBadges(); });
+
+    document.getElementById('badge-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var msg = document.getElementById('form-msg');
+      var b = collect();
+      if (!b.line1) { msg.textContent = 'Title line 1 is required.'; msg.className = 'auth-msg show error'; return; }
+      if (!b.id) { msg.textContent = 'A slug is required.'; msg.className = 'auth-msg show error'; return; }
+      var btn = document.getElementById('save-badge'); btn.disabled = true; var o = btn.textContent; btn.textContent = 'Saving…';
+      client.from('badges').upsert(b, { onConflict: 'id' }).then(function (res) {
+        if (res.error) { msg.textContent = res.error.message; msg.className = 'auth-msg show error'; return; }
+        showList(); loadBadges();
+      }).finally(function () { btn.disabled = false; btn.textContent = o; });
+    });
+
+    document.getElementById('delete-badge').addEventListener('click', function () {
+      if (!editingId) return;
+      if (!confirm('Delete this badge? Children who earned it keep their record, but it will disappear from the catalog.')) return;
+      client.from('badges').delete().eq('id', editingId).then(function () { showList(); loadBadges(); });
+    });
+
+    // ── Generate image via Edge Function ──
+    document.getElementById('gen-badge').addEventListener('click', function () {
+      var msg = document.getElementById('gen-msg'); msg.className = 'auth-msg';
+      var b = collect();
+      if (!b.line1) { msg.textContent = 'Add a title first.'; msg.className = 'auth-msg show error'; return; }
+      var btn = document.getElementById('gen-badge'); btn.disabled = true; var o = btn.textContent; btn.textContent = 'Generating… (~15s)';
+      fetch(cfg.url + '/functions/v1/generate-badge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': cfg.anonKey },
+        body: JSON.stringify(b)
+      }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok) { msg.textContent = res.d.error || 'Generation failed.'; msg.className = 'auth-msg show error'; return; }
+          setArt(res.d.imageUrl);
+          msg.textContent = 'Generated! Remember to Save the badge to keep it.'; msg.className = 'auth-msg show ok';
+        }).catch(function (err) { msg.textContent = 'Could not reach the generator function. Is it deployed? (' + err.message + ')'; msg.className = 'auth-msg show error'; })
+        .finally(function () { btn.disabled = false; btn.textContent = o; });
+    });
+    document.getElementById('f-image').addEventListener('change', function () { setArt(this.value.trim()); });
+  })();
+</script>
+
+</body>
+</html>
