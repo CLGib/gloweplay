@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=7" />
+<link rel="stylesheet" href="styles.css?v=8" />
 <style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -81,14 +81,19 @@
     <h2 class="bm-title" id="bm-title"></h2>
     <p class="bm-desc" id="bm-desc"></p>
     <div class="bm-how"><h3>How to earn it</h3><ol id="bm-steps"></ol></div>
+    <div class="bm-mem" id="bm-mem" hidden>
+      <h3>Memories</h3>
+      <div class="mem-list" id="mem-list"></div>
+      <div class="mem-add" id="mem-add"></div>
+    </div>
     <button class="btn-primary" id="bm-action" type="button"></button>
     <p class="bm-note" id="bm-note" role="status" aria-live="polite"></p>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js?v=7"></script>
-<script src="js/app.js?v=7"></script>
+<script src="js/supabase-config.js?v=8"></script>
+<script src="js/app.js?v=8"></script>
 <script>
   (function () {
     var client = GLOWE.makeClient();
@@ -102,6 +107,15 @@
     var statusById = {};   // badge_id -> 'new'|'progress'|'earned'
     var child = null, ageWord = '';
     var filter = 'all', currentId = null;
+    var memoriesByBadge = {};  // badge_id -> [memory rows]
+    var photoByBadge = {};     // badge_id -> signed URL of first image (for the book)
+    var MEDIA_META = {
+      photo:   { label: 'Photo',          accept: 'image/*', icon: '📷' },
+      video:   { label: 'Video',          accept: 'video/*', icon: '🎥' },
+      voice:   { label: 'Voice memo',     accept: 'audio/*', icon: '🎙' },
+      drawing: { label: 'Drawing',        accept: 'image/*', icon: '🎨' },
+      text:    { label: 'Written answer',                     icon: '✍️' }
+    };
 
     var grid = document.getElementById('badge-grid');
     var modal = document.getElementById('badge-modal');
@@ -139,9 +153,25 @@
         return client.from('child_badges').select('badge_id,status').eq('child_id', childId);
       }).then(function (res) {
         if (res && res.data) res.data.forEach(function (r) { statusById[r.badge_id] = r.status; });
+        return loadMemories();
+      }).then(function () {
         document.body.classList.remove('auth-pending');
         render(); updateProgress(); buildBook();
       });
+    }
+
+    function loadMemories() {
+      return client.from('memories').select('*').eq('child_id', childId).order('created_at', { ascending: true }).then(function (res) {
+        memoriesByBadge = {}; photoByBadge = {};
+        (res && res.data || []).forEach(function (m) { (memoriesByBadge[m.badge_id] = memoriesByBadge[m.badge_id] || []).push(m); });
+        // Pre-sign the first image per badge so the book can show real photos.
+        var jobs = Object.keys(memoriesByBadge).map(function (bid) {
+          var img = memoriesByBadge[bid].filter(function (m) { return m.kind === 'photo' || m.kind === 'drawing'; })[0];
+          if (!img) return null;
+          return client.storage.from('memories').createSignedUrl(img.url, 3600).then(function (r) { if (r.data && r.data.signedUrl) photoByBadge[bid] = r.data.signedUrl; });
+        }).filter(Boolean);
+        return Promise.all(jobs);
+      }).catch(function () { /* memories table not set up yet — ignore */ });
     }
 
     function renderHeader() {
@@ -214,10 +244,70 @@
       var action = document.getElementById('bm-action'), s = statusOf(b);
       action.textContent = s === 'new' ? 'Start this badge →' : (s === 'progress' ? 'I earned it! →' : 'See your book page →');
       document.getElementById('bm-note').textContent = '';
+      renderMem(b);
       modal.hidden = false;
       document.getElementById('badge-modal-close').focus();
     }
     function closeModal() { modal.hidden = true; currentId = null; }
+
+    // ── Memories (upload content to complete a badge) ──
+    function badgeMedia(b) { return (Array.isArray(b.media) && b.media.length) ? b.media : ['photo']; }
+    function renderMem(b) {
+      var wrap = document.getElementById('bm-mem');
+      if (statusOf(b) === 'new') { wrap.hidden = true; return; }  // add memories once started
+      wrap.hidden = false;
+      var list = document.getElementById('mem-list');
+      var mems = memoriesByBadge[b.id] || [];
+      list.innerHTML = mems.length ? '' : '<p class="mem-empty">No memories yet — add one below to fill this year’s book.</p>';
+      mems.forEach(function (m) { renderMemItem(list, m); });
+
+      var add = document.getElementById('mem-add');
+      add.innerHTML = badgeMedia(b).map(function (k) {
+        var meta = MEDIA_META[k] || MEDIA_META.photo;
+        if (k === 'text') return '<div class="mem-textrow"><textarea data-kind="text" rows="2" placeholder="' + meta.icon + ' Write it here…"></textarea><button type="button" class="mem-btn" data-add-text>Add</button></div>';
+        return '<label class="mem-upload"><input type="file" accept="' + meta.accept + '" data-kind="' + k + '" hidden>' + meta.icon + ' Add ' + meta.label + '</label>';
+      }).join('');
+
+      add.querySelectorAll('input[type=file]').forEach(function (inp) {
+        inp.addEventListener('change', function () {
+          var f = inp.files && inp.files[0]; if (!f) return;
+          var kind = inp.getAttribute('data-kind');
+          uploadFile(b, kind, f);
+        });
+      });
+      var tbtn = add.querySelector('[data-add-text]');
+      if (tbtn) tbtn.addEventListener('click', function () {
+        var ta = add.querySelector('textarea[data-kind=text]'); var t = (ta.value || '').trim(); if (!t) return;
+        tbtn.disabled = true;
+        client.from('memories').insert({ child_id: childId, badge_id: b.id, kind: 'text', content: t })
+          .then(function (r) { if (r.error) throw r.error; return loadMemories(); })
+          .then(function () { renderMem(b); buildBook(); })
+          .catch(function (err) { alert('Could not save: ' + err.message); tbtn.disabled = false; });
+      });
+    }
+    function renderMemItem(container, m) {
+      var el = document.createElement('div'); el.className = 'mem-item';
+      if (m.kind === 'text') { el.innerHTML = '<blockquote>“' + GLOWE.esc(m.content || '') + '”</blockquote>'; container.appendChild(el); return; }
+      el.innerHTML = '<div class="mem-ph">…</div>';
+      container.appendChild(el);
+      client.storage.from('memories').createSignedUrl(m.url, 3600).then(function (r) {
+        var u = r.data && r.data.signedUrl; if (!u) { el.innerHTML = '<div class="mem-ph">⚠️</div>'; return; }
+        if (m.kind === 'voice') el.innerHTML = '<audio controls src="' + u + '"></audio>';
+        else if (m.kind === 'video') el.innerHTML = '<video controls src="' + u + '"></video>';
+        else el.innerHTML = '<img src="' + u + '" alt="">';
+      });
+    }
+    function uploadFile(b, kind, file) {
+      var wrap = document.getElementById('bm-mem'); wrap.classList.add('mem-busy');
+      var ext = ((file.name.split('.').pop()) || 'dat').toLowerCase().replace(/[^a-z0-9]/g, '') || 'dat';
+      var path = childId + '/' + b.id + '/' + kind + '-' + Date.now() + '.' + ext;
+      client.storage.from('memories').upload(path, file, { contentType: file.type || undefined })
+        .then(function (up) { if (up.error) throw up.error; return client.from('memories').insert({ child_id: childId, badge_id: b.id, kind: kind, url: path }); })
+        .then(function (r) { if (r.error) throw r.error; return loadMemories(); })
+        .then(function () { renderMem(b); buildBook(); })
+        .catch(function (err) { alert('Upload failed: ' + (err.message || err)); })
+        .finally(function () { wrap.classList.remove('mem-busy'); });
+    }
 
     document.getElementById('bm-action').addEventListener('click', function () {
       var b = BADGES.find(function (x) { return x.id === currentId; }); if (!b) return;
@@ -260,7 +350,12 @@
     var pages = [], pageIdx = 0;
     var e = GLOWE.esc;
     function nm() { return e((child.name || '').split(' ')[0] || 'You'); }
-    function photo(label) { return '<div class="sp-photo"><span>' + (label || 'Your photo here') + '</span></div>'; }
+    var curBadgeId = null;
+    function photo(label) {
+      var u = curBadgeId && photoByBadge[curBadgeId];
+      if (u) return '<div class="sp-photo has-img"><img src="' + e(u) + '" alt=""></div>';
+      return '<div class="sp-photo"><span>' + (label || 'Your photo here') + '</span></div>';
+    }
     function badgeArt(b) {
       return b.image_url
         ? '<div class="sp-badge"><img src="' + e(b.image_url) + '" alt=""></div>'
@@ -268,6 +363,7 @@
     }
 
     function spread(b) {
+      curBadgeId = b.id;
       var t = b.template || 'badge';
       switch (t) {
         case 'chapter': return (

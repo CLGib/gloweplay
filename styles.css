@@ -1837,3 +1837,27 @@
   .art-gen:hover { background: var(--cream-deep); }
   .art-gen:disabled { opacity: 0.55; cursor: default; }
   .edit-preview #gen-all { width: 100%; }
+
+  /* ─── Badge memories (upload to complete) ─── */
+  .bm-mem { text-align: left; border-top: 1px solid var(--line); margin-top: 20px; padding-top: 18px; }
+  .bm-mem h3 { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 12px; }
+  .bm-mem.mem-busy { opacity: 0.6; pointer-events: none; }
+  .mem-empty { font-size: 13px; color: var(--ink-soft); margin-bottom: 12px; }
+  .mem-list { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .mem-item { width: 84px; }
+  .mem-item img, .mem-item video { width: 84px; height: 84px; object-fit: cover; border-radius: 10px; border: 1.5px solid var(--ink); display: block; }
+  .mem-item audio { width: 200px; }
+  .mem-item .mem-ph { width: 84px; height: 84px; border-radius: 10px; border: 1.5px dashed var(--line); display: grid; place-items: center; color: var(--ink-soft); }
+  .mem-item blockquote { font-family: 'Caveat', cursive; font-size: 18px; line-height: 1.15; color: var(--ink); border-left: 2px solid var(--sun); padding-left: 10px; margin: 0; width: auto; }
+  .mem-item:has(blockquote) { width: 100%; }
+  .mem-add { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mem-upload { display: inline-flex; align-items: center; gap: 6px; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--ink); background: var(--cream); color: var(--ink); cursor: pointer; }
+  .mem-upload:hover { background: var(--cream-deep); }
+  .mem-textrow { display: flex; gap: 8px; width: 100%; align-items: flex-start; }
+  .mem-textrow textarea { flex: 1; padding: 10px 12px; border: 1.5px solid var(--ink); border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--ink); background: var(--white); resize: vertical; }
+  .mem-btn { flex-shrink: 0; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13px; padding: 10px 16px; border-radius: 999px; border: none; background: var(--ink); color: var(--cream); cursor: pointer; }
+  .mem-btn:hover { background: var(--coral); }
+
+  /* Real uploaded photo filling a book spread slot */
+  .sp-photo.has-img { padding: 0; overflow: hidden; }
+  .sp-photo.has-img img { width: 100%; height: 100%; object-fit: cover; }
