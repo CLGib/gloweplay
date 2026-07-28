@@ -108,7 +108,7 @@
         <h3>Badge image</h3>
         <div class="badge-art" id="art-preview"><span id="art-empty">No image yet</span></div>
         <button type="button" class="btn-primary blue" id="gen-badge">✨ Generate badge image</button>
-        <p class="art-note">Uses the Gemini generator (Edge Function) with the Glowe Play badge style rules. Requires the function deployed &amp; <code>GEMINI_API_KEY</code> set.</p>
+        <p class="art-note">Uses the Gemini generator (Vercel function <code>/api/generate-badge</code>) with the Glowe Play badge style rules. Requires <code>GEMINI_API_KEY</code> set in Vercel.</p>
         <div class="auth-field" style="margin-top:14px"><label for="f-image">…or paste an image URL</label><input id="f-image" placeholder="https://…/badge.png" /></div>
         <p class="auth-msg" id="gen-msg" role="alert" aria-live="polite"></p>
       </aside>
@@ -260,9 +260,9 @@
       var b = collect();
       if (!b.line1) { msg.textContent = 'Add a title first.'; msg.className = 'auth-msg show error'; return; }
       var btn = document.getElementById('gen-badge'); btn.disabled = true; var o = btn.textContent; btn.textContent = 'Generating… (~15s)';
-      fetch(cfg.url + '/functions/v1/generate-badge', {
+      fetch('/api/generate-badge', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token, 'apikey': cfg.anonKey },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: JSON.stringify(b)
       }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
         .then(function (res) {

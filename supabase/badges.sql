@@ -81,7 +81,7 @@ on conflict (id) do nothing;
 
 -- ── Storage bucket for generated badge art ───────────────────
 -- Public read so the app can show badge images; writes happen server-side
--- (the Edge Function uses the service role, so no client write policy needed).
+-- (the Vercel function uses the service role, so no client write policy needed).
 insert into storage.buckets (id, name, public)
 values ('badge-art', 'badge-art', true)
 on conflict (id) do nothing;
