@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Your Adventure Year — Glowe Play</title>
+<title>Badges — Glowe Play</title>
 <meta name="robots" content="noindex" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,8 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css" />
 <style>
-  /* Hide the app until we've confirmed a session, to avoid a flash of content. */
-  body.auth-pending .dash-wrap { visibility: hidden; }
+  body.auth-pending .dash-wrap, body.auth-pending .badge-modal { visibility: hidden; }
 </style>
 </head>
 <body class="auth-pending">
@@ -33,104 +32,174 @@
 </nav>
 
 <main class="dash-wrap">
-  <div class="dash-head">
-    <div>
-      <span class="hero-eyebrow">Demo · Adventure Year in progress</span>
-      <h1>Emma's Year of Being <em>Six</em></h1>
-    </div>
+  <div class="explore-head">
+    <span class="hero-eyebrow">Demo · Emma, age six</span>
+    <h1>Choose your next <em>badge</em></h1>
+    <p>Explore the badges, then pick one to earn together. Every badge you earn becomes a page in your book.</p>
   </div>
 
-  <p class="section-lead" style="margin-bottom:32px;">This is a preview of the Glowe Play experience. Capture milestones, go on adventures, keep your yearly traditions — and watch this year's book take shape. Everything here is sample data.</p>
-
-  <div class="dash-grid">
-    <section class="dash-card dash-spotlight">
-      <span class="dash-kicker">This month · Adventure</span>
-      <div class="dash-adv">
-        <div class="dash-adv-badge">⛺</div>
-        <div>
-          <strong>Fort Builder</strong>
-          <p>Build a blanket fort and camp out inside.</p>
-        </div>
-      </div>
-      <button class="btn-primary" type="button" onclick="alert('Demo only — this is where a family would add a photo, drawing, answer, or voice memory.');">Add a memory →</button>
-    </section>
-
-    <section class="dash-card dash-book">
-      <h3>Your book is taking shape</h3>
-      <div class="dash-book-bar"><span style="width:62%"></span></div>
-      <p><strong>18 of 30</strong> pages filled · next birthday: <strong>July 10</strong></p>
-    </section>
+  <div class="explore-progress">
+    <div class="dash-book-bar"><span id="book-bar" style="width:60%"></span></div>
+    <span class="explore-progress-label" id="progress-label"></span>
   </div>
 
-  <h2 class="dash-section-title">Emma's collection this year</h2>
-  <div class="dash-types">
-    <section class="dash-card dash-type dash-type--milestone">
-      <div class="dash-type-top">
-        <span class="dash-type-kicker">Milestones</span>
-        <span class="dash-type-count">2 of 3</span>
-      </div>
-      <ul class="dash-progress">
-        <li><span>🦷 First Tooth</span> <b class="done">Captured</b></li>
-        <li><span>🚲 First Ride</span> <b class="done">Captured</b></li>
-        <li><span>🎒 First Day</span> <b>Up next</b></li>
-      </ul>
-    </section>
-
-    <section class="dash-card dash-type dash-type--adventure">
-      <div class="dash-type-top">
-        <span class="dash-type-kicker">Adventures</span>
-        <span class="dash-type-count">2 of 3</span>
-      </div>
-      <ul class="dash-progress">
-        <li><span>🌈 Rainbow Hunter</span> <b class="done">Completed</b></li>
-        <li><span>🍪 Family Baker</span> <b class="done">Completed</b></li>
-        <li><span>⛺ Fort Builder</span> <b>In progress</b></li>
-      </ul>
-    </section>
-
-    <section class="dash-card dash-type dash-type--tradition">
-      <div class="dash-type-top">
-        <span class="dash-type-kicker">Yearly Traditions</span>
-        <span class="dash-type-count">1 of 3</span>
-      </div>
-      <ul class="dash-progress">
-        <li><span>🎂 Birthday Interview</span> <b class="done">Answered</b></li>
-        <li><span>📅 Year Review</span> <b>Up next</b></li>
-        <li><span>🎙️ Story Time</span> <b>Up next</b></li>
-      </ul>
-    </section>
+  <div class="explore-filters" role="tablist" aria-label="Badge types">
+    <button class="chip-filter active" type="button" data-filter="all">All badges</button>
+    <button class="chip-filter" type="button" data-filter="milestone">🌟 Milestones</button>
+    <button class="chip-filter" type="button" data-filter="adventure">🧭 Adventures</button>
+    <button class="chip-filter" type="button" data-filter="tradition">📖 Yearly Traditions</button>
   </div>
+
+  <div class="explore-grid" id="badge-grid"></div>
 </main>
+
+<!-- Badge detail modal -->
+<div class="badge-modal" id="badge-modal" hidden role="dialog" aria-modal="true" aria-labelledby="bm-title">
+  <div class="badge-modal-backdrop" data-close></div>
+  <div class="badge-modal-card">
+    <button class="badge-modal-close" id="badge-modal-close" type="button" data-close aria-label="Close">×</button>
+    <div class="bm-badge" id="bm-badge"></div>
+    <span class="bm-kicker" id="bm-kicker"></span>
+    <h2 class="bm-title" id="bm-title"></h2>
+    <p class="bm-desc" id="bm-desc"></p>
+    <div class="bm-how">
+      <h3>How to earn it</h3>
+      <ol id="bm-steps"></ol>
+    </div>
+    <button class="btn-primary" id="bm-action" type="button"></button>
+    <p class="bm-note" id="bm-note" role="status" aria-live="polite"></p>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
 <script>
+  // ── Auth guard ──────────────────────────────────────────────
   (function () {
     var cfg = window.GLOWE_SUPABASE || {};
     var configured = cfg.url && cfg.anonKey &&
       cfg.url.indexOf("YOUR_SUPABASE") === -1 && cfg.anonKey.indexOf("YOUR_SUPABASE") === -1;
-
-    // Without config there's no way to verify a session — send to login.
     if (!configured) { window.location.replace('login.html'); return; }
 
     var client = window.supabase.createClient(cfg.url, cfg.anonKey);
-
     client.auth.getSession().then(function (res) {
       var session = res.data && res.data.session;
       if (!session) { window.location.replace('login.html'); return; }
-      var email = session.user && session.user.email;
-      if (email) document.getElementById('dash-user').textContent = email;
+      if (session.user && session.user.email) document.getElementById('dash-user').textContent = session.user.email;
       document.body.classList.remove('auth-pending');
     });
-
-    // If the user signs out in another tab, bounce this one too.
-    client.auth.onAuthStateChange(function (_event, session) {
-      if (!session) window.location.replace('login.html');
-    });
-
+    client.auth.onAuthStateChange(function (_e, session) { if (!session) window.location.replace('login.html'); });
     document.getElementById('signout-btn').addEventListener('click', function () {
       client.auth.signOut().then(function () { window.location.replace('login.html'); });
     });
+  })();
+
+  // ── Badge explorer (demo, sample data) ──────────────────────
+  (function () {
+    var BADGES = [
+      { id:'first-tooth', type:'milestone', emoji:'🦷', a:'First', b:'Tooth', desc:'The day a wobbly tooth finally comes out.', verb:'Captured', state:'earned', how:['Wait for the big wobble','Snap a photo of the gap','Earn your badge'] },
+      { id:'first-ride', type:'milestone', emoji:'🚲', a:'First', b:'Ride', desc:'Two wheels, no training wheels — you did it!', verb:'Captured', state:'earned', how:['Take the training wheels off','Film your first real ride','Earn your badge'] },
+      { id:'first-day', type:'milestone', emoji:'🎒', a:'First', b:'Day', desc:'The first morning of a brand-new school year.', verb:'Captured', state:'new', how:['Pack your backpack','Take a first-day photo','Earn your badge'] },
+      { id:'lost-toy', type:'milestone', emoji:'🧸', a:'Grew', b:'Up', desc:'A little moment that shows how big you got.', verb:'Captured', state:'new', how:['Notice something new you can do','Add a photo or note','Earn your badge'] },
+
+      { id:'rainbow', type:'adventure', emoji:'🌈', a:'Rainbow', b:'Hunter', desc:'Find a rainbow and chase the colors.', verb:'Completed', state:'earned', how:['Wait for sun after the rain','Photograph the rainbow','Earn your badge'] },
+      { id:'baker', type:'adventure', emoji:'🍪', a:'Family', b:'Baker', desc:'Bake something together — flour on the nose required.', verb:'Completed', state:'earned', how:['Pick a recipe together','Bake it (and taste it!)','Earn your badge'] },
+      { id:'fort', type:'adventure', emoji:'⛺', a:'Fort', b:'Builder', desc:'Build a blanket fort and camp out inside.', verb:'Completed', state:'progress', how:['Gather blankets & pillows','Build the coziest fort','Earn your badge'] },
+      { id:'stargazer', type:'adventure', emoji:'🌠', a:'Star', b:'Gazer', desc:'Look for constellations on a clear, dark night.', verb:'Completed', state:'new', how:['Wait for a clear night','Spot a constellation','Earn your badge'] },
+      { id:'kindness', type:'adventure', emoji:'❤️', a:'Kindness', b:'Hero', desc:'Do something kind, just because.', verb:'Completed', state:'new', how:['Spot someone who needs a hand','Do a kind thing','Earn your badge'] },
+
+      { id:'birthday', type:'tradition', emoji:'🎂', a:'Birthday', b:'Interview', desc:'The same fun questions, asked every birthday.', verb:'Answered', state:'earned', how:['Sit down on your birthday','Answer the questions','Earn your badge'] },
+      { id:'year-review', type:'tradition', emoji:'📅', a:'Year', b:'Review', desc:'Look back at everything this year held.', verb:'Answered', state:'new', how:['Wait for the end of your year','Answer the look-back','Earn your badge'] },
+      { id:'story', type:'tradition', emoji:'🎙️', a:'Story', b:'Time', desc:'Tell a story in your own words and your own voice.', verb:'Answered', state:'new', how:['Think up a story','Record it in your voice','Earn your badge'] }
+    ];
+    var TYPE_LABEL = { milestone:'Milestone', adventure:'Adventure', tradition:'Yearly Tradition' };
+
+    var grid = document.getElementById('badge-grid');
+    var modal = document.getElementById('badge-modal');
+    var filter = 'all';
+    var currentId = null;
+
+    function ribbon(b) {
+      if (b.state === 'earned') return '<span class="star">★</span><span class="tick">✓</span> ' + b.verb + ' <span class="star">★</span>';
+      if (b.state === 'progress') return '<span class="prog-dot"></span> In progress';
+      return '✦ Tap to start';
+    }
+    function card(b) {
+      return '<div class="badge-sticker type-' + b.type + ' is-' + b.state + '" role="button" tabindex="0" data-id="' + b.id + '" aria-label="' + b.a + ' ' + b.b + ' badge, ' + b.state + '">' +
+        '<div class="bs-cam">📷</div>' +
+        '<div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">' + b.emoji + '</span></div>' +
+        '<div class="bs-info"><div class="bs-title"><span class="a">' + b.a + '</span><span class="b">' + b.b + '</span></div>' +
+        '<div class="bs-div"></div><p>' + b.desc + '</p></div>' +
+        '<div class="bs-ribbon">' + ribbon(b) + '</div>' +
+      '</div>';
+    }
+    function render() {
+      grid.innerHTML = BADGES.filter(function (b) { return filter === 'all' || b.type === filter; }).map(card).join('');
+    }
+    function updateProgress() {
+      var earned = BADGES.filter(function (b) { return b.state === 'earned'; }).length;
+      var pages = Math.min(30, 13 + earned);
+      document.getElementById('book-bar').style.width = (pages / 30 * 100) + '%';
+      document.getElementById('progress-label').innerHTML = '<strong>' + earned + ' badges earned</strong> · ' + pages + ' of 30 book pages';
+    }
+
+    function openModal(id) {
+      var b = BADGES.find(function (x) { return x.id === id; });
+      if (!b) return;
+      currentId = id;
+      var badge = document.getElementById('bm-badge');
+      badge.className = 'bm-badge type-' + b.type;
+      badge.innerHTML = '<div class="bm-scene"><span>' + b.emoji + '</span></div>';
+      document.getElementById('bm-kicker').textContent = TYPE_LABEL[b.type];
+      document.getElementById('bm-title').textContent = b.a + ' ' + b.b;
+      document.getElementById('bm-desc').textContent = b.desc;
+      document.getElementById('bm-steps').innerHTML = b.how.map(function (s) { return '<li>' + s + '</li>'; }).join('');
+      var action = document.getElementById('bm-action');
+      if (b.state === 'new') action.textContent = 'Start this badge →';
+      else if (b.state === 'progress') action.textContent = 'I earned it! →';
+      else action.textContent = 'See your book page →';
+      document.getElementById('bm-note').textContent = '';
+      modal.hidden = false;
+      document.getElementById('badge-modal-close').focus();
+    }
+    function closeModal() { modal.hidden = true; currentId = null; }
+
+    document.getElementById('bm-action').addEventListener('click', function () {
+      var b = BADGES.find(function (x) { return x.id === currentId; });
+      if (!b) return;
+      if (b.state === 'new') {
+        b.state = 'progress'; render(); openModal(b.id);
+        document.getElementById('bm-note').textContent = 'Badge started — go do it together!';
+      } else if (b.state === 'progress') {
+        b.state = 'earned'; render(); updateProgress(); openModal(b.id);
+        document.getElementById('bm-note').textContent = '🎉 Badge earned! A new page was added to your book.';
+      } else {
+        document.getElementById('bm-note').textContent = 'Demo — this opens your finished page in the book.';
+      }
+    });
+
+    grid.addEventListener('click', function (e) {
+      var c = e.target.closest('.badge-sticker'); if (c) openModal(c.getAttribute('data-id'));
+    });
+    grid.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        var c = e.target.closest('.badge-sticker');
+        if (c) { e.preventDefault(); openModal(c.getAttribute('data-id')); }
+      }
+    });
+    document.querySelectorAll('.chip-filter').forEach(function (ch) {
+      ch.addEventListener('click', function () {
+        document.querySelectorAll('.chip-filter').forEach(function (x) { x.classList.remove('active'); });
+        ch.classList.add('active');
+        filter = ch.getAttribute('data-filter');
+        render();
+      });
+    });
+    modal.querySelectorAll('[data-close]').forEach(function (el) { el.addEventListener('click', closeModal); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+    render();
+    updateProgress();
   })();
 </script>
 
