@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Adventure Year — Glowe Play</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=3" />
+<style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
+</head>
+<body class="auth-pending">
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">
+      <a href="index.html"><div class="logo-mark">G</div> Glowe Play</a>
+    </div>
+    <div class="nav-right">
+      <span class="dash-user" id="dash-user"></span>
+      <button class="nav-cta" id="signout-btn" type="button">Sign out</button>
+    </div>
+  </div>
+</nav>
+
+<main class="app-wrap">
+  <a href="dashboard.html" class="legal-back">← Your family</a>
+
+  <div class="child-head">
+    <div class="child-avatar big" id="child-avatar"></div>
+    <div>
+      <span class="hero-eyebrow" id="child-age">Adventure Year</span>
+      <h1 id="child-name">…</h1>
+      <p class="child-book-title" id="child-book"></p>
+    </div>
+  </div>
+
+  <div class="seg" role="tablist" aria-label="View">
+    <button class="seg-btn active" id="seg-badges" type="button">🎖️ Badges</button>
+    <button class="seg-btn" id="seg-book" type="button">📖 The Book</button>
+  </div>
+
+  <!-- Badges -->
+  <section id="sec-badges">
+    <div class="explore-progress">
+      <div class="dash-book-bar"><span id="book-bar" style="width:0%"></span></div>
+      <span class="explore-progress-label" id="progress-label"></span>
+    </div>
+    <div class="explore-filters" role="tablist" aria-label="Badge types">
+      <button class="chip-filter active" type="button" data-filter="all">All badges</button>
+      <button class="chip-filter" type="button" data-filter="milestone">🌟 Milestones</button>
+      <button class="chip-filter" type="button" data-filter="adventure">🧭 Adventures</button>
+      <button class="chip-filter" type="button" data-filter="tradition">📖 Yearly Traditions</button>
+    </div>
+    <div class="explore-grid" id="badge-grid"></div>
+  </section>
+
+  <!-- Book -->
+  <section id="sec-book" hidden>
+    <div class="flipbook">
+      <div class="flip-stage" id="flip-stage"></div>
+      <div class="flip-nav">
+        <button class="flip-arrow" id="flip-prev" type="button" aria-label="Previous page">←</button>
+        <span class="flip-count" id="flip-count"></span>
+        <button class="flip-arrow" id="flip-next" type="button" aria-label="Next page">→</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Badge detail modal -->
+<div class="badge-modal" id="badge-modal" hidden role="dialog" aria-modal="true" aria-labelledby="bm-title">
+  <div class="badge-modal-backdrop" data-close></div>
+  <div class="badge-modal-card">
+    <button class="badge-modal-close" id="badge-modal-close" type="button" data-close aria-label="Close">×</button>
+    <div class="bm-badge" id="bm-badge"></div>
+    <span class="bm-kicker" id="bm-kicker"></span>
+    <h2 class="bm-title" id="bm-title"></h2>
+    <p class="bm-desc" id="bm-desc"></p>
+    <div class="bm-how"><h3>How to earn it</h3><ol id="bm-steps"></ol></div>
+    <button class="btn-primary" id="bm-action" type="button"></button>
+    <p class="bm-note" id="bm-note" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/app.js"></script>
+<script>
+  (function () {
+    var client = GLOWE.makeClient();
+    if (!client) { window.location.replace('login.html'); return; }
+
+    var params = new URLSearchParams(location.search);
+    var childId = params.get('id');
+    if (!childId) { window.location.replace('dashboard.html'); return; }
+
+    var BADGES = GLOWE.BADGES;
+    var statusById = {};   // badge_id -> 'new'|'progress'|'earned'
+    var child = null, ageWord = '';
+    var filter = 'all', currentId = null;
+
+    var grid = document.getElementById('badge-grid');
+    var modal = document.getElementById('badge-modal');
+
+    // ── Auth + load ──
+    client.auth.getSession().then(function (res) {
+      var session = res.data && res.data.session;
+      if (!session) { window.location.replace('login.html'); return; }
+      document.getElementById('dash-user').textContent = session.user ? session.user.email : '';
+      return loadChild();
+    });
+    client.auth.onAuthStateChange(function (_e, s) { if (!s) window.location.replace('login.html'); });
+    document.getElementById('signout-btn').addEventListener('click', function () {
+      client.auth.signOut().then(function () { window.location.replace('login.html'); });
+    });
+
+    function loadChild() {
+      return client.from('children').select('*').eq('id', childId).single().then(function (res) {
+        if (res.error || !res.data) { window.location.replace('dashboard.html'); return; }
+        child = res.data;
+        renderHeader();
+        return client.from('child_badges').select('badge_id,status').eq('child_id', childId);
+      }).then(function (res) {
+        if (res && res.data) res.data.forEach(function (r) { statusById[r.badge_id] = r.status; });
+        document.body.classList.remove('auth-pending');
+        render(); updateProgress(); buildBook();
+      });
+    }
+
+    function renderHeader() {
+      var age = GLOWE.ageFromBirthdate(child.birthdate);
+      ageWord = age != null ? GLOWE.numberWord(age) : '';
+      document.getElementById('child-name').textContent = child.name;
+      document.getElementById('child-avatar').textContent = (child.name || '?').trim().charAt(0).toUpperCase();
+      document.getElementById('child-age').textContent = age != null ? ('Adventure Year · age ' + age) : 'Adventure Year';
+      document.getElementById('child-book').textContent = age != null
+        ? ('Current book: The Year You Were ' + ageWord)
+        : 'Add a birthday on the family page to start their book';
+    }
+
+    // ── Badges ──
+    function statusOf(b) { return statusById[b.id] || 'new'; }
+    function ribbon(b) {
+      var s = statusOf(b);
+      if (s === 'earned') return '<span class="star">★</span><span class="tick">✓</span> ' + b.verb + ' <span class="star">★</span>';
+      if (s === 'progress') return '<span class="prog-dot"></span> In progress';
+      return '✦ Tap to start';
+    }
+    function card(b) {
+      return '<div class="badge-sticker type-' + b.type + ' is-' + statusOf(b) + '" role="button" tabindex="0" data-id="' + b.id + '" aria-label="' + b.a + ' ' + b.b + ' badge, ' + statusOf(b) + '">' +
+        '<div class="bs-cam">📷</div>' +
+        '<div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">' + b.emoji + '</span></div>' +
+        '<div class="bs-info"><div class="bs-title"><span class="a">' + b.a + '</span><span class="b">' + b.b + '</span></div><div class="bs-div"></div><p>' + GLOWE.esc(b.desc) + '</p></div>' +
+        '<div class="bs-ribbon">' + ribbon(b) + '</div></div>';
+    }
+    function render() {
+      grid.innerHTML = BADGES.filter(function (b) { return filter === 'all' || b.type === filter; }).map(card).join('');
+    }
+    function earnedCount() { return BADGES.filter(function (b) { return statusOf(b) === 'earned'; }).length; }
+    function updateProgress() {
+      var e = earnedCount(), total = BADGES.length;
+      document.getElementById('book-bar').style.width = (e / total * 100) + '%';
+      document.getElementById('progress-label').innerHTML = '<strong>' + e + ' of ' + total + ' badges earned</strong> · ' + e + ' book pages so far';
+    }
+
+    function setStatus(badgeId, status) {
+      statusById[badgeId] = status;
+      return client.from('child_badges').upsert(
+        { child_id: childId, badge_id: badgeId, status: status, updated_at: new Date().toISOString() },
+        { onConflict: 'child_id,badge_id' }
+      );
+    }
+
+    // ── Modal ──
+    function openModal(id) {
+      var b = BADGES.find(function (x) { return x.id === id; }); if (!b) return;
+      currentId = id;
+      var badge = document.getElementById('bm-badge');
+      badge.className = 'bm-badge type-' + b.type;
+      badge.innerHTML = '<div class="bm-scene"><span>' + b.emoji + '</span></div>';
+      document.getElementById('bm-kicker').textContent = GLOWE.TYPE_LABEL[b.type];
+      document.getElementById('bm-title').textContent = b.a + ' ' + b.b;
+      document.getElementById('bm-desc').textContent = b.desc;
+      document.getElementById('bm-steps').innerHTML = b.how.map(function (s) { return '<li>' + GLOWE.esc(s) + '</li>'; }).join('');
+      var action = document.getElementById('bm-action'), s = statusOf(b);
+      action.textContent = s === 'new' ? 'Start this badge →' : (s === 'progress' ? 'I earned it! →' : 'See your book page →');
+      document.getElementById('bm-note').textContent = '';
+      modal.hidden = false;
+      document.getElementById('badge-modal-close').focus();
+    }
+    function closeModal() { modal.hidden = true; currentId = null; }
+
+    document.getElementById('bm-action').addEventListener('click', function () {
+      var b = BADGES.find(function (x) { return x.id === currentId; }); if (!b) return;
+      var s = statusOf(b), note = document.getElementById('bm-note');
+      if (s === 'new') {
+        setStatus(b.id, 'progress'); render(); openModal(b.id);
+        note.textContent = 'Badge started — go do it together!';
+      } else if (s === 'progress') {
+        setStatus(b.id, 'earned'); render(); updateProgress(); buildBook(); openModal(b.id);
+        note.textContent = '🎉 Badge earned! A new page was added to the book.';
+      } else {
+        closeModal(); showBook();
+      }
+    });
+
+    grid.addEventListener('click', function (e) { var c = e.target.closest('.badge-sticker'); if (c) openModal(c.getAttribute('data-id')); });
+    grid.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { var c = e.target.closest('.badge-sticker'); if (c) { e.preventDefault(); openModal(c.getAttribute('data-id')); } }
+    });
+    document.querySelectorAll('.chip-filter').forEach(function (ch) {
+      ch.addEventListener('click', function () {
+        document.querySelectorAll('.chip-filter').forEach(function (x) { x.classList.remove('active'); });
+        ch.classList.add('active'); filter = ch.getAttribute('data-filter'); render();
+      });
+    });
+    modal.querySelectorAll('[data-close]').forEach(function (el) { el.addEventListener('click', closeModal); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+    // ── Tabs ──
+    var secBadges = document.getElementById('sec-badges'), secBook = document.getElementById('sec-book');
+    var tabBadges = document.getElementById('seg-badges'), tabBook = document.getElementById('seg-book');
+    function showBadges() { secBadges.hidden = false; secBook.hidden = true; tabBadges.classList.add('active'); tabBook.classList.remove('active'); }
+    function showBook() { secBadges.hidden = true; secBook.hidden = false; tabBook.classList.add('active'); tabBadges.classList.remove('active'); }
+    tabBadges.addEventListener('click', showBadges);
+    tabBook.addEventListener('click', showBook);
+
+    // ── Flip book ──
+    var pages = [], pageIdx = 0;
+    function buildBook() {
+      pages = [];
+      pages.push({ kind: 'cover' });
+      BADGES.filter(function (b) { return statusOf(b) === 'earned'; }).forEach(function (b) { pages.push({ kind: 'badge', b: b }); });
+      pages.push({ kind: 'end' });
+      if (pageIdx >= pages.length) pageIdx = pages.length - 1;
+      renderPage();
+    }
+    function renderPage() {
+      var stage = document.getElementById('flip-stage'), p = pages[pageIdx], html = '';
+      if (p.kind === 'cover') {
+        html = '<div class="flip-page cover">' +
+          '<span class="fp-eyebrow">A Glowe Play Keepsake</span>' +
+          '<div class="fp-cover-title">The Year You Were<br><em>' + GLOWE.esc(ageWord || '…') + '</em></div>' +
+          '<div class="fp-cover-name">' + GLOWE.esc(child.name) + '</div></div>';
+      } else if (p.kind === 'badge') {
+        html = '<div class="flip-page">' +
+          '<div class="fp-badge type-' + p.b.type + '"><div class="bm-scene"><span>' + p.b.emoji + '</span></div></div>' +
+          '<span class="fp-eyebrow">' + GLOWE.TYPE_LABEL[p.b.type] + ' · ' + p.b.verb + '</span>' +
+          '<h3 class="fp-title">' + GLOWE.esc(p.b.a + ' ' + p.b.b) + '</h3>' +
+          '<p class="fp-text">' + GLOWE.esc(p.b.desc) + '</p></div>';
+      } else {
+        html = '<div class="flip-page end">' +
+          '<p class="fp-end">The end of this year is just the <em>beginning of your story.</em></p>' +
+          '<span class="fp-eyebrow">See you next birthday ✦</span></div>';
+      }
+      stage.innerHTML = html;
+      document.getElementById('flip-count').textContent = 'Page ' + (pageIdx + 1) + ' of ' + pages.length;
+      document.getElementById('flip-prev').disabled = pageIdx === 0;
+      document.getElementById('flip-next').disabled = pageIdx === pages.length - 1;
+    }
+    document.getElementById('flip-prev').addEventListener('click', function () { if (pageIdx > 0) { pageIdx--; renderPage(); } });
+    document.getElementById('flip-next').addEventListener('click', function () { if (pageIdx < pages.length - 1) { pageIdx++; renderPage(); } });
+  })();
+</script>
+
+</body>
+</html>

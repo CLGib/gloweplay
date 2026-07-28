@@ -1621,3 +1621,67 @@
   .bm-how li::before { content: counter(s); width: 24px; height: 24px; flex-shrink: 0; background: var(--ink); color: var(--cream); border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 800; font-family: 'Nunito', sans-serif; }
   .badge-modal-card .btn-primary { width: 100%; }
   .bm-note { font-size: 14px; font-weight: 700; color: var(--mint); margin-top: 14px; min-height: 1px; }
+
+  /* ─── Real product: app shell ─── */
+  .app-wrap { max-width: 1080px; margin: 0 auto; padding: 36px 24px 100px; position: relative; z-index: 2; }
+  .app-sub { color: var(--ink-soft); font-size: 15px; }
+  .app-error { background: #FDE2E1; border: 1.5px solid var(--coral); color: var(--coral-deep); border-radius: 14px; padding: 14px 18px; font-size: 14px; font-weight: 600; margin-bottom: 20px; }
+
+  /* Family account */
+  .family-head { margin-bottom: 28px; }
+  .family-head h1 { font-family: 'Fraunces', serif; font-size: clamp(30px, 5vw, 48px); font-weight: 500; margin: 12px 0 6px; }
+  .children-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 22px; }
+  .child-card { display: flex; flex-direction: column; gap: 12px; text-align: left; text-decoration: none; color: inherit; background: var(--cream); border: 2px solid var(--ink); border-radius: 22px; padding: 26px; box-shadow: 0 6px 0 var(--ink); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; font-family: inherit; min-height: 200px; }
+  .child-card:hover { transform: translateY(-3px); box-shadow: 0 9px 0 var(--ink); }
+  .child-avatar { width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; font-family: 'Fraunces', serif; font-size: 26px; font-weight: 600; color: #fff; flex-shrink: 0; }
+  .child-avatar.add { background: var(--cream-deep); color: var(--ink); border: 2px dashed var(--ink); font-size: 30px; }
+  .child-avatar.big { width: 76px; height: 76px; font-size: 34px; background: var(--bay); }
+  .child-card h3 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; }
+  .child-card .child-year { font-size: 14px; color: var(--ink-soft); }
+  .child-card .child-cta { margin-top: auto; font-weight: 800; font-size: 14px; color: var(--coral); }
+  .child-add { border-style: dashed; box-shadow: none; }
+  .child-add:hover { box-shadow: 0 6px 0 var(--ink); }
+
+  .add-price { font-family: 'Fraunces', serif; font-size: 40px; font-weight: 500; color: var(--coral); margin-top: 6px; }
+  .add-price span { font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 600; color: var(--ink-soft); }
+  .add-note { font-size: 13px; color: var(--ink-soft); margin-bottom: 16px; }
+  #add-form { text-align: left; }
+  #add-form .btn-primary { width: 100%; }
+
+  /* Child profile header */
+  .child-head { display: flex; align-items: center; gap: 20px; margin: 18px 0 26px; }
+  .child-head h1 { font-family: 'Fraunces', serif; font-size: clamp(28px, 5vw, 44px); font-weight: 500; }
+  .child-book-title { color: var(--ink-soft); font-size: 15px; margin-top: 4px; }
+  .child-head .hero-eyebrow { margin-bottom: 8px; }
+
+  /* Segmented control */
+  .seg { display: inline-flex; gap: 4px; background: var(--cream-deep); border: 1.5px solid var(--ink); border-radius: 999px; padding: 4px; margin-bottom: 28px; }
+  .seg-btn { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 14px; padding: 9px 20px; border: none; background: transparent; color: var(--ink); border-radius: 999px; cursor: pointer; }
+  .seg-btn.active { background: var(--ink); color: var(--cream); }
+
+  /* Flip book */
+  .flipbook { max-width: 520px; margin: 0 auto; }
+  .flip-page { aspect-ratio: 4 / 4.6; background: var(--white); border: 2px solid var(--ink); border-radius: 8px 20px 20px 8px; box-shadow: 0 12px 0 var(--ink); padding: 40px 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; position: relative; overflow: hidden; }
+  .flip-page::before { content: ''; position: absolute; left: 10px; top: 12px; bottom: 12px; width: 2px; background: var(--line); }
+  .fp-eyebrow { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--coral); }
+  .flip-page.cover { background: linear-gradient(160deg, #FFF3D0, var(--cream-deep)); }
+  .fp-cover-title { font-family: 'Fraunces', serif; font-size: 30px; line-height: 1.05; color: var(--ink); }
+  .fp-cover-title em { font-style: italic; font-size: 2em; color: var(--coral); display: inline-block; margin-top: 6px; }
+  .fp-cover-name { font-family: 'Caveat', cursive; font-size: 30px; color: var(--ink); }
+  .fp-badge { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; border: 5px solid var(--bay); box-shadow: 0 0 0 6px var(--white); }
+  .fp-badge .bm-scene { width: 100%; height: 100%; display: grid; place-items: center; background: linear-gradient(180deg, #0D1530, #1B2440); }
+  .fp-badge .bm-scene span { font-size: 40px; }
+  .fp-badge.type-milestone { border-color: var(--sun-deep); }
+  .fp-badge.type-adventure { border-color: var(--bay-deep); }
+  .fp-badge.type-tradition { border-color: var(--coral); }
+  .fp-title { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 500; }
+  .fp-text { color: var(--ink-soft); font-size: 15px; max-width: 28ch; }
+  .flip-page.end { background: var(--ink); }
+  .fp-end { font-family: 'Fraunces', serif; font-size: 24px; color: var(--cream); line-height: 1.2; max-width: 20ch; }
+  .fp-end em { color: #F4C542; font-style: italic; }
+  .flip-page.end .fp-eyebrow { color: #F4C542; }
+  .flip-nav { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 22px; }
+  .flip-arrow { width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--ink); background: var(--cream); font-size: 18px; cursor: pointer; color: var(--ink); }
+  .flip-arrow:hover:not(:disabled) { background: var(--coral); color: #fff; }
+  .flip-arrow:disabled { opacity: 0.35; cursor: default; }
+  .flip-count { font-weight: 700; font-size: 14px; color: var(--ink-soft); min-width: 110px; text-align: center; }

@@ -3,26 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Badges — Glowe Play</title>
+<title>Your family — Glowe Play</title>
 <meta name="robots" content="noindex" />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=2" />
-<style>
-  body.auth-pending .dash-wrap, body.auth-pending .badge-modal { visibility: hidden; }
-</style>
+<link rel="stylesheet" href="styles.css?v=3" />
+<style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
 
 <nav>
   <div class="nav-inner">
     <div class="logo">
-      <a href="index.html">
-        <div class="logo-mark">G</div>
-        Glowe Play <span class="tag">/ demo</span>
-      </a>
+      <a href="index.html"><div class="logo-mark">G</div> Glowe Play</a>
     </div>
     <div class="nav-right">
       <span class="dash-user" id="dash-user"></span>
@@ -31,175 +26,134 @@
   </div>
 </nav>
 
-<main class="dash-wrap">
-  <div class="explore-head">
-    <span class="hero-eyebrow">Demo · Emma, age six</span>
-    <h1>Choose your next <em>badge</em></h1>
-    <p>Explore the badges, then pick one to earn together. Every badge you earn becomes a page in your book.</p>
+<main class="app-wrap">
+  <div class="family-head">
+    <span class="hero-eyebrow">Family account</span>
+    <h1>Your family</h1>
+    <p class="app-sub" id="family-email"></p>
   </div>
 
-  <div class="explore-progress">
-    <div class="dash-book-bar"><span id="book-bar" style="width:60%"></span></div>
-    <span class="explore-progress-label" id="progress-label"></span>
-  </div>
-
-  <div class="explore-filters" role="tablist" aria-label="Badge types">
-    <button class="chip-filter active" type="button" data-filter="all">All badges</button>
-    <button class="chip-filter" type="button" data-filter="milestone">🌟 Milestones</button>
-    <button class="chip-filter" type="button" data-filter="adventure">🧭 Adventures</button>
-    <button class="chip-filter" type="button" data-filter="tradition">📖 Yearly Traditions</button>
-  </div>
-
-  <div class="explore-grid" id="badge-grid"></div>
+  <div class="app-error" id="app-error" hidden></div>
+  <div class="children-grid" id="children-grid"></div>
 </main>
 
-<!-- Badge detail modal -->
-<div class="badge-modal" id="badge-modal" hidden role="dialog" aria-modal="true" aria-labelledby="bm-title">
+<!-- Add child modal -->
+<div class="badge-modal" id="add-modal" hidden role="dialog" aria-modal="true" aria-labelledby="add-title">
   <div class="badge-modal-backdrop" data-close></div>
   <div class="badge-modal-card">
-    <button class="badge-modal-close" id="badge-modal-close" type="button" data-close aria-label="Close">×</button>
-    <div class="bm-badge" id="bm-badge"></div>
-    <span class="bm-kicker" id="bm-kicker"></span>
-    <h2 class="bm-title" id="bm-title"></h2>
-    <p class="bm-desc" id="bm-desc"></p>
-    <div class="bm-how">
-      <h3>How to earn it</h3>
-      <ol id="bm-steps"></ol>
-    </div>
-    <button class="btn-primary" id="bm-action" type="button"></button>
-    <p class="bm-note" id="bm-note" role="status" aria-live="polite"></p>
+    <button class="badge-modal-close" type="button" data-close aria-label="Close">×</button>
+    <h2 class="bm-title" id="add-title">Add a child</h2>
+    <p class="bm-desc">Each child gets their own Adventure Year and their own hardcover book.</p>
+    <form id="add-form" novalidate>
+      <div class="auth-field"><label for="c-name">Child's name</label><input id="c-name" required maxlength="60" placeholder="e.g. Emma" autocomplete="off" /></div>
+      <div class="auth-field"><label for="c-bd">Birthday</label><input id="c-bd" type="date" required /></div>
+      <div class="add-price">$99<span> / year</span></div>
+      <p class="add-note">You won't be charged yet — payment opens before launch.</p>
+      <button type="submit" class="btn-primary" id="add-submit">Add child →</button>
+      <p class="auth-msg" id="add-msg" role="alert" aria-live="polite"></p>
+    </form>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
+<script src="js/app.js"></script>
 <script>
-  // ── Auth guard ──────────────────────────────────────────────
   (function () {
-    var cfg = window.GLOWE_SUPABASE || {};
-    var configured = cfg.url && cfg.anonKey &&
-      cfg.url.indexOf("YOUR_SUPABASE") === -1 && cfg.anonKey.indexOf("YOUR_SUPABASE") === -1;
-    if (!configured) { window.location.replace('login.html'); return; }
+    var client = GLOWE.makeClient();
+    if (!client) { window.location.replace('login.html'); return; }
 
-    var client = window.supabase.createClient(cfg.url, cfg.anonKey);
+    var grid = document.getElementById('children-grid');
+    var errBox = document.getElementById('app-error');
+    var addModal = document.getElementById('add-modal');
+    var AVATAR = ['#4EA8DE', '#F25F5C', '#E0AC2A', '#5CB85C', '#2E8AC4'];
+
+    function showError(msg) { errBox.textContent = msg; errBox.hidden = false; }
+
+    // ── Auth gate ──
     client.auth.getSession().then(function (res) {
       var session = res.data && res.data.session;
       if (!session) { window.location.replace('login.html'); return; }
-      if (session.user && session.user.email) document.getElementById('dash-user').textContent = session.user.email;
+      if (session.user && session.user.email) document.getElementById('family-email').textContent = session.user.email;
+      document.getElementById('dash-user').textContent = session.user ? session.user.email : '';
       document.body.classList.remove('auth-pending');
+      loadChildren();
     });
-    client.auth.onAuthStateChange(function (_e, session) { if (!session) window.location.replace('login.html'); });
+    client.auth.onAuthStateChange(function (_e, s) { if (!s) window.location.replace('login.html'); });
     document.getElementById('signout-btn').addEventListener('click', function () {
       client.auth.signOut().then(function () { window.location.replace('login.html'); });
     });
-  })();
 
-  // ── Badge explorer (demo, sample data) ──────────────────────
-  (function () {
-    var BADGES = [
-      { id:'first-tooth', type:'milestone', emoji:'🦷', a:'First', b:'Tooth', desc:'The day a wobbly tooth finally comes out.', verb:'Captured', state:'earned', how:['Wait for the big wobble','Snap a photo of the gap','Earn your badge'] },
-      { id:'first-ride', type:'milestone', emoji:'🚲', a:'First', b:'Ride', desc:'Two wheels, no training wheels — you did it!', verb:'Captured', state:'earned', how:['Take the training wheels off','Film your first real ride','Earn your badge'] },
-      { id:'first-day', type:'milestone', emoji:'🎒', a:'First', b:'Day', desc:'The first morning of a brand-new school year.', verb:'Captured', state:'new', how:['Pack your backpack','Take a first-day photo','Earn your badge'] },
-      { id:'lost-toy', type:'milestone', emoji:'🧸', a:'Grew', b:'Up', desc:'A little moment that shows how big you got.', verb:'Captured', state:'new', how:['Notice something new you can do','Add a photo or note','Earn your badge'] },
-
-      { id:'rainbow', type:'adventure', emoji:'🌈', a:'Rainbow', b:'Hunter', desc:'Find a rainbow and chase the colors.', verb:'Completed', state:'earned', how:['Wait for sun after the rain','Photograph the rainbow','Earn your badge'] },
-      { id:'baker', type:'adventure', emoji:'🍪', a:'Family', b:'Baker', desc:'Bake something together — flour on the nose required.', verb:'Completed', state:'earned', how:['Pick a recipe together','Bake it (and taste it!)','Earn your badge'] },
-      { id:'fort', type:'adventure', emoji:'⛺', a:'Fort', b:'Builder', desc:'Build a blanket fort and camp out inside.', verb:'Completed', state:'progress', how:['Gather blankets & pillows','Build the coziest fort','Earn your badge'] },
-      { id:'stargazer', type:'adventure', emoji:'🌠', a:'Star', b:'Gazer', desc:'Look for constellations on a clear, dark night.', verb:'Completed', state:'new', how:['Wait for a clear night','Spot a constellation','Earn your badge'] },
-      { id:'kindness', type:'adventure', emoji:'❤️', a:'Kindness', b:'Hero', desc:'Do something kind, just because.', verb:'Completed', state:'new', how:['Spot someone who needs a hand','Do a kind thing','Earn your badge'] },
-
-      { id:'birthday', type:'tradition', emoji:'🎂', a:'Birthday', b:'Interview', desc:'The same fun questions, asked every birthday.', verb:'Answered', state:'earned', how:['Sit down on your birthday','Answer the questions','Earn your badge'] },
-      { id:'year-review', type:'tradition', emoji:'📅', a:'Year', b:'Review', desc:'Look back at everything this year held.', verb:'Answered', state:'new', how:['Wait for the end of your year','Answer the look-back','Earn your badge'] },
-      { id:'story', type:'tradition', emoji:'🎙️', a:'Story', b:'Time', desc:'Tell a story in your own words and your own voice.', verb:'Answered', state:'new', how:['Think up a story','Record it in your voice','Earn your badge'] }
-    ];
-    var TYPE_LABEL = { milestone:'Milestone', adventure:'Adventure', tradition:'Yearly Tradition' };
-
-    var grid = document.getElementById('badge-grid');
-    var modal = document.getElementById('badge-modal');
-    var filter = 'all';
-    var currentId = null;
-
-    function ribbon(b) {
-      if (b.state === 'earned') return '<span class="star">★</span><span class="tick">✓</span> ' + b.verb + ' <span class="star">★</span>';
-      if (b.state === 'progress') return '<span class="prog-dot"></span> In progress';
-      return '✦ Tap to start';
+    // ── Children ──
+    function yearLabel(child) {
+      var age = GLOWE.ageFromBirthdate(child.birthdate);
+      if (age == null) return 'Add a birthday to start their book';
+      return 'Age ' + age + ' · The Year You Were ' + GLOWE.numberWord(age);
     }
-    function card(b) {
-      return '<div class="badge-sticker type-' + b.type + ' is-' + b.state + '" role="button" tabindex="0" data-id="' + b.id + '" aria-label="' + b.a + ' ' + b.b + ' badge, ' + b.state + '">' +
-        '<div class="bs-cam">📷</div>' +
-        '<div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">' + b.emoji + '</span></div>' +
-        '<div class="bs-info"><div class="bs-title"><span class="a">' + b.a + '</span><span class="b">' + b.b + '</span></div>' +
-        '<div class="bs-div"></div><p>' + b.desc + '</p></div>' +
-        '<div class="bs-ribbon">' + ribbon(b) + '</div>' +
-      '</div>';
+    function childCard(child, i) {
+      var initial = GLOWE.esc((child.name || '?').trim().charAt(0).toUpperCase());
+      return '<a class="child-card" href="child.html?id=' + encodeURIComponent(child.id) + '">' +
+        '<div class="child-avatar" style="background:' + AVATAR[i % AVATAR.length] + '">' + initial + '</div>' +
+        '<h3>' + GLOWE.esc(child.name) + '</h3>' +
+        '<span class="child-year">' + GLOWE.esc(yearLabel(child)) + '</span>' +
+        '<span class="child-cta">Open ' + GLOWE.esc((child.name || '').split(' ')[0]) + '&rsquo;s year →</span>' +
+      '</a>';
     }
-    function render() {
-      grid.innerHTML = BADGES.filter(function (b) { return filter === 'all' || b.type === filter; }).map(card).join('');
+    function addCard() {
+      return '<button class="child-card child-add" id="open-add" type="button">' +
+        '<div class="child-avatar add">＋</div>' +
+        '<h3>Add a child</h3>' +
+        '<span class="child-year">$99 / year · their own book</span>' +
+        '<span class="child-cta">New Adventure Year →</span>' +
+      '</button>';
     }
-    function updateProgress() {
-      var earned = BADGES.filter(function (b) { return b.state === 'earned'; }).length;
-      var pages = Math.min(30, 13 + earned);
-      document.getElementById('book-bar').style.width = (pages / 30 * 100) + '%';
-      document.getElementById('progress-label').innerHTML = '<strong>' + earned + ' badges earned</strong> · ' + pages + ' of 30 book pages';
-    }
-
-    function openModal(id) {
-      var b = BADGES.find(function (x) { return x.id === id; });
-      if (!b) return;
-      currentId = id;
-      var badge = document.getElementById('bm-badge');
-      badge.className = 'bm-badge type-' + b.type;
-      badge.innerHTML = '<div class="bm-scene"><span>' + b.emoji + '</span></div>';
-      document.getElementById('bm-kicker').textContent = TYPE_LABEL[b.type];
-      document.getElementById('bm-title').textContent = b.a + ' ' + b.b;
-      document.getElementById('bm-desc').textContent = b.desc;
-      document.getElementById('bm-steps').innerHTML = b.how.map(function (s) { return '<li>' + s + '</li>'; }).join('');
-      var action = document.getElementById('bm-action');
-      if (b.state === 'new') action.textContent = 'Start this badge →';
-      else if (b.state === 'progress') action.textContent = 'I earned it! →';
-      else action.textContent = 'See your book page →';
-      document.getElementById('bm-note').textContent = '';
-      modal.hidden = false;
-      document.getElementById('badge-modal-close').focus();
-    }
-    function closeModal() { modal.hidden = true; currentId = null; }
-
-    document.getElementById('bm-action').addEventListener('click', function () {
-      var b = BADGES.find(function (x) { return x.id === currentId; });
-      if (!b) return;
-      if (b.state === 'new') {
-        b.state = 'progress'; render(); openModal(b.id);
-        document.getElementById('bm-note').textContent = 'Badge started — go do it together!';
-      } else if (b.state === 'progress') {
-        b.state = 'earned'; render(); updateProgress(); openModal(b.id);
-        document.getElementById('bm-note').textContent = '🎉 Badge earned! A new page was added to your book.';
-      } else {
-        document.getElementById('bm-note').textContent = 'Demo — this opens your finished page in the book.';
-      }
-    });
-
-    grid.addEventListener('click', function (e) {
-      var c = e.target.closest('.badge-sticker'); if (c) openModal(c.getAttribute('data-id'));
-    });
-    grid.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        var c = e.target.closest('.badge-sticker');
-        if (c) { e.preventDefault(); openModal(c.getAttribute('data-id')); }
-      }
-    });
-    document.querySelectorAll('.chip-filter').forEach(function (ch) {
-      ch.addEventListener('click', function () {
-        document.querySelectorAll('.chip-filter').forEach(function (x) { x.classList.remove('active'); });
-        ch.classList.add('active');
-        filter = ch.getAttribute('data-filter');
-        render();
+    function loadChildren() {
+      client.from('children').select('*').order('created_at', { ascending: true }).then(function (res) {
+        if (res.error) {
+          showError('Could not load your family yet. If this is a fresh project, run supabase/schema.sql in Supabase, then refresh. (' + res.error.message + ')');
+          grid.innerHTML = addCard();
+          bindAdd();
+          return;
+        }
+        var list = res.data || [];
+        grid.innerHTML = list.map(childCard).join('') + addCard();
+        bindAdd();
       });
-    });
-    modal.querySelectorAll('[data-close]').forEach(function (el) { el.addEventListener('click', closeModal); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+    }
 
-    render();
-    updateProgress();
+    // ── Add child ──
+    function openAdd() { addModal.hidden = false; document.getElementById('c-name').focus(); }
+    function closeAdd() { addModal.hidden = true; }
+    function bindAdd() {
+      var b = document.getElementById('open-add');
+      if (b) b.addEventListener('click', openAdd);
+    }
+    addModal.querySelectorAll('[data-close]').forEach(function (el) { el.addEventListener('click', closeAdd); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !addModal.hidden) closeAdd(); });
+
+    document.getElementById('add-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var msg = document.getElementById('add-msg');
+      msg.className = 'auth-msg';
+      var name = document.getElementById('c-name').value.trim();
+      var bd = document.getElementById('c-bd').value;
+      if (!name) { msg.textContent = "Please enter your child's name."; msg.className = 'auth-msg show error'; return; }
+      if (!bd) { msg.textContent = 'Please add a birthday so we know their age.'; msg.className = 'auth-msg show error'; return; }
+
+      var btn = document.getElementById('add-submit');
+      btn.disabled = true; var orig = btn.textContent; btn.textContent = 'Adding…';
+      client.auth.getUser().then(function (u) {
+        var uid = u.data && u.data.user && u.data.user.id;
+        return client.from('children').insert({ owner: uid, name: name, birthdate: bd });
+      }).then(function (res) {
+        if (res.error) { msg.textContent = res.error.message; msg.className = 'auth-msg show error'; return; }
+        closeAdd();
+        document.getElementById('add-form').reset();
+        loadChildren();
+      }).catch(function (err) {
+        msg.textContent = (err && err.message) || 'Something went wrong.'; msg.className = 'auth-msg show error';
+      }).finally(function () { btn.disabled = false; btn.textContent = orig; });
+    });
   })();
 </script>
 
