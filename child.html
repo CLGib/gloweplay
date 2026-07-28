@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=4" />
+<link rel="stylesheet" href="styles.css?v=5" />
 <style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -98,7 +98,7 @@
     var childId = params.get('id');
     if (!childId) { window.location.replace('dashboard.html'); return; }
 
-    var BADGES = GLOWE.BADGES;
+    var BADGES = [];       // loaded from the admin-managed catalog (with fallback)
     var statusById = {};   // badge_id -> 'new'|'progress'|'earned'
     var child = null, ageWord = '';
     var filter = 'all', currentId = null;
@@ -123,6 +123,9 @@
         if (res.error || !res.data) { window.location.replace('dashboard.html'); return; }
         child = res.data;
         renderHeader();
+        return GLOWE.loadBadges(client);
+      }).then(function (list) {
+        BADGES = list || [];
         return client.from('child_badges').select('badge_id,status').eq('child_id', childId);
       }).then(function (res) {
         if (res && res.data) res.data.forEach(function (r) { statusById[r.badge_id] = r.status; });
@@ -151,7 +154,14 @@
       return '✦ Tap to start';
     }
     function card(b) {
-      return '<div class="badge-sticker type-' + b.type + ' is-' + statusOf(b) + '" role="button" tabindex="0" data-id="' + b.id + '" aria-label="' + b.a + ' ' + b.b + ' badge, ' + statusOf(b) + '">' +
+      var s = statusOf(b);
+      // Earned + has generated art → show the illustrated sticker (which already
+      // carries the "Completed" ring). Otherwise the CSS state badge.
+      if (s === 'earned' && b.image_url) {
+        return '<div class="badge-sticker badge-img is-earned" role="button" tabindex="0" data-id="' + b.id + '" aria-label="' + GLOWE.esc(b.a + ' ' + b.b) + ' badge, earned">' +
+          '<img src="' + GLOWE.esc(b.image_url) + '" alt="' + GLOWE.esc(b.a + ' ' + b.b) + '" /></div>';
+      }
+      return '<div class="badge-sticker type-' + b.type + ' is-' + s + '" role="button" tabindex="0" data-id="' + b.id + '" aria-label="' + b.a + ' ' + b.b + ' badge, ' + s + '">' +
         '<div class="bs-cam">📷</div>' +
         '<div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">' + b.emoji + '</span></div>' +
         '<div class="bs-info"><div class="bs-title"><span class="a">' + b.a + '</span><span class="b">' + b.b + '</span></div><div class="bs-div"></div><p>' + GLOWE.esc(b.desc) + '</p></div>' +
@@ -180,8 +190,13 @@
       var b = BADGES.find(function (x) { return x.id === id; }); if (!b) return;
       currentId = id;
       var badge = document.getElementById('bm-badge');
-      badge.className = 'bm-badge type-' + b.type;
-      badge.innerHTML = '<div class="bm-scene"><span>' + b.emoji + '</span></div>';
+      if (statusOf(b) === 'earned' && b.image_url) {
+        badge.className = 'bm-badge bm-badge-img';
+        badge.innerHTML = '<img src="' + GLOWE.esc(b.image_url) + '" alt="" />';
+      } else {
+        badge.className = 'bm-badge type-' + b.type;
+        badge.innerHTML = '<div class="bm-scene"><span>' + b.emoji + '</span></div>';
+      }
       document.getElementById('bm-kicker').textContent = GLOWE.TYPE_LABEL[b.type];
       document.getElementById('bm-title').textContent = b.a + ' ' + b.b;
       document.getElementById('bm-desc').textContent = b.desc;
@@ -247,8 +262,10 @@
           '<div class="fp-cover-title">The Year You Were<br><em>' + GLOWE.esc(ageWord || '…') + '</em></div>' +
           '<div class="fp-cover-name">' + GLOWE.esc(child.name) + '</div></div>';
       } else if (p.kind === 'badge') {
-        html = '<div class="flip-page">' +
-          '<div class="fp-badge type-' + p.b.type + '"><div class="bm-scene"><span>' + p.b.emoji + '</span></div></div>' +
+        var art = p.b.image_url
+          ? '<div class="fp-badge fp-badge-img"><img src="' + GLOWE.esc(p.b.image_url) + '" alt="" /></div>'
+          : '<div class="fp-badge type-' + p.b.type + '"><div class="bm-scene"><span>' + p.b.emoji + '</span></div></div>';
+        html = '<div class="flip-page">' + art +
           '<span class="fp-eyebrow">' + GLOWE.TYPE_LABEL[p.b.type] + ' · ' + p.b.verb + '</span>' +
           '<h3 class="fp-title">' + GLOWE.esc(p.b.a + ' ' + p.b.b) + '</h3>' +
           '<p class="fp-text">' + GLOWE.esc(p.b.desc) + '</p></div>';

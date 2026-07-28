@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=4" />
+<link rel="stylesheet" href="styles.css?v=5" />
 <style> body.auth-pending .app-wrap { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -97,11 +97,6 @@
           <div class="auth-field"><label class="chk" style="margin-top:26px"><input type="checkbox" id="f-active" checked> Active (visible to families)</label></div>
         </div>
 
-        <div class="edit-actions">
-          <button type="submit" class="btn-primary" id="save-badge">Save badge</button>
-          <button type="button" class="btn-outline" id="delete-badge" hidden>Delete</button>
-        </div>
-        <p class="auth-msg" id="form-msg" role="alert" aria-live="polite"></p>
       </form>
 
       <aside class="edit-preview">
@@ -112,6 +107,15 @@
         <div class="auth-field" style="margin-top:14px"><label for="f-image">…or paste an image URL</label><input id="f-image" placeholder="https://…/badge.png" /></div>
         <p class="auth-msg" id="gen-msg" role="alert" aria-live="polite"></p>
       </aside>
+    </div>
+
+    <div class="edit-stickybar">
+      <div class="sticky-left">
+        <span class="sticky-hint" id="sticky-hint"></span>
+        <p class="auth-msg sticky-msg" id="form-msg" role="alert" aria-live="polite"></p>
+      </div>
+      <button type="button" class="btn-outline" id="delete-badge" hidden>Delete</button>
+      <button type="submit" form="badge-form" class="btn-primary" id="save-badge">Save badge</button>
     </div>
   </div>
 </main>
@@ -200,6 +204,7 @@
       document.getElementById('delete-badge').hidden = !b.id;
       document.getElementById('form-msg').className = 'auth-msg';
       document.getElementById('gen-msg').className = 'auth-msg';
+      document.getElementById('sticky-hint').textContent = '';
     }
     function openEditor(id) {
       editingId = id || null;
@@ -268,7 +273,8 @@
         .then(function (res) {
           if (!res.ok) { msg.textContent = res.d.error || 'Generation failed.'; msg.className = 'auth-msg show error'; return; }
           setArt(res.d.imageUrl);
-          msg.textContent = 'Generated! Remember to Save the badge to keep it.'; msg.className = 'auth-msg show ok';
+          msg.textContent = 'Generated!'; msg.className = 'auth-msg show ok';
+          document.getElementById('sticky-hint').textContent = '✨ Image ready — click “Save badge” to keep it.';
         }).catch(function (err) { msg.textContent = 'Could not reach the generator function. Is it deployed? (' + err.message + ')'; msg.className = 'auth-msg show error'; })
         .finally(function () { btn.disabled = false; btn.textContent = o; });
     });

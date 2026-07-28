@@ -51,9 +51,34 @@ window.GLOWE = (function () {
     return window.supabase.createClient(cfg.url, cfg.anonKey);
   }
 
+  // Load the badge catalog from Supabase (admin-managed), mapped to the shape
+  // the product renders. Falls back to the bundled catalog if the table is
+  // empty or unreachable, so the app never breaks.
+  function loadBadges(client) {
+    var fallback = BADGES.map(function (b) {
+      return { id: b.id, type: b.type, emoji: b.emoji, a: b.a, b: b.b, desc: b.desc, verb: b.verb, how: b.how, image_url: null };
+    });
+    if (!client) return Promise.resolve(fallback);
+    return client.from('badges').select('*').eq('is_active', true).order('sort_order', { ascending: true })
+      .then(function (res) {
+        if (res.error || !res.data || !res.data.length) return fallback;
+        return res.data.map(function (r) {
+          return {
+            id: r.id, type: r.type, emoji: r.icon_emoji || '⭐',
+            a: r.line1, b: r.line2 || '', desc: r.description || '',
+            verb: r.verb || 'Completed',
+            how: Array.isArray(r.how_to_earn) ? r.how_to_earn : [],
+            image_url: r.image_url || null,
+            media: r.media, template: r.template, accent: r.accent
+          };
+        });
+      })
+      .catch(function () { return fallback; });
+  }
+
   return {
     BADGES: BADGES, TYPE_LABEL: TYPE_LABEL,
     ageFromBirthdate: ageFromBirthdate, numberWord: numberWord,
-    esc: esc, makeClient: makeClient
+    esc: esc, makeClient: makeClient, loadBadges: loadBadges
   };
 })();
