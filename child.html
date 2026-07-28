@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=9" />
+<link rel="stylesheet" href="styles.css?v=10" />
 <style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -100,9 +100,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js?v=9"></script>
-<script src="js/app.js?v=9"></script>
-<script src="js/covers.js?v=9"></script>
+<script src="js/supabase-config.js?v=10"></script>
+<script src="js/app.js?v=10"></script>
+<script src="js/covers.js?v=10"></script>
 <script>
   (function () {
     var client = GLOWE.makeClient();
@@ -114,7 +114,7 @@
 
     var BADGES = [];       // loaded from the admin-managed catalog (with fallback)
     var statusById = {};   // badge_id -> 'new'|'progress'|'earned'
-    var child = null, ageWord = '';
+    var child = null, ageWord = '', childMonths = null;
     var filter = 'all', currentId = null;
     var memoriesByBadge = {};  // badge_id -> [memory rows]
     var photoByBadge = {};     // badge_id -> signed URL of first image (for the book)
@@ -196,6 +196,7 @@
     function renderHeader() {
       var age = GLOWE.ageFromBirthdate(child.birthdate);
       ageWord = age != null ? GLOWE.numberWord(age) : '';
+      childMonths = GLOWE.ageMonthsFromBirthdate(child.birthdate);
       document.getElementById('child-name').textContent = child.name;
       document.getElementById('child-avatar').textContent = (child.name || '?').trim().charAt(0).toUpperCase();
       document.getElementById('child-age').textContent = age != null ? ('Adventure Year · age ' + age) : 'Adventure Year';
@@ -226,14 +227,24 @@
         '<div class="bs-info"><div class="bs-title"><span class="a">' + b.a + '</span><span class="b">' + b.b + '</span></div><div class="bs-div"></div><p>' + GLOWE.esc(b.desc) + '</p></div>' +
         '<div class="bs-ribbon">' + ribbon(b) + '</div></div>';
     }
-    function render() {
-      grid.innerHTML = BADGES.filter(function (b) { return filter === 'all' || b.type === filter; }).map(card).join('');
+    // Age-eligibility (uses actual months, not broad labels). Private badges are
+    // parent-initiated only, so they don't appear on the child's wall.
+    function eligible(b) {
+      if (b.sensitivity === 'private') return false;
+      if (childMonths == null) return true;
+      if (b.min_age_months != null && childMonths < b.min_age_months) return false;
+      if (b.max_age_months != null && childMonths > b.max_age_months) return false;
+      return true;
     }
-    function earnedCount() { return BADGES.filter(function (b) { return statusOf(b) === 'earned'; }).length; }
+    function visibleBadges() { return BADGES.filter(eligible); }
+    function render() {
+      grid.innerHTML = visibleBadges().filter(function (b) { return filter === 'all' || b.type === filter; }).map(card).join('');
+    }
     function updateProgress() {
-      var e = earnedCount(), total = BADGES.length;
+      var vis = visibleBadges();
+      var e = vis.filter(function (b) { return statusOf(b) === 'earned'; }).length, total = vis.length || 1;
       document.getElementById('book-bar').style.width = (e / total * 100) + '%';
-      document.getElementById('progress-label').innerHTML = '<strong>' + e + ' of ' + total + ' badges earned</strong> · ' + e + ' book pages so far';
+      document.getElementById('progress-label').innerHTML = '<strong>' + e + ' of ' + vis.length + ' badges earned</strong> · this year for age ' + (childMonths != null ? Math.floor(childMonths / 12) : '—');
     }
 
     function setStatus(badgeId, status) {

@@ -35,6 +35,14 @@ window.GLOWE = (function () {
     return age >= 0 ? age : null;
   }
   function numberWord(n) { return (n != null && WORDS[n]) ? WORDS[n] : String(n); }
+  function ageMonthsFromBirthdate(bd) {
+    if (!bd) return null;
+    var d = new Date(bd + 'T00:00:00'); if (isNaN(d)) return null;
+    var now = new Date();
+    var m = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
+    if (now.getDate() < d.getDate()) m--;
+    return m >= 0 ? m : 0;
+  }
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -71,7 +79,18 @@ window.GLOWE = (function () {
             image_url: r.image_url || null,
             image_new: r.image_new || null,
             image_progress: r.image_progress || null,
-            media: r.media, template: r.template, accent: r.accent
+            media: r.media, template: r.template, accent: r.accent,
+            // catalog fields (from the 360 master catalog)
+            category: r.category || null,
+            min_age_months: r.min_age_months, max_age_months: r.max_age_months,
+            age_stage: r.age_stage || null,
+            sensitivity: r.sensitivity || 'standard',
+            repeatable: !!r.repeatable, cadence: r.cadence || 'once',
+            season: r.season || 'any', featured: !!r.featured,
+            book_priority: r.book_priority != null ? r.book_priority : 5,
+            estimated_minutes: r.estimated_minutes, parent_effort: r.parent_effort || null,
+            prompt: r.prompt || null, photo_prompt: r.photo_prompt || null,
+            voice_prompt: r.voice_prompt || null, journal_prompt: r.journal_prompt || null
           };
         });
       })
@@ -80,7 +99,7 @@ window.GLOWE = (function () {
 
   return {
     BADGES: BADGES, TYPE_LABEL: TYPE_LABEL,
-    ageFromBirthdate: ageFromBirthdate, numberWord: numberWord,
-    esc: esc, makeClient: makeClient, loadBadges: loadBadges
+    ageFromBirthdate: ageFromBirthdate, ageMonthsFromBirthdate: ageMonthsFromBirthdate,
+    numberWord: numberWord, esc: esc, makeClient: makeClient, loadBadges: loadBadges
   };
 })();
