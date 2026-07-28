@@ -22,6 +22,9 @@ window.GLOWE_COVERS = (function () {
     { x: 80, y: 24, s: 15, r: 0 }, { x: 14, y: 55, s: 13, r: 0 }, { x: 86, y: 57, s: 13, r: 0 }
   ];
   var THEMES = [
+    { id: 'classic', name: 'Classic', bg: 'linear-gradient(165deg,#FDFBF4,#F6F0E2)', ink: '#243B6B', accent: '#F25F5C',
+      shapes: ['star','heart','spark','flower','dot','star','heart','dot','spark','flower','dot','star'],
+      colors: ['#F4C542','#F25F5C','#4EA8DE','#F4C542','#5CB85C','#243B6B','#F25F5C','#4EA8DE','#F4C542','#5CB85C','#F25F5C','#F4C542'] },
     { id: 'starlight', name: 'Starlight', bg: 'radial-gradient(circle at 50% 18%, #2c3f73, #182543 72%)', ink: '#FFF8F0', accent: '#F4C542',
       shapes: ['star','spark','moon','dot','star','spark','dot','star','spark','dot','star','spark'],
       colors: ['#F4C542','#FCFCFA','#F4C542','#4EA8DE','#FCFCFA','#F4C542','#F4C542','#FCFCFA','#F4C542','#4EA8DE','#F4C542','#FCFCFA'] },

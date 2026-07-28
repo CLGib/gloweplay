@@ -1862,27 +1862,38 @@
   .sp-photo.has-img { padding: 0; overflow: hidden; }
   .sp-photo.has-img img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* ─── Themed book cover ─── */
-  .cover { position: relative; width: min(430px, 94%); margin: 0 auto; aspect-ratio: 3 / 3.9; border: 2px solid var(--ink); border-radius: 8px 18px 18px 8px; box-shadow: 0 12px 0 var(--ink); overflow: hidden; padding: 26px 22px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  /* ─── Themed book cover (matches the keepsake reference) ─── */
+  .cover { position: relative; width: min(460px, 96%); margin: 0 auto; aspect-ratio: 1 / 1.06; border: 2px solid var(--ink); border-radius: 6px 16px 16px 6px; box-shadow: 0 12px 0 var(--ink); overflow: hidden; }
   .cover .cd { position: absolute; z-index: 0; pointer-events: none; }
   .cover .cd svg { width: 100%; height: 100%; display: block; }
-  .cover > *:not(.cd) { position: relative; z-index: 1; }
-  .cv-logo { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 7px; opacity: 0.92; }
-  .cv-logo-mark { width: 22px; height: 22px; border-radius: 50%; border: 2px solid currentColor; display: grid; place-items: center; font-family: 'Fraunces', serif; font-size: 12px; font-weight: 600; }
-  .cv-title { margin-top: 12px; }
-  .cv-yw { display: block; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; }
-  .cv-age { display: block; font-family: 'Fraunces', serif; font-weight: 500; font-style: italic; font-size: clamp(46px, 15vw, 74px); line-height: 1; margin-top: 2px; }
-  .cv-dates { font-family: 'Nunito', sans-serif; font-size: 11px; letter-spacing: 0.05em; opacity: 0.85; margin-top: 6px; }
-  .cv-collage { position: relative; flex: 1; width: 100%; margin: 12px 0 6px; }
-  .cv-photo { position: absolute; background: #fff; border: 1px solid rgba(0,0,0,0.14); padding: 5px 5px 9px; box-shadow: 0 7px 16px -7px rgba(0,0,0,0.45); }
-  .cv-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .cv-photo.empty { display: grid; place-items: center; background: rgba(255,255,255,0.55); border: 1.5px dashed rgba(0,0,0,0.28); box-shadow: none; }
-  .cv-photo.empty span { font-size: 9.5px; font-weight: 800; color: rgba(0,0,0,0.45); text-transform: uppercase; letter-spacing: 0.08em; }
-  .cv-draw { width: 46%; aspect-ratio: 1 / 1.05; left: 27%; top: 3%; transform: rotate(-4deg); }
-  .cv-p1 { width: 34%; aspect-ratio: 1 / 1.1; left: 1%; top: 40%; transform: rotate(-9deg); }
-  .cv-p2 { width: 34%; aspect-ratio: 1 / 1.1; left: 64%; top: 45%; transform: rotate(8deg); }
-  .cv-p3 { width: 32%; aspect-ratio: 1 / 1.1; left: 34%; top: 58%; transform: rotate(3deg); }
-  .cv-name { font-family: 'Caveat', cursive; font-weight: 700; font-size: 28px; }
+  .cv-splash { position: absolute; right: -5%; bottom: -6%; width: 40%; height: 34%; border-radius: 50%; background: radial-gradient(circle at 42% 42%, var(--a, #4EA8DE), transparent 66%); opacity: 0.32; filter: blur(3px); z-index: 0; }
+  .cv-logo { position: absolute; top: 18px; left: 0; right: 0; text-align: center; z-index: 4; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .cv-logo .cv-sun { color: var(--sun-deep); }
+
+  .cv-center { position: absolute; top: 53%; left: 50%; transform: translate(-50%, -50%); width: 62%; text-align: center; z-index: 2; }
+  .cv-title { font-family: 'Fraunces', serif; }
+  .cv-the { display: block; font-size: clamp(20px, 4.5vw, 30px); font-weight: 400; line-height: 1; }
+  .cv-year { display: block; font-weight: 600; font-size: clamp(44px, 12vw, 70px); line-height: 0.9; }
+  .cv-yw2 { display: block; font-size: clamp(22px, 5.5vw, 36px); font-weight: 400; line-height: 1.05; }
+  .cv-age { display: block; font-family: 'Fraunces', serif; font-weight: 700; font-size: clamp(58px, 18vw, 100px); line-height: 0.86; margin-top: 2px; }
+  .cv-sub { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; line-height: 1.5; margin: 12px auto 0; max-width: 24ch; opacity: 0.92; }
+  .cv-hr { color: var(--coral); font-size: 13px; margin: 6px 0 4px; }
+  .cv-dates { font-family: 'Nunito', sans-serif; font-size: 11px; letter-spacing: 0.04em; opacity: 0.85; }
+
+  .cv-circle { position: absolute; top: 5%; right: 5%; width: 24%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 7px 16px -7px rgba(0,0,0,0.45); z-index: 3; }
+  .cv-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .cv-circle.empty { display: grid; place-items: center; background: rgba(255,255,255,0.55); }
+  .cv-draw { position: absolute; top: 15%; left: 1%; width: 27%; transform: rotate(-3deg); z-index: 2; }
+  .cv-draw img { width: 100%; display: block; border-radius: 4px; }
+  .cv-draw.empty { aspect-ratio: 1 / 1; border: 2px dashed rgba(0,0,0,0.22); border-radius: 8px; display: grid; place-items: center; }
+  .cv-draw.empty span, .cv-circle.empty span, .cv-poly.empty .lbl { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.5; }
+  .cv-poly { position: absolute; background: #fff; padding: 6px 6px 11px; box-shadow: 0 9px 18px -8px rgba(0,0,0,0.5); z-index: 3; }
+  .cv-poly img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+  .cv-poly.empty { display: grid; place-items: center; aspect-ratio: 1 / 1.1; }
+  .cv-poly1 { left: 3%; bottom: 5%; width: 30%; transform: rotate(-5deg); }
+  .cv-poly2 { right: 2%; top: 40%; width: 27%; transform: rotate(6deg); }
+  .cv-tape { position: absolute; top: -7px; left: 50%; transform: translateX(-50%) rotate(-4deg); width: 46%; height: 15px; background: rgba(244,197,66,0.55); border-radius: 2px; z-index: 4; }
+  @media (max-width: 480px) { .cv-center { width: 66%; } }
 
   .cover-toolbar { max-width: 560px; margin: 20px auto 0; display: flex; flex-direction: column; gap: 12px; align-items: center; }
   .cover-toolbar.mem-busy { opacity: 0.6; pointer-events: none; }

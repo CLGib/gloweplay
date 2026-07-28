@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=10" />
+<link rel="stylesheet" href="styles.css?v=11" />
 <style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -100,9 +100,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js?v=10"></script>
-<script src="js/app.js?v=10"></script>
-<script src="js/covers.js?v=10"></script>
+<script src="js/supabase-config.js?v=11"></script>
+<script src="js/app.js?v=11"></script>
+<script src="js/covers.js?v=11"></script>
 <script>
   (function () {
     var client = GLOWE.makeClient();
@@ -485,30 +485,44 @@
       var f = function (x) { return x.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); };
       return f(start) + ' – ' + f(end);
     }
-    function coverSlot(url, cls, label) {
-      return url ? '<div class="cv-photo ' + cls + '"><img src="' + e(url) + '" alt=""></div>'
-                 : '<div class="cv-photo ' + cls + ' empty"><span>' + label + '</span></div>';
+    function cvCircle(url) {
+      return url ? '<div class="cv-circle"><img src="' + e(url) + '" alt=""></div>'
+                 : '<div class="cv-circle empty"><span>📷</span></div>';
+    }
+    function cvDraw(url) {
+      return url ? '<div class="cv-draw"><img src="' + e(url) + '" alt=""></div>'
+                 : '<div class="cv-draw empty"><span>✏️ drawing</span></div>';
+    }
+    function cvPoly(url, cls) {
+      return '<div class="cv-poly ' + cls + (url ? '' : ' empty') + '"><span class="cv-tape"></span>' +
+        (url ? '<img src="' + e(url) + '" alt="">' : '<span class="lbl">📷 photo</span>') + '</div>';
     }
     function renderCover() {
-      var th = window.GLOWE_COVERS.byId(child.cover_theme || 'starlight');
-      return '<div class="cover" style="background:' + th.bg + ';color:' + th.ink + '">' +
+      var th = window.GLOWE_COVERS.byId(child.cover_theme || 'classic');
+      var light = th.ink && th.ink.toUpperCase().indexOf('FFF') > -1;   // light ink = dark background
+      var pal = light ? ['#F4C542','#4EA8DE','#F25F5C','#FCFCFA','#5CB85C']
+                      : ['#F25F5C','#243B6B','#4EA8DE','#F4C542','#5CB85C'];
+      var age = ageWord || '…';
+      var ageSize = age.length >= 8 ? 'clamp(32px,9vw,56px)' : (age.length >= 5 ? 'clamp(40px,11vw,72px)' : 'clamp(56px,17vw,96px)');
+      var ageHtml = age.split('').map(function (ch, i) { return '<span style="color:' + pal[i % pal.length] + '">' + e(ch) + '</span>'; }).join('');
+      return '<div class="cover' + (light ? ' cover-dark' : '') + '" style="background:' + th.bg + ';color:' + th.ink + '">' +
         window.GLOWE_COVERS.doodles(th) +
-        '<div class="cv-logo"><span class="cv-logo-mark">G</span> Glowe Play</div>' +
-        '<div class="cv-title"><span class="cv-yw">The Year You Were</span>' +
-          '<span class="cv-age" style="color:' + th.accent + '">' + e(ageWord || '…') + '</span></div>' +
-        '<div class="cv-dates">' + e(coverDates()) + '</div>' +
-        '<div class="cv-collage">' +
-          coverSlot(coverArt.drawing, 'cv-draw', '✏️ drawing') +
-          coverSlot(coverArt.photos[0], 'cv-p1', '📷 photo') +
-          coverSlot(coverArt.photos[1], 'cv-p2', '📷 photo') +
-          coverSlot(coverArt.photos[2], 'cv-p3', '📷 photo') +
+        '<span class="cv-splash" style="--a:' + th.accent + '"></span>' +
+        '<div class="cv-logo"><span class="cv-sun">☀︎</span> Glowe Play</div>' +
+        cvCircle(coverArt.photos[0]) + cvDraw(coverArt.drawing) +
+        cvPoly(coverArt.photos[1], 'cv-poly1') + cvPoly(coverArt.photos[2], 'cv-poly2') +
+        '<div class="cv-center">' +
+          '<div class="cv-title"><span class="cv-the">The</span><span class="cv-year">Year</span>' +
+            '<span class="cv-yw2">You Were</span><span class="cv-age" style="font-size:' + ageSize + '">' + ageHtml + '</span></div>' +
+          '<p class="cv-sub">A year of adventures, laughter &amp; little moments that made you, you.</p>' +
+          '<div class="cv-hr">♥</div>' +
+          '<div class="cv-dates">' + e(coverDates()) + '</div>' +
         '</div>' +
-        '<div class="cv-name">' + e(child.name) + '</div>' +
       '</div>';
     }
     function renderThemePicker() {
       var wrap = document.getElementById('cv-themes'); if (!wrap) return;
-      var cur = child.cover_theme || 'starlight';
+      var cur = child.cover_theme || 'classic';
       wrap.innerHTML = window.GLOWE_COVERS.THEMES.map(function (t) {
         return '<button type="button" class="cv-swatch' + (t.id === cur ? ' active' : '') + '" data-theme="' + t.id + '" title="' + t.name + '" style="background:' + t.bg + '"><span style="color:' + t.accent + '">' + window.GLOWE_COVERS.svg(t.shapes[0], t.accent) + '</span></button>';
       }).join('');
