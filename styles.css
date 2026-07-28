@@ -1743,3 +1743,86 @@
   .bm-badge.bm-badge-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .fp-badge.fp-badge-img { border: none; box-shadow: none; width: 132px; height: 132px; }
   .fp-badge.fp-badge-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+  /* ─── Book: two-page spreads (match the keepsake design) ─── */
+  #sec-book .flipbook { max-width: 900px; }
+  .flip-cover {
+    max-width: 460px; margin: 0 auto; aspect-ratio: 4 / 4.6;
+    background: linear-gradient(160deg, #FFF3D0, var(--cream-deep));
+    border: 2px solid var(--ink); border-radius: 8px 20px 20px 8px; box-shadow: 0 12px 0 var(--ink);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; position: relative; padding: 40px;
+  }
+  .flip-cover::before { content: ''; position: absolute; left: 10px; top: 12px; bottom: 12px; width: 2px; background: var(--line); }
+
+  .spread {
+    display: grid; grid-template-columns: 1fr 1fr;
+    background: var(--white); border: 2px solid var(--ink); border-radius: 10px;
+    box-shadow: 0 12px 0 var(--ink); overflow: hidden; min-height: 470px;
+  }
+  .spread-full { grid-template-columns: 1fr; }
+  .pg { padding: 30px 30px; display: flex; flex-direction: column; gap: 12px; position: relative; }
+  .spread .pg-l { border-right: 1px solid var(--line); }
+  .pg-center { align-items: center; text-align: center; justify-content: center; }
+  .pg-navy { background: var(--ink); color: var(--cream); }
+  .pg-full { padding: 36px 34px; }
+
+  .sp-kicker { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-soft); }
+  .sp-kicker.coral { color: var(--coral); }
+  .hrt { color: var(--coral); }
+  .sp-chapter-title { font-family: 'Fraunces', serif; font-size: 34px; font-weight: 400; line-height: 1.02; }
+  .sp-sun { color: var(--sun-deep); font-size: 20px; }
+  .sp-mini { font-size: 40px; margin-top: auto; }
+  .sp-hand { font-family: 'Caveat', cursive; font-size: 22px; line-height: 1.15; color: var(--ink); }
+  .sp-hand-lg { font-family: 'Caveat', cursive; font-size: 30px; line-height: 1.1; color: var(--ink); }
+
+  .sp-q { font-family: 'Fraunces', serif; font-size: 21px; line-height: 1.15; }
+  .sp-a { font-family: 'Caveat', cursive; font-size: 23px; line-height: 1.15; color: var(--coral-deep); border-left: 2px solid var(--sun); padding-left: 12px; }
+  .sp-q2 { font-size: 13px; font-weight: 700; color: var(--ink-soft); margin-top: 8px; }
+  .sp-a2 { font-family: 'Caveat', cursive; font-size: 22px; color: var(--ink); }
+
+  .sp-photo { flex: 1; min-height: 150px; border-radius: 10px; background: linear-gradient(150deg, var(--cream-deep), #E8DCC0); display: grid; place-items: center; }
+  .sp-photo span { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(36,59,107,0.45); }
+
+  .sp-draw { border: 2px dashed var(--line); border-radius: 10px; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: 34px; color: var(--ink-soft); }
+  .sp-draw.tall { min-height: 230px; flex: 1; }
+  .sp-draw span { font-size: 12px; font-weight: 700; }
+  .sp-caption { font-family: 'Fraunces', serif; font-size: 16px; text-align: center; }
+  .sp-date { font-family: 'Nunito', sans-serif; font-size: 12px; color: var(--ink-soft); }
+  .sp-note { font-family: 'Caveat', cursive; font-size: 21px; line-height: 1.2; color: var(--ink); }
+
+  .sp-h { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; text-align: center; }
+  .sp-bubbles { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 26px; margin-top: 14px; }
+  .sp-bubble { border: 1.5px solid var(--line); border-radius: 50%/38%; padding: 22px 20px; text-align: center; font-family: 'Caveat', cursive; font-size: 21px; line-height: 1.1; color: var(--ink); }
+  .sp-bubble span { display: block; margin-top: 8px; font-family: 'Nunito', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint, var(--ink-soft)); }
+
+  .fav-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+  .fav-tag { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; padding: 4px 10px; border-radius: 6px 6px 6px 0; margin-bottom: 10px; }
+  .fav-tag.green { background: var(--mint); } .fav-tag.blue { background: var(--bay); }
+  .fav-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .fav-col li { font-size: 13px; font-weight: 600; color: var(--ink); }
+
+  .sp-birthday { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 400; }
+  .sp-stats { list-style: none; display: flex; flex-direction: column; gap: 11px; margin-top: 6px; }
+  .sp-stats li { font-size: 15px; color: var(--ink); }
+  .sp-stats b { color: var(--coral); font-weight: 700; margin-right: 6px; }
+  .sp-stats .fill { color: var(--ink-faint, var(--ink-soft)); font-style: italic; font-size: 13px; }
+
+  .sp-sign { font-family: 'Caveat', cursive; font-size: 40px; color: var(--plum, var(--ink)); margin: 4px 0 18px; }
+  .sp-qr { width: 84px; height: 84px; border-radius: 10px; background: repeating-conic-gradient(var(--ink) 0% 25%, #fff 0% 50%) 50%/16px 16px; border: 3px solid var(--ink); }
+
+  .sp-letter { font-family: 'Caveat', cursive; font-size: 24px; line-height: 1.25; color: var(--ink); }
+  .sp-end { font-family: 'Fraunces', serif; font-size: 24px; line-height: 1.2; color: var(--cream); }
+  .sp-end em { color: var(--sun); font-style: italic; }
+  .sp-see { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sun); }
+
+  .sp-badge { width: 120px; height: 120px; border-radius: 50%; overflow: hidden; }
+  .sp-badge img { width: 100%; height: 100%; object-fit: contain; }
+  .sp-badge-css { display: grid; place-items: center; background: linear-gradient(180deg, #0D1530, #1B2440); border: 5px solid var(--bay); font-size: 46px; }
+  .sp-badge-css.type-milestone { border-color: var(--sun-deep); }
+  .sp-badge-css.type-tradition { border-color: var(--coral); }
+
+  @media (max-width: 720px) {
+    .spread { grid-template-columns: 1fr; }
+    .spread .pg-l { border-right: none; border-bottom: 1px solid var(--line); }
+    .sp-bubbles { grid-template-columns: 1fr; }
+  }

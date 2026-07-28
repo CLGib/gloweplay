@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=5" />
+<link rel="stylesheet" href="styles.css?v=6" />
 <style> body.auth-pending .app-wrap { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -82,7 +82,17 @@
 
         <div class="row2">
           <div class="auth-field"><label for="f-template">Book page template</label>
-            <select id="f-template"><option value="portrait">Portrait</option><option value="photo-spotlight">Photo Spotlight</option><option value="quote">Quote</option><option value="collage">Collage</option></select>
+            <select id="f-template">
+              <option value="badge">Adventure earned (badge)</option>
+              <option value="chapter">Chapter</option>
+              <option value="interview">Interview / conversation</option>
+              <option value="masterpiece">Masterpiece (drawing)</option>
+              <option value="quotes">Funny quotes</option>
+              <option value="favorites">Favorites (start vs end)</option>
+              <option value="birthday">Birthday chapter</option>
+              <option value="signature">Draw yourself &amp; sign</option>
+              <option value="letter">Letter to future you</option>
+            </select>
           </div>
           <div class="auth-field"><label for="f-accent">Accent</label>
             <select id="f-accent"><option value="auto">Auto (by type)</option><option value="#4EA8DE">Teal</option><option value="#F4C542">Gold</option><option value="#F25F5C">Red</option><option value="#5CB85C">Green</option></select>

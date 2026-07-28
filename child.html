@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=5" />
+<link rel="stylesheet" href="styles.css?v=6" />
 <style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -244,38 +244,99 @@
     tabBadges.addEventListener('click', showBadges);
     tabBook.addEventListener('click', showBook);
 
-    // ── Flip book ──
+    // ── Flip book ── each earned badge becomes a two-page spread, laid out
+    // by its template. Real photos/answers get filled in as families collect
+    // them; until then we show elegant placeholders.
     var pages = [], pageIdx = 0;
+    var e = GLOWE.esc;
+    function nm() { return e((child.name || '').split(' ')[0] || 'You'); }
+    function photo(label) { return '<div class="sp-photo"><span>' + (label || 'Your photo here') + '</span></div>'; }
+    function badgeArt(b) {
+      return b.image_url
+        ? '<div class="sp-badge"><img src="' + e(b.image_url) + '" alt=""></div>'
+        : '<div class="sp-badge sp-badge-css type-' + b.type + '"><span>' + b.emoji + '</span></div>';
+    }
+
+    function spread(b) {
+      var t = b.template || 'badge';
+      switch (t) {
+        case 'chapter': return (
+          '<div class="pg pg-l pg-chapter"><span class="sp-kicker">Chapter</span>' +
+            '<h3 class="sp-chapter-title">' + e(b.a) + '<br>' + e(b.b) + '</h3><span class="sp-sun">☀︎</span>' +
+            '<div class="sp-mini">🏡</div><p class="sp-hand">' + e(b.desc) + ' <span class="hrt">♥</span></p></div>' +
+          '<div class="pg pg-r">' + photo() + '</div>');
+        case 'interview': return (
+          '<div class="pg pg-l"><span class="sp-kicker">Our conversation</span>' +
+            '<p class="sp-q">If you could build anything in the world, what would it be?</p>' +
+            '<p class="sp-a">“I&rsquo;d build a treehouse with four slides, a snack elevator, and a room just for reading.”</p>' +
+            '<p class="sp-q2">Who would live there?</p><p class="sp-a2">Only me, my family, and giraffes.</p></div>' +
+          '<div class="pg pg-r">' + photo() + '</div>');
+        case 'masterpiece': return (
+          '<div class="pg pg-l pg-center"><span class="sp-kicker">Your masterpiece</span>' +
+            '<div class="sp-draw">🎨<span>Your drawing</span></div>' +
+            '<p class="sp-caption"><strong>My Dream Treehouse</strong><br><span class="sp-date">this year</span></p></div>' +
+          '<div class="pg pg-r"><span class="sp-kicker coral">Love note from a grown-up</span>' +
+            '<p class="sp-note">This year I noticed how confident you&rsquo;ve become. You try new things without hesitating, and you always have the best ideas. <span class="hrt">♥</span></p>' +
+            photo('a favorite photo') + '</div>');
+        case 'quotes': return (
+          '<div class="pg pg-full"><h3 class="sp-h">Funny Things ' + nm() + ' Said</h3>' +
+            '<div class="sp-bubbles">' +
+              '<div class="sp-bubble">“I don&rsquo;t trust ducks.”<span>September</span></div>' +
+              '<div class="sp-bubble">“Broccoli has feelings. We just don&rsquo;t listen.”<span>November</span></div>' +
+              '<div class="sp-bubble">“I&rsquo;m not tired. I&rsquo;m just closing my eyes.”<span>October</span></div>' +
+              '<div class="sp-bubble">“When I grow up, I&rsquo;m going to have a snack store.”<span>January</span></div>' +
+            '</div></div>');
+        case 'favorites': return (
+          '<div class="pg pg-l"><h3 class="sp-h">Your Favorites</h3><div class="fav-cols">' +
+            '<div class="fav-col"><span class="fav-tag green">Start of the year</span><ul>' +
+              '<li>🎨 Color: Purple</li><li>🍝 Food: Pasta</li><li>🦈 Animal: Shark</li><li>🎵 Song: Old Town Road</li></ul></div>' +
+            '<div class="fav-col"><span class="fav-tag blue">End of the year</span><ul>' +
+              '<li>🎨 Color: Blue</li><li>🍉 Food: Watermelon</li><li>🐴 Animal: Horses</li><li>🎵 Song: Cruel Summer</li></ul></div>' +
+          '</div></div>' +
+          '<div class="pg pg-r pg-center"><p class="sp-hand-lg">You changed, you grew, you amazed us. <span class="hrt">♥</span></p>' + photo() + '</div>');
+        case 'birthday': return (
+          '<div class="pg pg-l"><span class="sp-kicker coral">Birthday chapter</span>' +
+            '<h3 class="sp-birthday">You Are ' + e(ageWord || '…') + '</h3><ul class="sp-stats">' +
+              '<li><b>Age</b> ' + e(GLOWE.ageFromBirthdate(child.birthdate) || '—') + '</li>' +
+              '<li><b>Height</b> <span class="fill">to add</span></li><li><b>Favorite food</b> <span class="fill">to add</span></li>' +
+              '<li><b>Dream job</b> <span class="fill">to add</span></li><li><b>Best friend</b> <span class="fill">to add</span></li>' +
+              '<li><b>Favorite joke</b> <span class="fill">to add</span></li></ul></div>' +
+          '<div class="pg pg-r">' + photo('a birthday photo') + '</div>');
+        case 'signature': return (
+          '<div class="pg pg-l pg-center"><span class="sp-kicker">Draw yourself</span>' +
+            '<div class="sp-draw tall">✏️<span>Your self-portrait</span></div></div>' +
+          '<div class="pg pg-r pg-center"><span class="sp-kicker">Your signature</span>' +
+            '<div class="sp-sign">' + nm() + ' <span class="hrt">♥</span></div>' +
+            '<span class="sp-kicker">Your voice</span><p class="sp-note">Scan to hear what you sound like this year.</p>' +
+            '<div class="sp-qr">▦</div></div>');
+        case 'letter': return (
+          '<div class="pg pg-l"><span class="sp-kicker coral">A letter to future you</span>' +
+            '<p class="sp-letter">Dear Future Me,<br>I hope you still like animals and drawing. I hope you have a pet giraffe one day.<br><br>Don&rsquo;t forget to be kind.<br><br>Love,<br>' + nm() + ' <span class="hrt">♥</span></p></div>' +
+          '<div class="pg pg-r pg-navy pg-center"><p class="sp-end">The end of this year is just the <em>beginning of your story.</em></p><span class="sp-see">See you next birthday! ✦</span></div>');
+        default: /* badge — Adventure Earned */ return (
+          '<div class="pg pg-l pg-center"><span class="sp-kicker">' + e(b.verb === 'Answered' ? 'Tradition kept!' : (b.verb === 'Captured' ? 'Milestone captured!' : 'Adventure earned!')) + '</span>' +
+            badgeArt(b) + '<p class="sp-hand" style="margin-top:16px">You did something epic!</p></div>' +
+          '<div class="pg pg-r">' + photo() + '<p class="sp-hand">' + e(b.desc) + ' <span class="hrt">♥</span></p></div>');
+      }
+    }
+
     function buildBook() {
-      pages = [];
-      pages.push({ kind: 'cover' });
-      BADGES.filter(function (b) { return statusOf(b) === 'earned'; }).forEach(function (b) { pages.push({ kind: 'badge', b: b }); });
-      pages.push({ kind: 'end' });
+      pages = [{ kind: 'cover' }];
+      BADGES.filter(function (b) { return statusOf(b) === 'earned'; }).forEach(function (b) { pages.push({ kind: 'spread', b: b }); });
       if (pageIdx >= pages.length) pageIdx = pages.length - 1;
       renderPage();
     }
     function renderPage() {
       var stage = document.getElementById('flip-stage'), p = pages[pageIdx], html = '';
       if (p.kind === 'cover') {
-        html = '<div class="flip-page cover">' +
-          '<span class="fp-eyebrow">A Glowe Play Keepsake</span>' +
-          '<div class="fp-cover-title">The Year You Were<br><em>' + GLOWE.esc(ageWord || '…') + '</em></div>' +
-          '<div class="fp-cover-name">' + GLOWE.esc(child.name) + '</div></div>';
-      } else if (p.kind === 'badge') {
-        var art = p.b.image_url
-          ? '<div class="fp-badge fp-badge-img"><img src="' + GLOWE.esc(p.b.image_url) + '" alt="" /></div>'
-          : '<div class="fp-badge type-' + p.b.type + '"><div class="bm-scene"><span>' + p.b.emoji + '</span></div></div>';
-        html = '<div class="flip-page">' + art +
-          '<span class="fp-eyebrow">' + GLOWE.TYPE_LABEL[p.b.type] + ' · ' + p.b.verb + '</span>' +
-          '<h3 class="fp-title">' + GLOWE.esc(p.b.a + ' ' + p.b.b) + '</h3>' +
-          '<p class="fp-text">' + GLOWE.esc(p.b.desc) + '</p></div>';
+        html = '<div class="flip-cover"><span class="fp-eyebrow">A Glowe Play Keepsake</span>' +
+          '<div class="fp-cover-title">The Year You Were<br><em>' + e(ageWord || '…') + '</em></div>' +
+          '<div class="fp-cover-name">' + e(child.name) + '</div></div>';
       } else {
-        html = '<div class="flip-page end">' +
-          '<p class="fp-end">The end of this year is just the <em>beginning of your story.</em></p>' +
-          '<span class="fp-eyebrow">See you next birthday ✦</span></div>';
+        html = '<div class="spread' + ((p.b.template || 'badge') === 'quotes' ? ' spread-full' : '') + '">' + spread(p.b) + '</div>';
       }
       stage.innerHTML = html;
-      document.getElementById('flip-count').textContent = 'Page ' + (pageIdx + 1) + ' of ' + pages.length;
+      document.getElementById('flip-count').textContent = pageIdx === 0 ? 'Cover' : ('Page ' + pageIdx + ' of ' + (pages.length - 1));
       document.getElementById('flip-prev').disabled = pageIdx === 0;
       document.getElementById('flip-next').disabled = pageIdx === pages.length - 1;
     }
