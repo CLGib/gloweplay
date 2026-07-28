@@ -39,13 +39,17 @@
       <div>
         <span class="hero-eyebrow">A birthday tradition · Launching soon</span>
         <h1>Remember who they were <span class="glow">this year.</span></h1>
-        <p class="hero-sub">From one birthday to the next, complete meaningful family adventures, capture everyday moments, and receive a beautiful hardcover book celebrating the year they were six, seven, eight…</p>
+        <p class="hero-sub">Complete simple family adventures, then save their photos, drawings, answers, and voice through the year — and receive a beautiful hardcover book on their next birthday.</p>
+        <p class="hero-reassure"><strong>Welcome kit</strong> · <strong>a private way to collect memories</strong> · <strong>one hardcover book a year</strong></p>
 
         <form class="hero-form" data-waitlist novalidate>
-          <input type="email" name="email" placeholder="Your email address" aria-label="Email address" required />
+          <label for="hero-email" class="sr-only">Email address</label>
+          <input id="hero-email" type="email" name="email" placeholder="Your email address" required autocomplete="email" aria-describedby="hero-email-err" />
+          <input type="text" name="hp_company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <button type="submit" class="btn-primary">Get early access →</button>
         </form>
-        <div class="form-success" data-success><span class="tick">✓</span> You're on the list! We'll be in touch before the first birthday.</div>
+        <p class="form-error" data-error id="hero-email-err" role="alert" hidden>Please enter a valid email address.</p>
+        <div class="form-success" data-success><span class="tick">✓</span> You're on the list! We'll send launch details, founding-family pricing, and your early-access invitation when we open.</div>
         <p class="hero-note">Be first to start the tradition. No spam — just a note when we open.</p>
 
         <a href="#inside" class="btn-secondary">Preview the book ↓</a>
@@ -53,7 +57,7 @@
 
       <div class="hero-visual" aria-hidden="true">
         <!-- Drop the real cover at images/book-cover.png and it replaces the CSS book automatically -->
-        <img class="book-img" src="images/book-cover.png" alt="" onerror="this.remove()" />
+        <img class="book-img" src="images/book-cover.png" width="722" height="766" fetchpriority="high" alt="The Glowe Play hardcover keepsake book, titled 'The Year You Were Six'." onerror="this.remove()" />
         <div class="book">
           <div class="book-spine"><span>Glowe Play</span></div>
           <div class="book-photo">😊</div>
@@ -269,13 +273,13 @@
   <section class="block" id="kit">
     <div class="block-head">
       <span class="section-num">04 — What's in the kit</span>
-      <h2>It's not an app. It's a <em>welcome kit</em> on your doorstep.</h2>
-      <p class="section-lead">Glowe Play arrives as a beautiful box — everything you need to start your adventure year, made to keep long after it ends.</p>
+      <h2>It starts with a <em>welcome kit</em> — not another app demanding your attention.</h2>
+      <p class="section-lead">Glowe Play arrives as a beautiful box on your doorstep. A private digital space is there whenever you want to save a moment — the technology stays in the background; your family stays at the center.</p>
     </div>
 
     <div class="kit-layout">
       <!-- Drop the real kit photo at images/kit.png to feature it here -->
-      <img class="kit-photo" src="images/kit.png" alt="" onerror="this.remove()" />
+      <img class="kit-photo" src="images/kit.png" width="1126" height="1122" loading="lazy" alt="The Glowe Play welcome kit — hardcover book, Adventure Passport, badge stickers, memory pouch, door hanger, and welcome cards." onerror="this.remove()" />
       <div class="kit-grid">
         <div class="kit-item reveal">
           <span class="kit-ico navy">📦</span>
@@ -317,7 +321,7 @@
       <p class="section-lead">Every page is designed to feel like opening something precious. Here's what's inside each year.</p>
     </div>
     <!-- Real interior spreads (images/book-inside.png); falls back to the previews below -->
-    <img class="spreads-img" src="images/book-inside.png" alt="A selection of interior spreads from a Glowe Play keepsake book" onerror="this.remove()" />
+    <img class="spreads-img" src="images/book-inside.png" width="2758" height="1804" loading="lazy" alt="A selection of interior spreads from a Glowe Play keepsake book — a birthday chapter, an interview, artwork, favorite things, and a letter to future you." onerror="this.remove()" />
     <div class="spreads">
 
       <article class="pg reveal">
@@ -461,7 +465,7 @@
       <ul class="includes">
         <li><span class="check">✓</span> Birthday Conversation</li>
         <li><span class="check">✓</span> Family Adventure Collection</li>
-        <li><span class="check">✓</span> Unlimited Photos</li>
+        <li><span class="check">✓</span> Photos, all year long</li>
         <li><span class="check">✓</span> Child Drawings</li>
         <li><span class="check">✓</span> Parent Reflections</li>
         <li><span class="check">✓</span> Voice Memories</li>
@@ -480,32 +484,56 @@
     </div>
     <div class="faq-list">
       <details class="faq-item">
-        <summary>Can I add multiple children?<span class="plus"></span></summary>
-        <div class="answer">Yes. Each child gets their own year, their own adventures, and their own book — so every kid ends up with a shelf that's truly theirs.</div>
+        <summary>Is this physical, digital, or both?<span class="plus"></span></summary>
+        <div class="answer">Both — and the physical part leads. It starts with a welcome kit on your doorstep. A simple, private digital space lets you save photos, drawings, answers, and voice memories through the year. At your child's next birthday, it all becomes a hardcover book.</div>
       </details>
       <details class="faq-item">
-        <summary>What if we miss an adventure?<span class="plus"></span></summary>
-        <div class="answer">There's no pressure and no penalty. The adventures are a menu, not a checklist — do the ones that fit your year, and the book celebrates what you actually did together.</div>
+        <summary>What do I receive right away?<span class="plus"></span></summary>
+        <div class="answer">Your welcome kit ships to your door — the Adventure Passport, badge stickers, memory pouch, door hanger, welcome guide, and a few surprise extras. Everything you need to begin on day one.</div>
       </details>
       <details class="faq-item">
-        <summary>How many adventures are there?<span class="plus"></span></summary>
-        <div class="answer">Dozens, across every season — from rainbow hunts to backyard campouts to acts of kindness. New ones are added throughout the year.</div>
+        <summary>Do I need to keep up with an app?<span class="plus"></span></summary>
+        <div class="answer">No. There's a private digital space you open only when you want to save a moment — the technology stays in the background; your family stays at the center.</div>
       </details>
       <details class="faq-item">
-        <summary>Can grandparents participate?<span class="plus"></span></summary>
-        <div class="answer">Absolutely. Grandparents (and anyone you invite) can add photos, voice memories, and notes to your child's year.</div>
+        <summary>How often do we do an adventure, and how long do they take?<span class="plus"></span></summary>
+        <div class="answer">As often as you like — there's no schedule and no pressure. Most adventures take minutes, not hours: a rainbow hunt, a batch of cookies, a bedtime question. The point is time together, not a big production.</div>
       </details>
       <details class="faq-item">
-        <summary>Can I buy previous years?<span class="plus"></span></summary>
-        <div class="answer">Starting a little late is completely fine. You can begin with this year and, when we launch, build backward to capture the ages you've already lived.</div>
+        <summary>How are voice memories added?<span class="plus"></span></summary>
+        <div class="answer">Right from your phone in the private digital space — tap record and it's saved to your child's year. A QR code in the finished book plays it back, so you can hear exactly how they sounded that year.</div>
       </details>
       <details class="faq-item">
-        <summary>What ages is this best for?<span class="plus"></span></summary>
-        <div class="answer">It shines from the toddler years through the tween years — any age where a child is growing and changing faster than you can hold on to.</div>
+        <summary>Does AI write my child's story? Can I edit it?<span class="plus"></span></summary>
+        <div class="answer">No. Glowe Play is hand-curated, not automated. Your book is built from your family's own words, photos, and drawings — the real things your child said and made. You review and approve everything before it's printed.</div>
       </details>
       <details class="faq-item">
-        <summary>Can I reorder books?<span class="plus"></span></summary>
-        <div class="answer">Yes — order extra hardcover copies anytime for grandparents, co-parents, or keepsakes.</div>
+        <summary>Who owns our photos and recordings?<span class="plus"></span></summary>
+        <div class="answer">You do. Your family's memories belong to your family — private by default, never sold, and yours to export or delete anytime. Our privacy policy will spell this out in full before we start collecting anything.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Is the hardcover book included in the price?<span class="plus"></span></summary>
+        <div class="answer">Yes. One annual membership includes your welcome kit, the full year of adventures, and one hardcover book. Full details — including shipping — will be confirmed before launch.</div>
+      </details>
+      <details class="faq-item">
+        <summary>How much is a second child?<span class="plus"></span></summary>
+        <div class="answer">Each child gets their own membership, their own adventures, and their own book, so every kid ends up with a shelf that's truly theirs. Founding-family pricing for additional children will be shared before launch.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What if we miss several months?<span class="plus"></span></summary>
+        <div class="answer">No problem, and no penalty. Your book celebrates what you actually did — a lighter year is still a beautiful book. You can pick right back up whenever life allows.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can separated or divorced parents collaborate privately?<span class="plus"></span></summary>
+        <div class="answer">Yes. You control who's invited to your child's year — grandparents, co-parents, anyone you choose — and collaboration can stay private between households.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Is it suitable for children with disabilities or limited speech?<span class="plus"></span></summary>
+        <div class="answer">Yes. A child's year can be captured through photos, drawings, favorite things, and a parent's own reflections — never dependent on speech. Every child's story deserves to be told.</div>
+      </details>
+      <details class="faq-item">
+        <summary>When does it launch?<span class="plus"></span></summary>
+        <div class="answer">We haven't set a public date yet. Join the waitlist and founding families will be the first to hear — with early access and launch pricing.</div>
       </details>
     </div>
   </section>
@@ -516,10 +544,13 @@
     <h2>One day they'll be too big to hold your hand. You'll always have <span class="underline">this book.</span></h2>
     <p>Join the waitlist and be first to start your child's adventure when we open.</p>
     <form class="hero-form" data-waitlist novalidate>
-      <input type="email" name="email" placeholder="Your email address" aria-label="Email address" required />
-      <button type="submit" class="btn-primary">Start your child's adventure →</button>
+      <label for="cta-email" class="sr-only">Email address</label>
+      <input id="cta-email" type="email" name="email" placeholder="Your email address" required autocomplete="email" aria-describedby="cta-email-err" />
+      <input type="text" name="hp_company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <button type="submit" class="btn-primary">Join the founding family list →</button>
     </form>
-    <div class="form-success" data-success><span class="tick">✓</span> You're on the list! We'll be in touch before the first birthday.</div>
+    <p class="form-error" data-error id="cta-email-err" role="alert" hidden>Please enter a valid email address.</p>
+    <div class="form-success" data-success><span class="tick">✓</span> You're on the list! We'll send launch details, founding-family pricing, and your early-access invitation when we open.</div>
     <p class="hero-note">Founding families get early access &amp; launch pricing.</p>
   </section>
 
@@ -555,7 +586,7 @@
     </div>
     <div class="footer-bottom">
       <span>© 2026 Glowe Play</span>
-      <span>Hosted by <a href="https://cg-co.com" rel="noopener noreferrer">CG &amp; Co</a></span>
+      <span>Hosted by <a href="https://cg-co.com" target="_blank" rel="noopener noreferrer">CG &amp; Co</a></span>
       <span>Coming soon ✦</span>
     </div>
   </footer>
@@ -563,23 +594,72 @@
 </div>
 
 <script>
-  // Waitlist forms — client-side success state.
-  // TODO: wire the fetch() below to your email provider (Mailchimp, ConvertKit,
-  // Formspree, etc.) to actually store the address.
+  // ── Waitlist forms ────────────────────────────────────────────────
+  // REQUIRED BEFORE LAUNCH: set WAITLIST_ENDPOINT to a real endpoint that
+  // stores the email (Formspree/Mailchimp/ConvertKit/Klaviyo/serverless).
+  // While it is empty, the form does NOT collect anything — it shows an
+  // error instead of a false success, so no lead is silently lost.
+  var WAITLIST_ENDPOINT = ''; // e.g. 'https://formspree.io/f/xxxxxxx'
+
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   document.querySelectorAll('form[data-waitlist]').forEach(function (form) {
+    var input = form.querySelector('input[type="email"]');
+    var honeypot = form.querySelector('input.hp');
+    var button = form.querySelector('button[type="submit"]');
+    var wrap = form.parentElement;
+    var errorEl = wrap.querySelector('[data-error]');
+    var successEl = wrap.querySelector('[data-success]');
+    var buttonLabel = button ? button.textContent : '';
+
+    function showError(msg) {
+      if (errorEl) { errorEl.textContent = msg; errorEl.hidden = false; }
+      input.setAttribute('aria-invalid', 'true');
+      input.focus();
+    }
+    function clearError() {
+      if (errorEl) errorEl.hidden = true;
+      input.removeAttribute('aria-invalid');
+    }
+    input.addEventListener('input', clearError);
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var input = form.querySelector('input[type="email"]');
-      if (!input.value || !input.checkValidity()) {
-        input.focus();
+      clearError();
+
+      // Silently accept bot submissions (honeypot) without doing anything.
+      if (honeypot && honeypot.value) return;
+
+      var email = (input.value || '').trim();
+      if (!EMAIL_RE.test(email)) {
+        showError('Please enter a valid email address.');
         return;
       }
-      // Example endpoint hookup:
-      // fetch('/api/waitlist', { method: 'POST', headers: {'Content-Type':'application/json'},
-      //   body: JSON.stringify({ email: input.value }) });
-      var success = form.parentElement.querySelector('[data-success]');
-      form.style.display = 'none';
-      if (success) success.classList.add('show');
+
+      // No endpoint configured yet — fail loudly rather than fake success.
+      if (!WAITLIST_ENDPOINT) {
+        showError('Sign-ups aren’t open just yet. Please check back soon!');
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = 'Joining…';
+
+      fetch(WAITLIST_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email: email, source: 'waitlist' })
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error('bad status ' + res.status);
+          form.hidden = true;
+          if (successEl) successEl.classList.add('show');
+        })
+        .catch(function () {
+          button.disabled = false;
+          button.textContent = buttonLabel;
+          showError('Something went wrong — please try again.');
+        });
     });
   });
 

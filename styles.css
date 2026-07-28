@@ -259,8 +259,10 @@
     align-items: center;
   }
   @media (max-width: 940px) {
-    .hero-grid { grid-template-columns: 1fr; gap: 44px; }
-    .hero-visual { order: -1; }
+    .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+    /* Copy + signup stay first on mobile; the book follows below the CTA. */
+    .hero-visual { order: 1; min-height: 0; }
+    .book, .book-img { width: min(320px, 82%); }
   }
 
   .hero h1 {
@@ -1333,3 +1335,57 @@
     .reveal { opacity: 1; transform: none; transition: none; }
     * { scroll-behavior: auto; animation: none !important; }
   }
+
+  /* ─── Accessibility & form states ─── */
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .hp {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px; height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .form-error {
+    color: var(--coral-deep);
+    font-size: 14px;
+    font-weight: 700;
+    margin: -4px 0 16px;
+    max-width: 500px;
+  }
+  .final .form-error { margin-left: auto; margin-right: auto; }
+  .hero-form input[aria-invalid="true"] {
+    border-color: var(--coral-deep);
+    box-shadow: 0 0 0 3px rgba(242, 95, 92, 0.16);
+  }
+  .hero-form button:disabled { opacity: 0.75; cursor: default; transform: none; }
+  .hero-form[hidden] { display: none; }
+
+  .hero-reassure {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: -16px 0 32px;
+    line-height: 1.5;
+  }
+  .hero-reassure strong { color: var(--ink); font-weight: 700; }
+  .final .hero-reassure { max-width: 46ch; margin-left: auto; margin-right: auto; }
+
+  /* Visible keyboard focus for all interactive elements */
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible,
+  input:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  .nav-cta:focus-visible,
+  .btn-primary:focus-visible { outline-offset: 4px; }
