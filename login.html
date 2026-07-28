@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Log in — Glowe Play</title>
+<meta name="description" content="Log in to your Glowe Play demo account." />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">
+      <a href="index.html">
+        <div class="logo-mark">G</div>
+        Glowe Play <span class="tag">/ keepsakes</span>
+      </a>
+    </div>
+    <div class="nav-right">
+      <a href="index.html" class="nav-cta">← Home</a>
+    </div>
+  </div>
+</nav>
+
+<main class="auth-main">
+  <div class="auth-card">
+    <div class="auth-config-warn" id="config-warn" hidden>
+      ⚠️ Demo login isn't connected yet. Add your Supabase URL &amp; anon key in <code>js/supabase-config.js</code>.
+    </div>
+
+    <h1 id="auth-title">Welcome back</h1>
+    <p class="auth-sub" id="auth-sub">Log in to your Glowe Play demo account.</p>
+
+    <div class="auth-tabs" role="tablist">
+      <button class="auth-tab active" id="tab-login" type="button" role="tab" aria-selected="true">Log in</button>
+      <button class="auth-tab" id="tab-signup" type="button" role="tab" aria-selected="false">Create account</button>
+    </div>
+
+    <form id="auth-form" novalidate>
+      <div class="auth-field">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+      </div>
+      <div class="auth-field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="••••••••" minlength="6" />
+      </div>
+      <button type="submit" class="btn-primary" id="submit-btn">Log in →</button>
+    </form>
+
+    <div class="auth-msg" id="auth-msg" role="alert" aria-live="polite"></div>
+
+    <p class="auth-alt" id="auth-alt">
+      New here? <a href="#" id="switch-link">Create an account</a>
+    </p>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script>
+  (function () {
+    var cfg = window.GLOWE_SUPABASE || {};
+    var configured = cfg.url && cfg.anonKey &&
+      cfg.url.indexOf("YOUR_SUPABASE") === -1 && cfg.anonKey.indexOf("YOUR_SUPABASE") === -1;
+
+    var msg = document.getElementById('auth-msg');
+    var form = document.getElementById('auth-form');
+    var submitBtn = document.getElementById('submit-btn');
+    var emailEl = document.getElementById('email');
+    var passwordEl = document.getElementById('password');
+    var tabLogin = document.getElementById('tab-login');
+    var tabSignup = document.getElementById('tab-signup');
+    var title = document.getElementById('auth-title');
+    var sub = document.getElementById('auth-sub');
+    var alt = document.getElementById('auth-alt');
+    var switchLink = document.getElementById('switch-link');
+
+    var mode = 'login'; // or 'signup'
+
+    if (!configured) {
+      document.getElementById('config-warn').hidden = false;
+      submitBtn.disabled = true;
+    }
+
+    var client = configured
+      ? window.supabase.createClient(cfg.url, cfg.anonKey)
+      : null;
+
+    // If already logged in, go straight to the dashboard.
+    if (client) {
+      client.auth.getSession().then(function (res) {
+        if (res.data && res.data.session) { window.location.href = 'dashboard.html'; }
+      });
+    }
+
+    function showMsg(text, kind) {
+      msg.textContent = text;
+      msg.className = 'auth-msg show ' + (kind || '');
+    }
+    function clearMsg() { msg.className = 'auth-msg'; msg.textContent = ''; }
+
+    function setMode(next) {
+      mode = next;
+      var isLogin = mode === 'login';
+      tabLogin.classList.toggle('active', isLogin);
+      tabSignup.classList.toggle('active', !isLogin);
+      tabLogin.setAttribute('aria-selected', String(isLogin));
+      tabSignup.setAttribute('aria-selected', String(!isLogin));
+      title.textContent = isLogin ? 'Welcome back' : 'Create your account';
+      sub.textContent = isLogin
+        ? 'Log in to your Glowe Play demo account.'
+        : 'Set up a demo account to explore Glowe Play.';
+      submitBtn.textContent = isLogin ? 'Log in →' : 'Create account →';
+      passwordEl.setAttribute('autocomplete', isLogin ? 'current-password' : 'new-password');
+      alt.innerHTML = isLogin
+        ? 'New here? <a href="#" id="switch-link">Create an account</a>'
+        : 'Already have an account? <a href="#" id="switch-link">Log in</a>';
+      bindSwitch();
+      clearMsg();
+    }
+
+    function bindSwitch() {
+      var link = document.getElementById('switch-link');
+      if (link) link.addEventListener('click', function (e) {
+        e.preventDefault();
+        setMode(mode === 'login' ? 'signup' : 'login');
+      });
+    }
+
+    tabLogin.addEventListener('click', function () { setMode('login'); });
+    tabSignup.addEventListener('click', function () { setMode('signup'); });
+    bindSwitch();
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!client) return;
+      clearMsg();
+
+      var email = emailEl.value.trim();
+      var password = passwordEl.value;
+      if (!email || !emailEl.checkValidity()) { showMsg('Please enter a valid email address.', 'error'); emailEl.focus(); return; }
+      if (!password || password.length < 6) { showMsg('Password must be at least 6 characters.', 'error'); passwordEl.focus(); return; }
+
+      submitBtn.disabled = true;
+      var original = submitBtn.textContent;
+      submitBtn.textContent = mode === 'login' ? 'Logging in…' : 'Creating…';
+
+      var op = mode === 'login'
+        ? client.auth.signInWithPassword({ email: email, password: password })
+        : client.auth.signUp({ email: email, password: password });
+
+      op.then(function (res) {
+        if (res.error) { showMsg(res.error.message, 'error'); return; }
+        if (mode === 'signup' && res.data && !res.data.session) {
+          // Email confirmation is on for this project.
+          showMsg('Account created! Check your email to confirm, then log in.', 'ok');
+          setMode('login');
+          return;
+        }
+        window.location.href = 'dashboard.html';
+      }).catch(function (err) {
+        showMsg((err && err.message) || 'Something went wrong. Please try again.', 'error');
+      }).finally(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = original;
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
