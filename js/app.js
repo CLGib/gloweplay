@@ -69,6 +69,8 @@ window.GLOWE = (function () {
             verb: r.verb || 'Completed',
             how: Array.isArray(r.how_to_earn) ? r.how_to_earn : [],
             image_url: r.image_url || null,
+            image_new: r.image_new || null,
+            image_progress: r.image_progress || null,
             media: r.media, template: r.template, accent: r.accent
           };
         });

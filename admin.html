@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=6" />
+<link rel="stylesheet" href="styles.css?v=7" />
 <style> body.auth-pending .app-wrap { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -110,11 +110,27 @@
       </form>
 
       <aside class="edit-preview">
-        <h3>Badge image</h3>
-        <div class="badge-art" id="art-preview"><span id="art-empty">No image yet</span></div>
-        <button type="button" class="btn-primary blue" id="gen-badge">✨ Generate badge image</button>
-        <p class="art-note">Uses the Gemini generator (Vercel function <code>/api/generate-badge</code>) with the Glowe Play badge style rules. Requires <code>GEMINI_API_KEY</code> set in Vercel.</p>
-        <div class="auth-field" style="margin-top:14px"><label for="f-image">…or paste an image URL</label><input id="f-image" placeholder="https://…/badge.png" /></div>
+        <h3>Badge art · 3 states</h3>
+        <div class="art-states">
+          <div class="art-state">
+            <span class="art-label">Not started</span>
+            <div class="badge-art sm" id="art-new"><span>—</span></div>
+            <button type="button" class="art-gen" data-state="new">Generate</button>
+          </div>
+          <div class="art-state">
+            <span class="art-label">In progress</span>
+            <div class="badge-art sm" id="art-progress"><span>—</span></div>
+            <button type="button" class="art-gen" data-state="progress">Generate</button>
+          </div>
+          <div class="art-state">
+            <span class="art-label">Completed</span>
+            <div class="badge-art sm" id="art-earned"><span>—</span></div>
+            <button type="button" class="art-gen" data-state="earned">Generate</button>
+          </div>
+        </div>
+        <button type="button" class="btn-primary blue" id="gen-all">✨ Generate all three</button>
+        <p class="art-note">Gemini generates each state in the Glowe Play badge style (locked / in-progress / completed). Requires <code>GEMINI_API_KEY</code> set in Vercel. ~15s each.</p>
+        <input type="hidden" id="f-image-new" /><input type="hidden" id="f-image-progress" /><input type="hidden" id="f-image" />
         <p class="auth-msg" id="gen-msg" role="alert" aria-live="polite"></p>
       </aside>
     </div>
@@ -131,8 +147,8 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js?v=6"></script>
-<script src="js/app.js?v=6"></script>
+<script src="js/supabase-config.js?v=7"></script>
+<script src="js/app.js?v=7"></script>
 <script>
   (function () {
     var client = GLOWE.makeClient();
@@ -187,11 +203,14 @@
       document.querySelectorAll('.f-media').forEach(function (c) { c.checked = (arr || []).indexOf(c.value) !== -1; });
     }
     function getMedia() { return Array.prototype.filter.call(document.querySelectorAll('.f-media'), function (c) { return c.checked; }).map(function (c) { return c.value; }); }
-    function setArt(url) {
-      var p = document.getElementById('art-preview');
-      p.innerHTML = url ? '<img src="' + GLOWE.esc(url) + '" alt="badge preview" />' : '<span id="art-empty">No image yet</span>';
-      document.getElementById('f-image').value = url || '';
+    function stateEl(s) { return s === 'new' ? 'art-new' : (s === 'progress' ? 'art-progress' : 'art-earned'); }
+    function stateInput(s) { return s === 'new' ? 'f-image-new' : (s === 'progress' ? 'f-image-progress' : 'f-image'); }
+    function setArt(state, url) {
+      var p = document.getElementById(stateEl(state));
+      p.innerHTML = url ? '<img src="' + GLOWE.esc(url) + '" alt="" />' : '<span>—</span>';
+      document.getElementById(stateInput(state)).value = url || '';
     }
+    function setAllArt(b) { setArt('new', b.image_new || ''); setArt('progress', b.image_progress || ''); setArt('earned', b.image_url || ''); }
     function fillForm(b) {
       b = b || {};
       document.getElementById('edit-title').textContent = b.id ? 'Edit badge' : 'New badge';
@@ -210,7 +229,7 @@
       document.getElementById('f-scene').value = b.scene_prompt || '';
       document.getElementById('f-sort').value = b.sort_order != null ? b.sort_order : 0;
       document.getElementById('f-active').checked = b.is_active !== false;
-      setArt(b.image_url || '');
+      setAllArt(b);
       document.getElementById('delete-badge').hidden = !b.id;
       document.getElementById('form-msg').className = 'auth-msg';
       document.getElementById('gen-msg').className = 'auth-msg';
@@ -242,6 +261,8 @@
         scene_prompt: document.getElementById('f-scene').value.trim(),
         sort_order: parseInt(document.getElementById('f-sort').value, 10) || 0,
         is_active: document.getElementById('f-active').checked,
+        image_new: document.getElementById('f-image-new').value.trim() || null,
+        image_progress: document.getElementById('f-image-progress').value.trim() || null,
         image_url: document.getElementById('f-image').value.trim() || null,
         updated_at: new Date().toISOString()
       };
@@ -269,26 +290,41 @@
       client.from('badges').delete().eq('id', editingId).then(function () { showList(); loadBadges(); });
     });
 
-    // ── Generate image via Edge Function ──
-    document.getElementById('gen-badge').addEventListener('click', function () {
-      var msg = document.getElementById('gen-msg'); msg.className = 'auth-msg';
-      var b = collect();
-      if (!b.line1) { msg.textContent = 'Add a title first.'; msg.className = 'auth-msg show error'; return; }
-      var btn = document.getElementById('gen-badge'); btn.disabled = true; var o = btn.textContent; btn.textContent = 'Generating… (~15s)';
-      fetch('/api/generate-badge', {
+    // ── Generate images (per state) via the Vercel function ──
+    function genState(state) {
+      var body = collect(); body.state = state;
+      return fetch('/api/generate-badge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-        body: JSON.stringify(b)
+        body: JSON.stringify(body)
       }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
-        .then(function (res) {
-          if (!res.ok) { msg.textContent = res.d.error || 'Generation failed.'; msg.className = 'auth-msg show error'; return; }
-          setArt(res.d.imageUrl);
-          msg.textContent = 'Generated!'; msg.className = 'auth-msg show ok';
-          document.getElementById('sticky-hint').textContent = '✨ Image ready — click “Save badge” to keep it.';
-        }).catch(function (err) { msg.textContent = 'Could not reach the generator function. Is it deployed? (' + err.message + ')'; msg.className = 'auth-msg show error'; })
-        .finally(function () { btn.disabled = false; btn.textContent = o; });
+        .then(function (res) { if (!res.ok) throw new Error(res.d.error || 'Generation failed.'); setArt(state, res.d.imageUrl); });
+    }
+    function savedHint() { document.getElementById('sticky-hint').textContent = '✨ Art ready — click “Save badge” to keep it.'; }
+
+    document.querySelectorAll('.art-gen').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var st = btn.getAttribute('data-state'), msg = document.getElementById('gen-msg'); msg.className = 'auth-msg';
+        if (!document.getElementById('f-line1').value.trim()) { msg.textContent = 'Add a title first.'; msg.className = 'auth-msg show error'; return; }
+        btn.disabled = true; var o = btn.textContent; btn.textContent = '…';
+        genState(st).then(function () { msg.textContent = 'Generated the ' + st + ' state!'; msg.className = 'auth-msg show ok'; savedHint(); })
+          .catch(function (err) { msg.textContent = err.message; msg.className = 'auth-msg show error'; })
+          .finally(function () { btn.disabled = false; btn.textContent = o; });
+      });
     });
-    document.getElementById('f-image').addEventListener('change', function () { setArt(this.value.trim()); });
+
+    document.getElementById('gen-all').addEventListener('click', function () {
+      var msg = document.getElementById('gen-msg'); msg.className = 'auth-msg';
+      if (!document.getElementById('f-line1').value.trim()) { msg.textContent = 'Add a title first.'; msg.className = 'auth-msg show error'; return; }
+      var btn = this, o = btn.textContent, states = ['new', 'progress', 'earned'], i = 0;
+      btn.disabled = true;
+      (function next() {
+        if (i >= states.length) { btn.disabled = false; btn.textContent = o; msg.textContent = 'All three generated! Click “Save badge” to keep them.'; msg.className = 'auth-msg show ok'; savedHint(); return; }
+        btn.textContent = 'Generating ' + states[i] + '… (' + (i + 1) + '/3)';
+        genState(states[i]).then(function () { i++; next(); })
+          .catch(function (err) { btn.disabled = false; btn.textContent = o; msg.textContent = err.message; msg.className = 'auth-msg show error'; });
+      })();
+    });
   })();
 </script>
 

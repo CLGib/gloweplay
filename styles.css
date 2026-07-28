@@ -1826,3 +1826,14 @@
     .spread .pg-l { border-right: none; border-bottom: 1px solid var(--line); }
     .sp-bubbles { grid-template-columns: 1fr; }
   }
+
+  /* ─── Admin: 3-state badge art ─── */
+  .art-states { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+  .art-state { text-align: center; }
+  .art-label { display: block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); margin-bottom: 6px; }
+  .badge-art.sm { aspect-ratio: 1; margin-bottom: 8px; border-radius: 12px; }
+  .badge-art.sm span { font-size: 16px; }
+  .art-gen { width: 100%; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 12px; padding: 8px 6px; border-radius: 999px; border: 1.5px solid var(--ink); background: var(--cream); color: var(--ink); cursor: pointer; transition: background 0.2s; }
+  .art-gen:hover { background: var(--cream-deep); }
+  .art-gen:disabled { opacity: 0.55; cursor: default; }
+  .edit-preview #gen-all { width: 100%; }

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=6" />
+<link rel="stylesheet" href="styles.css?v=7" />
 <style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -87,8 +87,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js?v=6"></script>
-<script src="js/app.js?v=6"></script>
+<script src="js/supabase-config.js?v=7"></script>
+<script src="js/app.js?v=7"></script>
 <script>
   (function () {
     var client = GLOWE.makeClient();
@@ -163,13 +163,13 @@
       if (s === 'progress') return '<span class="prog-dot"></span> In progress';
       return '✦ Tap to start';
     }
+    function imgFor(b, s) { return s === 'earned' ? b.image_url : (s === 'progress' ? b.image_progress : b.image_new); }
     function card(b) {
-      var s = statusOf(b);
-      // Earned + has generated art → show the illustrated sticker (which already
-      // carries the "Completed" ring). Otherwise the CSS state badge.
-      if (s === 'earned' && b.image_url) {
-        return '<div class="badge-sticker badge-img is-earned" role="button" tabindex="0" data-id="' + b.id + '" aria-label="' + GLOWE.esc(b.a + ' ' + b.b) + ' badge, earned">' +
-          '<img src="' + GLOWE.esc(b.image_url) + '" alt="' + GLOWE.esc(b.a + ' ' + b.b) + '" /></div>';
+      var s = statusOf(b), img = imgFor(b, s);
+      // Show the generated art for this state if it exists; otherwise the CSS badge.
+      if (img) {
+        return '<div class="badge-sticker badge-img is-' + s + '" role="button" tabindex="0" data-id="' + b.id + '" aria-label="' + GLOWE.esc(b.a + ' ' + b.b) + ' badge, ' + s + '">' +
+          '<img src="' + GLOWE.esc(img) + '" alt="' + GLOWE.esc(b.a + ' ' + b.b) + '" /></div>';
       }
       return '<div class="badge-sticker type-' + b.type + ' is-' + s + '" role="button" tabindex="0" data-id="' + b.id + '" aria-label="' + b.a + ' ' + b.b + ' badge, ' + s + '">' +
         '<div class="bs-cam">📷</div>' +
@@ -199,10 +199,10 @@
     function openModal(id) {
       var b = BADGES.find(function (x) { return x.id === id; }); if (!b) return;
       currentId = id;
-      var badge = document.getElementById('bm-badge');
-      if (statusOf(b) === 'earned' && b.image_url) {
+      var badge = document.getElementById('bm-badge'), mimg = imgFor(b, statusOf(b));
+      if (mimg) {
         badge.className = 'bm-badge bm-badge-img';
-        badge.innerHTML = '<img src="' + GLOWE.esc(b.image_url) + '" alt="" />';
+        badge.innerHTML = '<img src="' + GLOWE.esc(mimg) + '" alt="" />';
       } else {
         badge.className = 'bm-badge type-' + b.type;
         badge.innerHTML = '<div class="bm-scene"><span>' + b.emoji + '</span></div>';

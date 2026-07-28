@@ -22,6 +22,24 @@ function accentName(type, accent) {
   return "teal";
 }
 
+function stateBits(state) {
+  if (state === "new") return {
+    ribbon: "TAP TO START",
+    check: "a small outline star (not filled)",
+    extra: "Render the whole badge in a soft, muted, slightly desaturated \"not yet earned\" look — lower contrast, like a faded sticker waiting to be earned — but still clearly the same badge.",
+  };
+  if (state === "progress") return {
+    ribbon: "IN PROGRESS",
+    check: "a small half-filled progress ring (not a check mark)",
+    extra: "Use slightly softened colors to suggest it is underway but not finished. Do NOT show a completed check mark.",
+  };
+  return {
+    ribbon: "ADVENTURE COMPLETED!",
+    check: "a white check-mark circle flanked by two small gold stars",
+    extra: "Full, vibrant, celebratory colors.",
+  };
+}
+
 function buildBadgePrompt(input) {
   const line1 = input.line1 || "";
   const line2 = input.line2 || "";
@@ -29,11 +47,13 @@ function buildBadgePrompt(input) {
   const description = input.description || "";
   const accent = accentName(type, input.accent || "auto");
   const scene = input.scene_prompt || `a friendly flat-illustration scene about "${line1} ${line2}"`;
+  const s = stateBits(input.state || "earned");
   return `Create a single circular achievement badge sticker, flat vector illustration, centered on a plain off-white background. Square image.
 The badge is a perfect circle with a thick ${accent} outer ring and a clean white sticker border with a soft drop shadow.
 Top ~55%: a flat-illustration night scene — ${scene} — set against a deep navy sky with a few small stars and a crescent moon. A small circular ${accent} camera icon chip overlaps the badge at the top-left edge.
 Bottom ~45%: a white panel. Show the title on two lines — "${line1}" in bold navy uppercase, and "${line2}" in ${accent} uppercase beneath it — then a thin divider, then the caption "${description}" in small navy text.
-Along the very bottom, a curved ${accent} banner reads "ADVENTURE COMPLETED!" with a white check-mark circle flanked by two small gold stars.
+Along the very bottom, a curved ${accent} banner reads "${s.ribbon}" with ${s.check}.
+${s.extra}
 Style: modern children's-brand, cheerful, rounded, high detail, crisp flat colors, no photographic elements. Spell all text exactly and correctly. ${PALETTE}`;
 }
 
@@ -103,7 +123,8 @@ module.exports = async function handler(req, res) {
 
   // 4) Upload PNG to Supabase Storage (service role) and return the public URL.
   const buffer = Buffer.from(images[0], "base64");
-  const path = `${slug}-${Date.now().toString(36)}.png`;
+  const state = (body.state || "earned").replace(/[^a-z]/gi, "");
+  const path = `${slug}-${state}-${Date.now().toString(36)}.png`;
   const up = await fetch(`${SUPABASE_URL}/storage/v1/object/badge-art/${path}`, {
     method: "POST",
     headers: { Authorization: `Bearer ${SERVICE}`, apikey: SERVICE, "Content-Type": "image/png", "x-upsert": "true" },
