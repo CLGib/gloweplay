@@ -1903,3 +1903,10 @@
   .cv-swatch { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--ink); cursor: pointer; display: grid; place-items: center; padding: 0; overflow: hidden; }
   .cv-swatch.active { outline: 3px solid var(--coral); outline-offset: 2px; }
   .cv-swatch svg { width: 18px; height: 18px; }
+
+  /* ─── Section 2: real book-spread gallery ─── */
+  .spreads-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .spread-shot { margin: 0; border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 24px 50px -22px rgba(0,0,0,0.65); transition: transform 0.3s ease; }
+  .spread-shot:hover { transform: translateY(-5px); }
+  .spread-shot img { display: block; width: 100%; height: auto; }
+  @media (max-width: 720px) { .spreads-gallery { grid-template-columns: 1fr; gap: 18px; } }
