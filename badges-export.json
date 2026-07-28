@@ -1,0 +1,491 @@
+[
+  {
+    "id": "friend",
+    "line1": "Made a Friend",
+    "line2": "YAY",
+    "type": "adventure",
+    "icon_emoji": "⭐",
+    "description": "Made a Friend",
+    "verb": "Completed",
+    "how_to_earn": [
+      "Make a friend"
+    ],
+    "media": [
+      "photo"
+    ],
+    "template": "signature",
+    "accent": "#4EA8DE",
+    "sort_order": 0,
+    "is_active": true,
+    "image_url": "https://rjufqwngmfnpkigtaukj.supabase.co/storage/v1/object/public/badge-art/friend-earned-ms4zsr1k.png",
+    "image_new": "https://rjufqwngmfnpkigtaukj.supabase.co/storage/v1/object/public/badge-art/friend-new-ms4zsfva.png",
+    "image_progress": "https://rjufqwngmfnpkigtaukj.supabase.co/storage/v1/object/public/badge-art/friend-progress-ms4zslnf.png"
+  },
+  {
+    "id": "big-dreams",
+    "line1": "Big",
+    "line2": "Dreams",
+    "type": "adventure",
+    "icon_emoji": "🏡",
+    "description": "You imagined big, built a little, and dreamt even bigger.",
+    "verb": "Completed",
+    "how_to_earn": [
+      "Dream up something big together",
+      "Add a photo",
+      "Earn your badge"
+    ],
+    "media": [
+      "photo",
+      "text"
+    ],
+    "template": "chapter",
+    "accent": "auto",
+    "sort_order": 5,
+    "is_active": true,
+    "image_url": "https://rjufqwngmfnpkigtaukj.supabase.co/storage/v1/object/public/badge-art/big-dreams-earned-ms5000gf.png",
+    "image_new": "https://rjufqwngmfnpkigtaukj.supabase.co/storage/v1/object/public/badge-art/big-dreams-new-ms4zzbt2.png",
+    "image_progress": "https://rjufqwngmfnpkigtaukj.supabase.co/storage/v1/object/public/badge-art/big-dreams-progress-ms4zzhyp.png"
+  },
+  {
+    "id": "first-tooth",
+    "line1": "First",
+    "line2": "Tooth",
+    "type": "milestone",
+    "icon_emoji": "🦷",
+    "description": "The day a wobbly tooth finally comes out.",
+    "verb": "Captured",
+    "how_to_earn": [
+      "Wait for the big wobble",
+      "Snap a photo of the gap",
+      "Earn your badge"
+    ],
+    "media": [
+      "photo"
+    ],
+    "template": "portrait",
+    "accent": "auto",
+    "sort_order": 10,
+    "is_active": true,
+    "image_url": "https://rjufqwngmfnpkigtaukj.supabase.co/storage/v1/object/public/badge-art/first-tooth-ms4wk0mz.png",
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "our-conversation",
+    "line1": "Our",
+    "line2": "Conversation",
+    "type": "tradition",
+    "icon_emoji": "💬",
+    "description": "A little interview about your big ideas.",
+    "verb": "Answered",
+    "how_to_earn": [
+      "Ask the month's question",
+      "Record the answer",
+      "Earn your badge"
+    ],
+    "media": [
+      "text",
+      "voice"
+    ],
+    "template": "interview",
+    "accent": "auto",
+    "sort_order": 15,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "first-ride",
+    "line1": "First",
+    "line2": "Ride",
+    "type": "milestone",
+    "icon_emoji": "🚲",
+    "description": "Two wheels, no training wheels — you did it!",
+    "verb": "Captured",
+    "how_to_earn": [
+      "Take the training wheels off",
+      "Film your first real ride",
+      "Earn your badge"
+    ],
+    "media": [
+      "photo",
+      "video"
+    ],
+    "template": "photo-spotlight",
+    "accent": "auto",
+    "sort_order": 20,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "masterpiece",
+    "line1": "Your",
+    "line2": "Masterpiece",
+    "type": "milestone",
+    "icon_emoji": "🎨",
+    "description": "A drawing worth framing.",
+    "verb": "Captured",
+    "how_to_earn": [
+      "Make a drawing",
+      "Photograph it",
+      "Add a love note"
+    ],
+    "media": [
+      "drawing",
+      "text"
+    ],
+    "template": "masterpiece",
+    "accent": "auto",
+    "sort_order": 25,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "first-day",
+    "line1": "First",
+    "line2": "Day",
+    "type": "milestone",
+    "icon_emoji": "🎒",
+    "description": "The first morning of a brand-new school year.",
+    "verb": "Captured",
+    "how_to_earn": [
+      "Pack your backpack",
+      "Take a first-day photo",
+      "Earn your badge"
+    ],
+    "media": [
+      "photo"
+    ],
+    "template": "portrait",
+    "accent": "auto",
+    "sort_order": 30,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "grew-up",
+    "line1": "Grew",
+    "line2": "Up",
+    "type": "milestone",
+    "icon_emoji": "🧸",
+    "description": "A little moment that shows how big you got.",
+    "verb": "Captured",
+    "how_to_earn": [
+      "Notice something new you can do",
+      "Add a photo or note",
+      "Earn your badge"
+    ],
+    "media": [
+      "photo",
+      "text"
+    ],
+    "template": "portrait",
+    "accent": "auto",
+    "sort_order": 40,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "rainbow",
+    "line1": "Rainbow",
+    "line2": "Hunter",
+    "type": "adventure",
+    "icon_emoji": "🌈",
+    "description": "Find a rainbow and chase the colors.",
+    "verb": "Completed",
+    "how_to_earn": [
+      "Wait for sun after the rain",
+      "Photograph the rainbow",
+      "Earn your badge"
+    ],
+    "media": [
+      "photo"
+    ],
+    "template": "photo-spotlight",
+    "accent": "auto",
+    "sort_order": 50,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "baker",
+    "line1": "Family",
+    "line2": "Baker",
+    "type": "adventure",
+    "icon_emoji": "🍪",
+    "description": "Bake something together — flour on the nose required.",
+    "verb": "Completed",
+    "how_to_earn": [
+      "Pick a recipe together",
+      "Bake it (and taste it!)",
+      "Earn your badge"
+    ],
+    "media": [
+      "photo"
+    ],
+    "template": "collage",
+    "accent": "auto",
+    "sort_order": 60,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "fort",
+    "line1": "Fort",
+    "line2": "Builder",
+    "type": "adventure",
+    "icon_emoji": "⛺",
+    "description": "Build a blanket fort and camp out inside.",
+    "verb": "Completed",
+    "how_to_earn": [
+      "Gather blankets & pillows",
+      "Build the coziest fort",
+      "Earn your badge"
+    ],
+    "media": [
+      "photo",
+      "video"
+    ],
+    "template": "photo-spotlight",
+    "accent": "auto",
+    "sort_order": 70,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "stargazer",
+    "line1": "Star",
+    "line2": "Gazer",
+    "type": "adventure",
+    "icon_emoji": "🌠",
+    "description": "Look for constellations on a clear, dark night.",
+    "verb": "Completed",
+    "how_to_earn": [
+      "Wait for a clear night",
+      "Spot a constellation",
+      "Earn your badge"
+    ],
+    "media": [
+      "photo",
+      "voice"
+    ],
+    "template": "quote",
+    "accent": "auto",
+    "sort_order": 80,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "kindness",
+    "line1": "Kindness",
+    "line2": "Hero",
+    "type": "adventure",
+    "icon_emoji": "❤️",
+    "description": "Do something kind, just because.",
+    "verb": "Completed",
+    "how_to_earn": [
+      "Spot someone who needs a hand",
+      "Do a kind thing",
+      "Earn your badge"
+    ],
+    "media": [
+      "photo",
+      "text"
+    ],
+    "template": "quote",
+    "accent": "auto",
+    "sort_order": 90,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "birthday",
+    "line1": "Birthday",
+    "line2": "Interview",
+    "type": "tradition",
+    "icon_emoji": "🎂",
+    "description": "The same fun questions, asked every birthday.",
+    "verb": "Answered",
+    "how_to_earn": [
+      "Sit down on your birthday",
+      "Answer the questions",
+      "Earn your badge"
+    ],
+    "media": [
+      "voice",
+      "text"
+    ],
+    "template": "birthday",
+    "accent": "auto",
+    "sort_order": 100,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "year-review",
+    "line1": "Year",
+    "line2": "Review",
+    "type": "tradition",
+    "icon_emoji": "📅",
+    "description": "Look back at everything this year held.",
+    "verb": "Answered",
+    "how_to_earn": [
+      "Wait for the end of your year",
+      "Answer the look-back",
+      "Earn your badge"
+    ],
+    "media": [
+      "text"
+    ],
+    "template": "quote",
+    "accent": "auto",
+    "sort_order": 110,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "story",
+    "line1": "Story",
+    "line2": "Time",
+    "type": "tradition",
+    "icon_emoji": "🎙️",
+    "description": "Tell a story in your own words and your own voice.",
+    "verb": "Answered",
+    "how_to_earn": [
+      "Think up a story",
+      "Record it in your voice",
+      "Earn your badge"
+    ],
+    "media": [
+      "voice"
+    ],
+    "template": "quote",
+    "accent": "auto",
+    "sort_order": 120,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "funny-things",
+    "line1": "Funny",
+    "line2": "Things",
+    "type": "tradition",
+    "icon_emoji": "😄",
+    "description": "The funniest things you said this year.",
+    "verb": "Answered",
+    "how_to_earn": [
+      "Catch a funny quote",
+      "Write it down with the month",
+      "Earn your badge"
+    ],
+    "media": [
+      "text"
+    ],
+    "template": "quotes",
+    "accent": "auto",
+    "sort_order": 205,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "favorites",
+    "line1": "Your",
+    "line2": "Favorites",
+    "type": "tradition",
+    "icon_emoji": "⭐",
+    "description": "How your favorites changed from the start of the year to the end.",
+    "verb": "Answered",
+    "how_to_earn": [
+      "List your favorites",
+      "Compare start vs end of year",
+      "Earn your badge"
+    ],
+    "media": [
+      "text"
+    ],
+    "template": "favorites",
+    "accent": "auto",
+    "sort_order": 215,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "draw-yourself",
+    "line1": "Draw",
+    "line2": "Yourself",
+    "type": "tradition",
+    "icon_emoji": "✏️",
+    "description": "A self-portrait, your signature, and your voice.",
+    "verb": "Answered",
+    "how_to_earn": [
+      "Draw a self-portrait",
+      "Sign your name",
+      "Record your voice"
+    ],
+    "media": [
+      "drawing",
+      "voice"
+    ],
+    "template": "signature",
+    "accent": "auto",
+    "sort_order": 225,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  },
+  {
+    "id": "letter-future",
+    "line1": "Letter to",
+    "line2": "Future You",
+    "type": "tradition",
+    "icon_emoji": "💌",
+    "description": "A note to the person you will become.",
+    "verb": "Answered",
+    "how_to_earn": [
+      "Write a letter to future you",
+      "Add your voice",
+      "Earn your badge"
+    ],
+    "media": [
+      "text",
+      "voice"
+    ],
+    "template": "letter",
+    "accent": "auto",
+    "sort_order": 999,
+    "is_active": true,
+    "image_url": null,
+    "image_new": null,
+    "image_progress": null
+  }
+]

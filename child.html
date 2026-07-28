@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=8" />
+<link rel="stylesheet" href="styles.css?v=9" />
 <style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -68,6 +68,14 @@
         <button class="flip-arrow" id="flip-next" type="button" aria-label="Next page">→</button>
       </div>
     </div>
+    <div class="cover-toolbar" id="cover-toolbar" hidden>
+      <div class="cv-uploads">
+        <label class="mem-upload"><input type="file" accept="image/*" data-cover="drawing" hidden>✏️ Add drawing</label>
+        <label class="mem-upload"><input type="file" accept="image/*" data-cover="photo" hidden>📷 Add photo</label>
+      </div>
+      <span class="cv-themes-label">Cover theme</span>
+      <div class="cv-themes" id="cv-themes"></div>
+    </div>
   </section>
 </main>
 
@@ -92,8 +100,9 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js?v=8"></script>
-<script src="js/app.js?v=8"></script>
+<script src="js/supabase-config.js?v=9"></script>
+<script src="js/app.js?v=9"></script>
+<script src="js/covers.js?v=9"></script>
 <script>
   (function () {
     var client = GLOWE.makeClient();
@@ -109,6 +118,7 @@
     var filter = 'all', currentId = null;
     var memoriesByBadge = {};  // badge_id -> [memory rows]
     var photoByBadge = {};     // badge_id -> signed URL of first image (for the book)
+    var coverArt = { drawing: null, photos: [] };  // signed URLs for the cover
     var MEDIA_META = {
       photo:   { label: 'Photo',          accept: 'image/*', icon: '📷' },
       video:   { label: 'Video',          accept: 'video/*', icon: '🎥' },
@@ -170,6 +180,15 @@
           if (!img) return null;
           return client.storage.from('memories').createSignedUrl(img.url, 3600).then(function (r) { if (r.data && r.data.signedUrl) photoByBadge[bid] = r.data.signedUrl; });
         }).filter(Boolean);
+        // Sign the cover's drawing + photos (badge_id '__cover__').
+        coverArt = { drawing: null, photos: [] };
+        (memoriesByBadge['__cover__'] || []).forEach(function (m) {
+          jobs.push(client.storage.from('memories').createSignedUrl(m.url, 3600).then(function (r) {
+            var u = r.data && r.data.signedUrl; if (!u) return;
+            if (m.kind === 'drawing') { if (!coverArt.drawing) coverArt.drawing = u; }
+            else if (coverArt.photos.length < 3) coverArt.photos.push(u);
+          }));
+        });
         return Promise.all(jobs);
       }).catch(function () { /* memories table not set up yet — ignore */ });
     }
@@ -434,13 +453,9 @@
     }
     function renderPage() {
       var stage = document.getElementById('flip-stage'), p = pages[pageIdx], html = '';
-      if (p.kind === 'cover') {
-        html = '<div class="flip-cover"><span class="fp-eyebrow">A Glowe Play Keepsake</span>' +
-          '<div class="fp-cover-title">The Year You Were<br><em>' + e(ageWord || '…') + '</em></div>' +
-          '<div class="fp-cover-name">' + e(child.name) + '</div></div>';
-      } else {
-        html = '<div class="spread' + ((p.b.template || 'badge') === 'quotes' ? ' spread-full' : '') + '">' + spread(p.b) + '</div>';
-      }
+      var toolbar = document.getElementById('cover-toolbar');
+      if (p.kind === 'cover') { html = renderCover(); toolbar.hidden = false; renderThemePicker(); }
+      else { toolbar.hidden = true; html = '<div class="spread' + ((p.b.template || 'badge') === 'quotes' ? ' spread-full' : '') + '">' + spread(p.b) + '</div>'; }
       stage.innerHTML = html;
       document.getElementById('flip-count').textContent = pageIdx === 0 ? 'Cover' : ('Page ' + pageIdx + ' of ' + (pages.length - 1));
       document.getElementById('flip-prev').disabled = pageIdx === 0;
@@ -448,6 +463,67 @@
     }
     document.getElementById('flip-prev').addEventListener('click', function () { if (pageIdx > 0) { pageIdx--; renderPage(); } });
     document.getElementById('flip-next').addEventListener('click', function () { if (pageIdx < pages.length - 1) { pageIdx++; renderPage(); } });
+
+    // ── Cover (themed, with drawing + photo slots) ──
+    function coverDates() {
+      if (!child.birthdate) return '';
+      var age = GLOWE.ageFromBirthdate(child.birthdate); if (age == null) return '';
+      var d = new Date(child.birthdate + 'T00:00:00');
+      var start = new Date(d); start.setFullYear(d.getFullYear() + age);
+      var end = new Date(start); end.setFullYear(start.getFullYear() + 1); end.setDate(end.getDate() - 1);
+      var f = function (x) { return x.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); };
+      return f(start) + ' – ' + f(end);
+    }
+    function coverSlot(url, cls, label) {
+      return url ? '<div class="cv-photo ' + cls + '"><img src="' + e(url) + '" alt=""></div>'
+                 : '<div class="cv-photo ' + cls + ' empty"><span>' + label + '</span></div>';
+    }
+    function renderCover() {
+      var th = window.GLOWE_COVERS.byId(child.cover_theme || 'starlight');
+      return '<div class="cover" style="background:' + th.bg + ';color:' + th.ink + '">' +
+        window.GLOWE_COVERS.doodles(th) +
+        '<div class="cv-logo"><span class="cv-logo-mark">G</span> Glowe Play</div>' +
+        '<div class="cv-title"><span class="cv-yw">The Year You Were</span>' +
+          '<span class="cv-age" style="color:' + th.accent + '">' + e(ageWord || '…') + '</span></div>' +
+        '<div class="cv-dates">' + e(coverDates()) + '</div>' +
+        '<div class="cv-collage">' +
+          coverSlot(coverArt.drawing, 'cv-draw', '✏️ drawing') +
+          coverSlot(coverArt.photos[0], 'cv-p1', '📷 photo') +
+          coverSlot(coverArt.photos[1], 'cv-p2', '📷 photo') +
+          coverSlot(coverArt.photos[2], 'cv-p3', '📷 photo') +
+        '</div>' +
+        '<div class="cv-name">' + e(child.name) + '</div>' +
+      '</div>';
+    }
+    function renderThemePicker() {
+      var wrap = document.getElementById('cv-themes'); if (!wrap) return;
+      var cur = child.cover_theme || 'starlight';
+      wrap.innerHTML = window.GLOWE_COVERS.THEMES.map(function (t) {
+        return '<button type="button" class="cv-swatch' + (t.id === cur ? ' active' : '') + '" data-theme="' + t.id + '" title="' + t.name + '" style="background:' + t.bg + '"><span style="color:' + t.accent + '">' + window.GLOWE_COVERS.svg(t.shapes[0], t.accent) + '</span></button>';
+      }).join('');
+    }
+    function setCoverTheme(id) {
+      child.cover_theme = id;
+      client.from('children').update({ cover_theme: id }).eq('id', childId).then(function () {});
+      renderPage();
+    }
+    document.getElementById('cv-themes').addEventListener('click', function (ev) {
+      var s = ev.target.closest('.cv-swatch'); if (s) setCoverTheme(s.getAttribute('data-theme'));
+    });
+    function coverUpload(kind, file) {
+      var tb = document.getElementById('cover-toolbar'); tb.classList.add('mem-busy');
+      var ext = ((file.name.split('.').pop()) || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+      var path = childId + '/__cover__/' + kind + '-' + Date.now() + '.' + ext;
+      client.storage.from('memories').upload(path, file, { contentType: file.type || undefined })
+        .then(function (up) { if (up.error) throw up.error; return client.from('memories').insert({ child_id: childId, badge_id: '__cover__', kind: kind, url: path }); })
+        .then(function (r) { if (r.error) throw r.error; return loadMemories(); })
+        .then(function () { renderPage(); })
+        .catch(function (err) { alert('Upload failed: ' + (err.message || err)); })
+        .finally(function () { tb.classList.remove('mem-busy'); });
+    }
+    document.querySelectorAll('[data-cover]').forEach(function (inp) {
+      inp.addEventListener('change', function () { var f = inp.files && inp.files[0]; if (f) coverUpload(inp.getAttribute('data-cover'), f); inp.value = ''; });
+    });
   })();
 </script>
 

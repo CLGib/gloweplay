@@ -1861,3 +1861,34 @@
   /* Real uploaded photo filling a book spread slot */
   .sp-photo.has-img { padding: 0; overflow: hidden; }
   .sp-photo.has-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ─── Themed book cover ─── */
+  .cover { position: relative; width: min(430px, 94%); margin: 0 auto; aspect-ratio: 3 / 3.9; border: 2px solid var(--ink); border-radius: 8px 18px 18px 8px; box-shadow: 0 12px 0 var(--ink); overflow: hidden; padding: 26px 22px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .cover .cd { position: absolute; z-index: 0; pointer-events: none; }
+  .cover .cd svg { width: 100%; height: 100%; display: block; }
+  .cover > *:not(.cd) { position: relative; z-index: 1; }
+  .cv-logo { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13px; display: inline-flex; align-items: center; gap: 7px; opacity: 0.92; }
+  .cv-logo-mark { width: 22px; height: 22px; border-radius: 50%; border: 2px solid currentColor; display: grid; place-items: center; font-family: 'Fraunces', serif; font-size: 12px; font-weight: 600; }
+  .cv-title { margin-top: 12px; }
+  .cv-yw { display: block; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; }
+  .cv-age { display: block; font-family: 'Fraunces', serif; font-weight: 500; font-style: italic; font-size: clamp(46px, 15vw, 74px); line-height: 1; margin-top: 2px; }
+  .cv-dates { font-family: 'Nunito', sans-serif; font-size: 11px; letter-spacing: 0.05em; opacity: 0.85; margin-top: 6px; }
+  .cv-collage { position: relative; flex: 1; width: 100%; margin: 12px 0 6px; }
+  .cv-photo { position: absolute; background: #fff; border: 1px solid rgba(0,0,0,0.14); padding: 5px 5px 9px; box-shadow: 0 7px 16px -7px rgba(0,0,0,0.45); }
+  .cv-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .cv-photo.empty { display: grid; place-items: center; background: rgba(255,255,255,0.55); border: 1.5px dashed rgba(0,0,0,0.28); box-shadow: none; }
+  .cv-photo.empty span { font-size: 9.5px; font-weight: 800; color: rgba(0,0,0,0.45); text-transform: uppercase; letter-spacing: 0.08em; }
+  .cv-draw { width: 46%; aspect-ratio: 1 / 1.05; left: 27%; top: 3%; transform: rotate(-4deg); }
+  .cv-p1 { width: 34%; aspect-ratio: 1 / 1.1; left: 1%; top: 40%; transform: rotate(-9deg); }
+  .cv-p2 { width: 34%; aspect-ratio: 1 / 1.1; left: 64%; top: 45%; transform: rotate(8deg); }
+  .cv-p3 { width: 32%; aspect-ratio: 1 / 1.1; left: 34%; top: 58%; transform: rotate(3deg); }
+  .cv-name { font-family: 'Caveat', cursive; font-weight: 700; font-size: 28px; }
+
+  .cover-toolbar { max-width: 560px; margin: 20px auto 0; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  .cover-toolbar.mem-busy { opacity: 0.6; pointer-events: none; }
+  .cv-uploads { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .cv-themes-label { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+  .cv-themes { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .cv-swatch { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--ink); cursor: pointer; display: grid; place-items: center; padding: 0; overflow: hidden; }
+  .cv-swatch.active { outline: 3px solid var(--coral); outline-offset: 2px; }
+  .cv-swatch svg { width: 18px; height: 18px; }
