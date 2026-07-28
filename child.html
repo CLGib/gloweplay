@@ -87,8 +87,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase-config.js"></script>
-<script src="js/app.js"></script>
+<script src="js/supabase-config.js?v=6"></script>
+<script src="js/app.js?v=6"></script>
 <script>
   (function () {
     var client = GLOWE.makeClient();
@@ -112,6 +112,16 @@
       if (!session) { window.location.replace('login.html'); return; }
       document.getElementById('dash-user').textContent = session.user ? session.user.email : '';
       return loadChild();
+    }).catch(function (err) {
+      // Never leave the page silently blank — reveal it with a message.
+      document.body.classList.remove('auth-pending');
+      var main = document.querySelector('.app-wrap');
+      if (main) {
+        var box = document.createElement('div');
+        box.className = 'app-error';
+        box.textContent = 'Sorry — something went wrong loading this page. Try a hard refresh (Cmd/Ctrl+Shift+R). ' + (err && err.message ? '(' + err.message + ')' : '');
+        main.insertBefore(box, main.firstChild);
+      }
     });
     client.auth.onAuthStateChange(function (_e, s) { if (!s) window.location.replace('login.html'); });
     document.getElementById('signout-btn').addEventListener('click', function () {
