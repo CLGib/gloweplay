@@ -458,20 +458,25 @@
       <h2 style="margin-left:auto; margin-right:auto;">One year. One book. One <em>tradition.</em></h2>
     </div>
     <div class="pricing-card">
-      <div class="tier">Annual Membership</div>
-      <p class="tier-sub">Everything you need for one unforgettable year.</p>
-      <div class="price">$149<span>/year</span></div>
-      <div class="price-note">✦ Founding-member pricing at launch</div>
+      <div class="tier">Adventure Year</div>
+      <p class="tier-sub">Everything one child needs for one unforgettable year.</p>
+      <div class="price">$149<span>/child, per year</span></div>
+      <div class="price-note">✦ Founding-family pricing at launch</div>
       <ul class="includes">
+        <li><span class="check">✓</span> The welcome kit</li>
+        <li><span class="check">✓</span> A full year of adventures</li>
+        <li><span class="check">✓</span> Photo, drawing &amp; voice memory collection</li>
         <li><span class="check">✓</span> Birthday Conversation</li>
-        <li><span class="check">✓</span> Family Adventure Collection</li>
-        <li><span class="check">✓</span> Photos, all year long</li>
-        <li><span class="check">✓</span> Child Drawings</li>
         <li><span class="check">✓</span> Parent Reflections</li>
-        <li><span class="check">✓</span> Voice Memories</li>
         <li><span class="check">✓</span> Beautifully Written Story Pages</li>
-        <li><span class="check">✓</span> Hardcover Memory Book</li>
+        <li><span class="check">✓</span> One hardcover annual book</li>
+        <li><span class="check">✓</span> Standard U.S. shipping</li>
       </ul>
+      <div class="price-fine">
+        <p><strong>Each child gets their own Adventure Year and their own hardcover book.</strong></p>
+        <p>Additional children — <strong>$99 per child, per year</strong>. Extra book copies — pricing coming soon.</p>
+        <p class="renew-note">You won't be charged during the waitlist. When paid enrollment opens, we'll show renewal terms clearly before you ever join — you'll always be in control.</p>
+      </div>
       <a href="#waitlist" class="btn-primary">Join the waitlist →</a>
     </div>
   </section>
@@ -512,12 +517,16 @@
         <div class="answer">You do. Your family's memories belong to your family — private by default, never sold, and yours to export or delete anytime. Our privacy policy will spell this out in full before we start collecting anything.</div>
       </details>
       <details class="faq-item">
-        <summary>Is the hardcover book included in the price?<span class="plus"></span></summary>
-        <div class="answer">Yes. One annual membership includes your welcome kit, the full year of adventures, and one hardcover book. Full details — including shipping — will be confirmed before launch.</div>
+        <summary>What's included, and is the book in the price?<span class="plus"></span></summary>
+        <div class="answer">Yes. It's <strong>$149 per child, per year</strong>, and that includes the welcome kit, a full year of adventures and memory collection, one hardcover annual book, and standard U.S. shipping.</div>
       </details>
       <details class="faq-item">
         <summary>How much is a second child?<span class="plus"></span></summary>
-        <div class="answer">Each child gets their own membership, their own adventures, and their own book, so every kid ends up with a shelf that's truly theirs. Founding-family pricing for additional children will be shared before launch.</div>
+        <div class="answer">Each child gets their own Adventure Year, their own adventures, and their own hardcover book — so every kid ends up with a shelf that's truly theirs. Additional children are <strong>$99 per child, per year</strong>. Extra book copies — pricing coming soon.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Does membership renew automatically?<span class="plus"></span></summary>
+        <div class="answer">Paid enrollment isn't open yet, so no one is charged during the waitlist. When enrollment opens, we'll show renewal terms clearly before you ever join — you'll always be in control.</div>
       </details>
       <details class="faq-item">
         <summary>What if we miss several months?<span class="plus"></span></summary>
@@ -573,8 +582,8 @@
         </div>
         <div>
           <h4>Legal</h4>
-          <a href="#">Privacy</a>
-          <a href="#">Terms</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
         </div>
         <div>
           <h4>Follow</h4>
@@ -603,6 +612,18 @@
 
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+  // Privacy-conscious event tracking. Sends only the event name + a location
+  // label (hero/cta) — never the email or any personal data. Works with
+  // Plausible, GA4 (gtag), or a dataLayer if present; otherwise no-ops.
+  function track(event, props) {
+    props = props || {};
+    try {
+      if (window.plausible) window.plausible(event, { props: props });
+      if (window.gtag) window.gtag('event', event, props);
+      if (window.dataLayer) window.dataLayer.push(Object.assign({ event: event }, props));
+    } catch (e) {}
+  }
+
   document.querySelectorAll('form[data-waitlist]').forEach(function (form) {
     var input = form.querySelector('input[type="email"]');
     var honeypot = form.querySelector('input.hp');
@@ -611,6 +632,11 @@
     var errorEl = wrap.querySelector('[data-error]');
     var successEl = wrap.querySelector('[data-success]');
     var buttonLabel = button ? button.textContent : '';
+    var where = form.closest('.final') ? 'cta' : 'hero';
+    var started = false;
+    input.addEventListener('focus', function () {
+      if (!started) { started = true; track('waitlist_form_start', { location: where }); }
+    });
 
     function showError(msg) {
       if (errorEl) { errorEl.textContent = msg; errorEl.hidden = false; }
@@ -633,6 +659,7 @@
       var email = (input.value || '').trim();
       if (!EMAIL_RE.test(email)) {
         showError('Please enter a valid email address.');
+        track('waitlist_submit_invalid', { location: where });
         return;
       }
 
@@ -644,6 +671,7 @@
 
       button.disabled = true;
       button.textContent = 'Joining…';
+      track('waitlist_submit', { location: where });
 
       fetch(WAITLIST_ENDPOINT, {
         method: 'POST',
@@ -654,11 +682,13 @@
           if (!res.ok) throw new Error('bad status ' + res.status);
           form.hidden = true;
           if (successEl) successEl.classList.add('show');
+          track('waitlist_submit_success', { location: where });
         })
         .catch(function () {
           button.disabled = false;
           button.textContent = buttonLabel;
           showError('Something went wrong — please try again.');
+          track('waitlist_submit_error', { location: where });
         });
     });
   });
