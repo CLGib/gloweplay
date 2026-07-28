@@ -1490,3 +1490,26 @@
   .dash-book-bar span { display: block; height: 100%; background: var(--coral); }
   .dash-book p { font-size: 15px; color: var(--ink-soft); }
   @media (max-width: 680px) { .dash-grid { grid-template-columns: 1fr; } }
+
+  /* ─── Adventure types (Milestones / Adventures / Yearly Traditions) ─── */
+  .adv-type { margin-bottom: 54px; }
+  .adv-type:last-of-type { margin-bottom: 0; }
+  .adv-type-head { margin-bottom: 26px; }
+  .adv-type-kicker {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px; font-weight: 800;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    display: block; margin-bottom: 8px;
+    color: var(--coral);
+  }
+  .adv-type--milestone .adv-type-kicker { color: var(--sun-deep); }
+  .adv-type--adventure .adv-type-kicker { color: var(--bay-deep); }
+  .adv-type--tradition .adv-type-kicker { color: var(--coral); }
+  .adv-type-tag { font-family: 'Fraunces', serif; font-size: clamp(24px, 3.4vw, 34px); font-weight: 500; margin-bottom: 8px; }
+  .adv-type-head p { font-size: 15px; color: var(--ink-soft); max-width: 66ch; }
+  .adv-type .adv-cards { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 900px) { .adv-type .adv-cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .adv-type .adv-cards { grid-template-columns: 1fr; max-width: 320px; margin: 0 auto; } }
+  .adv-more-row { margin-top: 44px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .adv-more-row .adv-more { margin-top: 0; }
+  .adv-more-note { font-size: 14px; color: var(--ink-soft); }
