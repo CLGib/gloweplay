@@ -3,294 +3,597 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Glowe Play — Where Ideas Come to Life</title>
+<title>Glowe Play — Remember Who They Were This Year</title>
+<meta name="description" content="From one birthday to the next, complete meaningful family adventures, capture everyday moments, and receive a beautiful hardcover book celebrating the year they were six, seven, eight… Coming soon." />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<div class="wrap">
-
-  <!-- NAV -->
-  <nav>
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
     <div class="logo">
-      <a href="index.html">
+      <a href="#top">
         <div class="logo-mark">G</div>
-        Glowe Play <span class="tag">/ mobile</span>
+        Glowe Play <span class="tag">/ keepsakes</span>
       </a>
     </div>
-    <div class="nav-links">
-      <a href="#mission">Mission</a>
-      <a href="#framework">Framework</a>
-      <a href="#model">The Model</a>
-      <a href="events.html">Events</a>
-      <a href="apply.html">Apply</a>
-      <a href="partner.html">Partners</a>
-      <a href="#faq">FAQ</a>
+    <div class="nav-right">
+      <span class="nav-soon">Coming Soon</span>
+      <a href="#waitlist" class="nav-cta">Join the waitlist</a>
     </div>
-    <a href="apply.html" class="nav-cta">Apply</a>
-  </nav>
+  </div>
+</nav>
+
+<span id="top"></span>
+
+<div class="wrap">
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="hero-eyebrow">Youth Innovation Challenge · Mobile, AL</div>
-    <h1>Where ideas come to <span class="glow">life.</span></h1>
-
+  <header class="hero">
     <div class="hero-grid">
       <div>
-        <p class="hero-sub">Glowe Play is a hands-on framework that helps kids turn ideas into real projects — through technology, entrepreneurship, and the kind of creative work that doesn't fit on a worksheet.</p>
+        <span class="hero-eyebrow">A birthday tradition · Launching soon</span>
+        <h1>Remember who they were <span class="glow">this year.</span></h1>
+        <p class="hero-sub">From one birthday to the next, complete meaningful family adventures, capture everyday moments, and receive a beautiful hardcover book celebrating the year they were six, seven, eight…</p>
 
-        <ul class="hero-bullets">
-          <li>🌱 Grow Ideas</li>
-          <li>💻 Learn Tech</li>
-          <li>🎨 Own Creativity</li>
-          <li>🤝 Work Together</li>
-          <li>🚀 Execute Projects</li>
-        </ul>
+        <form class="hero-form" data-waitlist novalidate>
+          <input type="email" name="email" placeholder="Your email address" aria-label="Email address" required />
+          <button type="submit" class="btn-primary">Get early access →</button>
+        </form>
+        <div class="form-success" data-success><span class="tick">✓</span> You're on the list! We'll be in touch before the first birthday.</div>
+        <p class="hero-note">Be first to start the tradition. No spam — just a note when we open.</p>
 
-        <div class="hero-cta-row">
-          <a href="apply.html" class="btn-primary">Apply to the challenge →</a>
-          <a href="#model" class="btn-secondary">See the model</a>
-        </div>
+        <a href="#inside" class="btn-secondary">Preview the book ↓</a>
       </div>
 
-      <div class="hero-card">
-        <div>
-          <div class="stack-label">— The Framework</div>
-          <div class="stack">
-            <div class="stack-row"><div class="letter">G</div><div class="word">Grow Ideas</div><div class="desc">think</div></div>
-            <div class="stack-row"><div class="letter">L</div><div class="word">Learn Tech</div><div class="desc">tools</div></div>
-            <div class="stack-row"><div class="letter">O</div><div class="word">Own Creativity</div><div class="desc">design</div></div>
-            <div class="stack-row"><div class="letter">W</div><div class="word">Work Together</div><div class="desc">team</div></div>
-            <div class="stack-row"><div class="letter">E</div><div class="word">Execute</div><div class="desc">build</div></div>
+      <div class="hero-visual" aria-hidden="true">
+        <!-- Drop the real cover at images/book-cover.png and it replaces the CSS book automatically -->
+        <img class="book-img" src="images/book-cover.png" alt="" onerror="this.remove()" />
+        <div class="book">
+          <div class="book-spine"><span>Glowe Play</span></div>
+          <div class="book-photo">😊</div>
+          <span class="doodle d-star">★</span>
+          <span class="doodle d-star2">✦</span>
+          <span class="doodle d-heart">♥</span>
+          <span class="doodle d-heart2">♥</span>
+          <span class="doodle d-flower">🌻</span>
+          <div class="book-brand">Glowe Play <span class="sun">☀</span></div>
+          <div class="book-title">
+            <span class="l1">The</span>
+            <span class="l2">Year You Were</span>
+            <span class="six"><span class="s">S</span><span class="i">i</span><span class="x">x</span></span>
           </div>
+          <p class="book-sub">A year of adventures, laughter &amp; little moments that made you, you.</p>
+          <div class="book-date">July 10, 2024 – July 9, 2025</div>
         </div>
-        <div class="hero-card-foot">play with purpose ↓</div>
+        <div class="chip chip-1"><span class="dot">🎨</span> First fort drawing</div>
+        <div class="chip chip-2 chip-quote">“Ducks can't be trusted.”</div>
+        <div class="chip chip-3"><span class="dot">🌈</span> Rainbow Hunter · earned</div>
       </div>
     </div>
-  </section>
+  </header>
 
   <!-- MARQUEE -->
   <div class="marquee">
     <div class="marquee-track">
-      <span>GROW <em class="star">✦</em> LEARN <em class="star">✦</em> OWN <em class="star">✦</em> WORK <em class="star">✦</em> EXECUTE <em class="star">✦</em> GROW <em class="star">✦</em> LEARN <em class="star">✦</em> OWN <em class="star">✦</em> WORK <em class="star">✦</em> EXECUTE <em class="star">✦</em></span>
-      <span>GROW <em class="star">✦</em> LEARN <em class="star">✦</em> OWN <em class="star">✦</em> WORK <em class="star">✦</em> EXECUTE <em class="star">✦</em> GROW <em class="star">✦</em> LEARN <em class="star">✦</em> OWN <em class="star">✦</em> WORK <em class="star">✦</em> EXECUTE <em class="star">✦</em></span>
+      <span>ADVENTURES <em class="star">✦</em> DRAWINGS <em class="star">✦</em> VOICES <em class="star">✦</em> PHOTOS <em class="star">✦</em> CONVERSATIONS <em class="star">✦</em> MEMORIES <em class="star">✦</em> </span>
+      <span>ADVENTURES <em class="star">✦</em> DRAWINGS <em class="star">✦</em> VOICES <em class="star">✦</em> PHOTOS <em class="star">✦</em> CONVERSATIONS <em class="star">✦</em> MEMORIES <em class="star">✦</em> </span>
     </div>
   </div>
 
-  <!-- PHILOSOPHY -->
-  <section class="philosophy">
-    <div class="phil-inner">
-      <span class="section-num">01 — The philosophy</span>
-      <h2>Kids don't just <em>learn</em> about ideas. They <em>build</em> them.</h2>
-      <p>Learning should be active, creative, and fun. At Glowe Play, students gain the confidence to create their own future through technology, entrepreneurship, and hands-on projects.</p>
-      <p>It's not coding camp. It's not test prep. It's a place where curious kids become builders.</p>
+  <!-- HOW IT WORKS -->
+  <section class="block" id="how">
+    <div class="block-head">
+      <span class="section-num">01 — How it works</span>
+      <h2>Every birthday begins a <em>new story.</em></h2>
+      <p class="section-lead">Simple, minimal, and easy to understand in fifteen seconds. One year of small moments, gathered into something you'll keep forever.</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><span class="num"></span><span class="ico">🎂</span><h4>Birthday Conversation</h4></div>
+      <div class="step reveal"><span class="num"></span><span class="ico">🌈</span><h4>Go on Family Adventures</h4></div>
+      <div class="step reveal"><span class="num"></span><span class="ico">📷</span><h4>Capture Photos</h4></div>
+      <div class="step reveal"><span class="num"></span><span class="ico">🎨</span><h4>Collect Drawings</h4></div>
+      <div class="step reveal"><span class="num"></span><span class="ico">🎙️</span><h4>Save Voice Memories</h4></div>
+      <div class="step reveal"><span class="num"></span><span class="ico">📖</span><h4>Receive Your Hardcover Book</h4></div>
     </div>
   </section>
 
-  <!-- MISSION -->
-  <section class="mission" id="mission">
-    <div class="mission-inner">
-      <span class="section-num">02 — Mission</span>
-      <blockquote>The mission of Glowe Play is to empower young minds in Mobile to explore innovation, develop creative problem-solving skills, and build confidence through hands-on experiences with technology and entrepreneurship.</blockquote>
+  <!-- MAGIC / MOMENTS -->
+  <section class="block magic">
+    <div class="block-head">
+      <span class="section-num">02 — The heart of it</span>
+      <h2>The magic isn't the book. It's the <em>memories you make together.</em></h2>
+      <p class="section-lead">Ordinary moments become extraordinary when you look back on them a year later — and a decade later.</p>
+    </div>
+    <div class="moments">
+      <div class="moment reveal">
+        <div class="photo"><span class="ph-label">Your photo here</span></div>
+        <div class="caption">“We built our first fort.”</div>
+      </div>
+      <div class="moment reveal">
+        <div class="photo"><span class="ph-label">Your photo here</span></div>
+        <div class="caption">“She finally learned to ride her bike.”</div>
+      </div>
+      <div class="moment reveal">
+        <div class="photo"><span class="ph-label">Your photo here</span></div>
+        <div class="caption">“He insisted ducks couldn't be trusted.”</div>
+      </div>
+      <div class="moment wide reveal">
+        <div class="photo"><span class="ph-label">Your photo here</span></div>
+        <div class="caption">“We danced in the rain.”</div>
+      </div>
+      <div class="moment reveal">
+        <div class="photo"><span class="ph-label">Your photo here</span></div>
+        <div class="caption">“I found my first four-leaf clover.”</div>
+      </div>
     </div>
   </section>
 
-  <!-- FRAMEWORK -->
-  <section class="section" id="framework">
-    <div class="framework-intro">
-      <div>
-        <span class="section-num">03 — The framework</span>
-        <h2 class="section-title">Five letters. One <em>method</em> that actually works.</h2>
-      </div>
-      <p class="section-lead">Glowe Play is the backbone of every program. Each letter is a real skill kids practice — and a real step from "I have an idea" to "look what I built."</p>
+  <!-- ADVENTURES -->
+  <section class="block" id="adventures">
+    <div class="block-head">
+      <span class="section-num">03 — Adventure collection</span>
+      <h2>Collect adventures before your <em>next birthday.</em></h2>
+      <p class="section-lead">Little quests to do together. Here's the magic of how it works:</p>
     </div>
 
-    <div class="letters">
+    <div class="adv-flow">
+      <div class="flow-step">
+        <span class="flow-ico">🧭</span>
+        <span class="flow-t">Go on the adventure</span>
+        <span class="flow-s">together, in real life</span>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">
+        <span class="flow-ico">🎖️</span>
+        <span class="flow-t">Earn the badge</span>
+        <span class="flow-s">a keepsake you collect</span>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step accent">
+        <span class="flow-ico">📖</span>
+        <span class="flow-t">It becomes a page</span>
+        <span class="flow-s">in this year's book</span>
+      </div>
+    </div>
 
-      <div class="letter-row">
-        <div class="big-letter">G</div>
-        <div class="letter-content">
-          <h3>Grow Ideas</h3>
-          <p>Kids learn to think like innovators — brainstorming, identifying problems, imagining solutions, and turning a spark into a project.</p>
+    <div class="adv-cards">
+      <div class="badge-sticker reveal">
+        <div class="bs-cam">📷</div>
+        <div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">⛺</span></div>
+        <div class="bs-info">
+          <div class="bs-title"><span class="a">Fort</span><span class="b">Builder</span></div>
+          <div class="bs-div"></div>
+          <p>Build a blanket fort and camp out inside.</p>
         </div>
-        <div class="letter-tags">
-          <span>Invention challenges</span>
-          <span>Idea workshops</span>
-          <span>Startup brainstorms</span>
-        </div>
-        <div class="row-arrow">→</div>
+        <div class="bs-ribbon"><span class="star">★</span><span class="tick">✓</span> Completed <span class="star">★</span></div>
       </div>
 
-      <div class="letter-row">
-        <div class="big-letter">L</div>
-        <div class="letter-content">
-          <h3>Learn Technology</h3>
-          <p>Students explore AI tools, website builders, digital design, and coding concepts — focused on creation, never just consumption.</p>
+      <div class="badge-sticker reveal">
+        <div class="bs-cam">📷</div>
+        <div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">🌈</span></div>
+        <div class="bs-info">
+          <div class="bs-title"><span class="a">Rainbow</span><span class="b">Hunter</span></div>
+          <div class="bs-div"></div>
+          <p>Find a rainbow and chase the colors.</p>
         </div>
-        <div class="letter-tags">
-          <span>AI tools</span>
-          <span>Website builders</span>
-          <span>Digital design</span>
-          <span>Code basics</span>
-        </div>
-        <div class="row-arrow">→</div>
+        <div class="bs-ribbon"><span class="star">★</span><span class="tick">✓</span> Completed <span class="star">★</span></div>
       </div>
 
-      <div class="letter-row">
-        <div class="big-letter">O</div>
-        <div class="letter-content">
-          <h3>Own Your Creativity</h3>
-          <p>Every student is encouraged to express their own ideas — designing brands, logos, and product concepts that feel like theirs.</p>
+      <div class="badge-sticker reveal">
+        <div class="bs-cam">📷</div>
+        <div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">🌠</span></div>
+        <div class="bs-info">
+          <div class="bs-title"><span class="a">Star</span><span class="b">Gazer</span></div>
+          <div class="bs-div"></div>
+          <p>Look for constellations on a clear, dark night.</p>
         </div>
-        <div class="letter-tags">
-          <span>Brand design</span>
-          <span>Logos</span>
-          <span>Product concepts</span>
-          <span>Independent thinking</span>
-        </div>
-        <div class="row-arrow">→</div>
+        <div class="bs-ribbon"><span class="star">★</span><span class="tick">✓</span> Completed <span class="star">★</span></div>
       </div>
 
-      <div class="letter-row">
-        <div class="big-letter">W</div>
-        <div class="letter-content">
-          <h3>Work Together</h3>
-          <p>Innovation rarely happens alone. Students build in small teams, learning collaboration, leadership, and how to solve problems with other humans.</p>
+      <div class="badge-sticker reveal">
+        <div class="bs-cam">📷</div>
+        <div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">🍪</span></div>
+        <div class="bs-info">
+          <div class="bs-title"><span class="a">Family</span><span class="b">Baker</span></div>
+          <div class="bs-div"></div>
+          <p>Bake something together — flour on the nose required.</p>
         </div>
-        <div class="letter-tags">
-          <span>Team projects</span>
-          <span>Collaboration</span>
-          <span>Leadership</span>
-        </div>
-        <div class="row-arrow">→</div>
+        <div class="bs-ribbon"><span class="star">★</span><span class="tick">✓</span> Completed <span class="star">★</span></div>
       </div>
 
-      <div class="letter-row">
-        <div class="big-letter">E</div>
-        <div class="letter-content">
-          <h3>Execute the Idea</h3>
-          <p>The most important step. Kids actually build and launch — websites, marketing, pricing, and a final pitch to a real audience.</p>
+      <div class="badge-sticker reveal">
+        <div class="bs-cam">📷</div>
+        <div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">❤️</span></div>
+        <div class="bs-info">
+          <div class="bs-title"><span class="a">Kindness</span><span class="b">Hero</span></div>
+          <div class="bs-div"></div>
+          <p>Do something kind, just because.</p>
         </div>
-        <div class="letter-tags">
-          <span>Build websites</span>
-          <span>Create marketing</span>
-          <span>Price ideas</span>
-          <span>Demo Day</span>
-        </div>
-        <div class="row-arrow">→</div>
+        <div class="bs-ribbon"><span class="star">★</span><span class="tick">✓</span> Completed <span class="star">★</span></div>
       </div>
 
+      <div class="badge-sticker reveal">
+        <div class="bs-cam">📷</div>
+        <div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">🐞</span></div>
+        <div class="bs-info">
+          <div class="bs-title"><span class="a">Bug</span><span class="b">Explorer</span></div>
+          <div class="bs-div"></div>
+          <p>Go on a hunt for creepy crawlies.</p>
+        </div>
+        <div class="bs-ribbon"><span class="star">★</span><span class="tick">✓</span> Completed <span class="star">★</span></div>
+      </div>
+
+      <div class="badge-sticker reveal">
+        <div class="bs-cam">📷</div>
+        <div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">📚</span></div>
+        <div class="bs-info">
+          <div class="bs-title"><span class="a">Story</span><span class="b">Explorer</span></div>
+          <div class="bs-div"></div>
+          <p>Read somewhere unusual — a tent, a treehouse.</p>
+        </div>
+        <div class="bs-ribbon"><span class="star">★</span><span class="tick">✓</span> Completed <span class="star">★</span></div>
+      </div>
+
+      <div class="badge-sticker reveal">
+        <div class="bs-cam">📷</div>
+        <div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">🍃</span></div>
+        <div class="bs-info">
+          <div class="bs-title"><span class="a">Nature</span><span class="b">Artist</span></div>
+          <div class="bs-div"></div>
+          <p>Make art from treasures found outside.</p>
+        </div>
+        <div class="bs-ribbon"><span class="star">★</span><span class="tick">✓</span> Completed <span class="star">★</span></div>
+      </div>
+
+      <div class="badge-sticker reveal">
+        <div class="bs-cam">📷</div>
+        <div class="bs-scene"><span class="moon">🌙</span><span class="bs-emoji">🔥</span></div>
+        <div class="bs-info">
+          <div class="bs-title"><span class="a">Backyard</span><span class="b">Camper</span></div>
+          <div class="bs-div"></div>
+          <p>Sleep out under the stars in your own backyard.</p>
+        </div>
+        <div class="bs-ribbon"><span class="star">★</span><span class="tick">✓</span> Completed <span class="star">★</span></div>
+      </div>
+    </div>
+    <a href="#waitlist" class="btn-outline adv-more">Browse all adventures →</a>
+  </section>
+
+  <!-- WHAT'S IN THE KIT -->
+  <section class="block" id="kit">
+    <div class="block-head">
+      <span class="section-num">04 — What's in the kit</span>
+      <h2>It's not an app. It's a <em>welcome kit</em> on your doorstep.</h2>
+      <p class="section-lead">Glowe Play arrives as a beautiful box — everything you need to start your adventure year, made to keep long after it ends.</p>
+    </div>
+
+    <div class="kit-layout">
+      <!-- Drop the real kit photo at images/kit.png to feature it here -->
+      <img class="kit-photo" src="images/kit.png" alt="" onerror="this.remove()" />
+      <div class="kit-grid">
+        <div class="kit-item reveal">
+          <span class="kit-ico navy">📦</span>
+          <div><h4>Welcome Box</h4><p>Everything you need to start your adventure year.</p></div>
+        </div>
+        <div class="kit-item reveal">
+          <span class="kit-ico green">📔</span>
+          <div><h4>Adventure Passport</h4><p>Track your adventures and collect your badges.</p></div>
+        </div>
+        <div class="kit-item reveal">
+          <span class="kit-ico navy">⭐</span>
+          <div><h4>Adventure Badges</h4><p>Earn them all throughout the year.</p></div>
+        </div>
+        <div class="kit-item reveal">
+          <span class="kit-ico red">❤️</span>
+          <div><h4>Welcome Guide</h4><p>Tips, ideas, and inspiration for your journey.</p></div>
+        </div>
+        <div class="kit-item reveal">
+          <span class="kit-ico yellow">📷</span>
+          <div><h4>Memory Pouch</h4><p>Store little treasures, drawings, and keepsakes.</p></div>
+        </div>
+        <div class="kit-item reveal">
+          <span class="kit-ico blue">🚪</span>
+          <div><h4>Adventure Door Hanger</h4><p>Let everyone know adventure time is happening.</p></div>
+        </div>
+        <div class="kit-item reveal">
+          <span class="kit-ico teal">✉️</span>
+          <div><h4>Surprise Extras</h4><p>Fun goodies to make each adventure extra special.</p></div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- DEMO DAY BANNER -->
-  <section class="demo-day">
-    <span class="marker">— and the challenge ends with —</span>
-    <h2>Demo <span class="underline">Day.</span></h2>
-    <p>Where every kid presents what they built — to friends, family, and judges. Because finishing is the skill nobody teaches.</p>
-  </section>
-
-  <!-- THE MODEL -->
-  <section class="section" id="model">
-    <span class="section-num">04 — The model</span>
-    <h2 class="section-title">Glowe Play <em>Youth Innovation Challenge.</em></h2>
-    <p class="section-lead">Instead of running weekly classes, we run:</p>
-
-    <ul class="model-list">
-      <li>1 annual contest</li>
-      <li>3–4 workshops</li>
-      <li>1 big Demo Day / pitch event</li>
-    </ul>
-
-    <div class="model-flow">
-      Kids submit ideas <span>→</span> develop them <span>→</span> present to judges.
+  <!-- INSIDE THE BOOK -->
+  <section class="block" id="inside">
+    <div class="block-head">
+      <span class="section-num">05 — Inside your book</span>
+      <h2>A keepsake, not a <em>photo dump.</em></h2>
+      <p class="section-lead">Every page is designed to feel like opening something precious. Here's what's inside each year.</p>
     </div>
-    <p class="model-note">Families can <a href="apply.html">apply to enter</a>. Local businesses can <a href="partner.html">join the Youth Innovation Challenge</a> to lead a workshop.</p>
+    <!-- Real interior spreads (images/book-inside.png); falls back to the previews below -->
+    <img class="spreads-img" src="images/book-inside.png" alt="A selection of interior spreads from a Glowe Play keepsake book" onerror="this.remove()" />
+    <div class="spreads">
+
+      <article class="pg reveal">
+        <span class="pg-kicker">Chapter · August Adventure</span>
+        <h4 class="pg-serif">Big Dreams</h4>
+        <span class="pg-sun">☀</span>
+        <p class="pg-hand">"This month you imagined big, built a little, and dreamt even bigger." <span class="h">♥</span></p>
+      </article>
+
+      <article class="pg reveal">
+        <span class="pg-kicker">Our conversation</span>
+        <p class="pg-q">If you could build anything in the world, what would it be?</p>
+        <p class="pg-a">“I'd build a treehouse with four slides, a snack elevator, and a room just for reading.”</p>
+      </article>
+
+      <article class="pg reveal">
+        <span class="pg-kicker coral">Birthday chapter</span>
+        <h4 class="pg-serif">You Are Six</h4>
+        <ul class="stats">
+          <li><b>Age</b> · 6</li>
+          <li><b>Height</b> · 45 inches</li>
+          <li><b>Dream job</b> · Veterinarian</li>
+          <li><b>Best friend</b> · Lily</li>
+        </ul>
+      </article>
+
+      <article class="pg pg-badge reveal">
+        <span class="pg-kicker">Adventure earned!</span>
+        <div class="mini-badge">⛺</div>
+        <h4 class="pg-serif sm">Fort Builder</h4>
+        <p class="pg-hand" style="margin-top:6px;">You built something epic!</p>
+      </article>
+
+      <article class="pg reveal">
+        <h4 class="pg-serif sm">Funny Things You Said</h4>
+        <div class="bubbles">
+          <span class="bubble">“I don't trust ducks.”</span>
+          <span class="bubble">“Broccoli has feelings.”</span>
+          <span class="bubble">“I'm going to open a snack store.”</span>
+        </div>
+      </article>
+
+      <article class="pg reveal">
+        <h4 class="pg-serif sm">Your Favorites</h4>
+        <div class="fav-cols">
+          <div>
+            <span class="tagg green">Start of year</span>
+            <ul><li>🎨 Purple</li><li>🍝 Pasta</li><li>🦈 Shark</li></ul>
+          </div>
+          <div>
+            <span class="tagg blue">End of year</span>
+            <ul><li>🎨 Blue</li><li>🍉 Watermelon</li><li>🐴 Horses</li></ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="pg pg-voice reveal">
+        <span class="pg-kicker">Your voice</span>
+        <div class="qr"></div>
+        <p>Scan to hear what you sounded like at six.</p>
+      </article>
+
+      <article class="pg pg-navy reveal">
+        <span class="pg-kicker gold">A letter to future you</span>
+        <p class="pg-letter">"The end of this year is just the beginning of your story."</p>
+        <span class="pg-see">See you next birthday! ✦</span>
+      </article>
+
+    </div>
+    <p class="section-lead" style="margin-top:32px;">Plus a birthday portrait, your masterpiece drawings, a love note from mom, a self-portrait, your signature, and photo memories on every page.</p>
   </section>
 
-  <!-- PILOT -->
-  <section class="pilot" id="pilot">
-    <div>
-      <span class="section-num">05 — Join us</span>
-      <h2>Be part of the <em>founding</em> story.</h2>
-      <p>We're launching the Glowe Play Youth Innovation Challenge in Mobile — and inviting founding families and local partners to help shape it.</p>
-      <ul class="perks">
-        <li><span class="check">✓</span> Early access before public enrollment</li>
-        <li><span class="check">✓</span> Founding-family benefits when we open registration</li>
-        <li><span class="check">✓</span> Direct input on workshops and challenge design</li>
-        <li><span class="check">✓</span> Recognition as a founding participant</li>
+  <!-- COMPARISON -->
+  <section class="block" id="compare">
+    <div class="block-head">
+      <span class="section-num">06 — Why it's different</span>
+      <h2>More than a <em>photo album.</em></h2>
+      <p class="section-lead">We're not selling journaling, scrapbooking, or a baby book. We're selling a birthday tradition — and the easiest way to remember exactly who your child was at every age.</p>
+    </div>
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="us">Glowe Play</th>
+            <th>Photo Album</th>
+            <th>Baby Book</th>
+            <th>Journal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th>Birthday tradition</th><td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><th>Family adventures</th><td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><th>Birthday conversations</th><td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="ltd">Limited</td></tr>
+          <tr><th>Artwork</th><td class="us yes">✓</td><td class="ltd">Limited</td><td class="ltd">Limited</td><td class="no">—</td></tr>
+          <tr><th>Voice memories</th><td class="us yes">✓</td><td class="no">—</td><td class="no">—</td><td class="no">—</td></tr>
+          <tr><th>Hardcover annual book</th><td class="us yes">✓</td><td class="no">—</td><td class="ltd">Sometimes</td><td class="ltd">Sometimes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CHAPTERS -->
+  <section class="block" id="chapters">
+    <div class="block-head">
+      <span class="section-num">07 — A whole childhood</span>
+      <h2>Every birthday starts a <em>new chapter.</em></h2>
+      <p class="section-lead">One book a year. Imagine the bookshelf when they're grown.</p>
+    </div>
+    <div class="chapter-row">
+      <div class="chapter reveal">
+        <div class="age">Age 5</div>
+        <div class="mini-book"><span class="lbl">Glowe Play</span><span class="t">The Year You Were Five</span></div>
+      </div>
+      <div class="chapter reveal">
+        <div class="age">Age 6</div>
+        <div class="mini-book"><span class="lbl">Glowe Play</span><span class="t">The Year You Were Six</span></div>
+      </div>
+      <div class="chapter reveal">
+        <div class="age">Age 7</div>
+        <div class="mini-book"><span class="lbl">Glowe Play</span><span class="t">The Year You Were Seven</span></div>
+      </div>
+      <div class="chapter future reveal">
+        <div class="age">Age 8</div>
+        <div class="mini-book"><span class="lbl">Keep going</span><span class="t">…and every year after</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="block" id="pricing">
+    <div class="block-head" style="text-align:center; margin-left:auto; margin-right:auto;">
+      <span class="section-num" style="text-align:center;">08 — Membership</span>
+      <h2 style="margin-left:auto; margin-right:auto;">One year. One book. One <em>tradition.</em></h2>
+    </div>
+    <div class="pricing-card">
+      <div class="tier">Annual Membership</div>
+      <p class="tier-sub">Everything you need for one unforgettable year.</p>
+      <div class="price">$149<span>/year</span></div>
+      <div class="price-note">✦ Founding-member pricing at launch</div>
+      <ul class="includes">
+        <li><span class="check">✓</span> Birthday Conversation</li>
+        <li><span class="check">✓</span> Family Adventure Collection</li>
+        <li><span class="check">✓</span> Unlimited Photos</li>
+        <li><span class="check">✓</span> Child Drawings</li>
+        <li><span class="check">✓</span> Parent Reflections</li>
+        <li><span class="check">✓</span> Voice Memories</li>
+        <li><span class="check">✓</span> Beautifully Written Story Pages</li>
+        <li><span class="check">✓</span> Hardcover Memory Book</li>
       </ul>
-    </div>
-
-    <div class="form-card pilot-split" id="waitlist">
-      <div>
-        <h3>For families</h3>
-        <p class="form-sub">Parents &amp; kids: apply to enter the challenge.</p>
-        <a href="apply.html" class="btn-primary" style="width:100%; justify-content:center;">Apply →</a>
-      </div>
-      <hr class="pilot-divider" />
-      <div>
-        <h3>For local businesses</h3>
-        <p class="form-sub">Lead a workshop or mentor a team.</p>
-        <a href="partner.html" class="btn-primary" style="width:100%; justify-content:center; background: var(--bay); box-shadow: 0 6px 0 var(--ink);">Partner with us →</a>
-      </div>
+      <a href="#waitlist" class="btn-primary">Join the waitlist →</a>
     </div>
   </section>
 
   <!-- FAQ -->
-  <section class="section" id="faq">
-    <span class="section-num">06 — Questions</span>
-    <h2 class="section-title">Things parents <em>usually</em> ask.</h2>
-
-    <div class="faq-list">
-      <div class="faq-item">
-        <h4>What ages is this for?</h4>
-        <p>Programs initially focus on kids ages 8 to 14. We may expand age ranges based on founding family feedback.</p>
-      </div>
-      <div class="faq-item">
-        <h4>Does my child need coding experience?</h4>
-        <p>Not at all. Glowe Play focuses on creativity, entrepreneurship, and modern AI tools that make building approachable for total beginners.</p>
-      </div>
-      <div class="faq-item">
-        <h4>Where will events be held?</h4>
-        <p>We're partnering with schools, community spaces, and learning centers across Mobile. Workshops and Demo Day locations will be shared with applicants and partners first.</p>
-      </div>
-      <div class="faq-item">
-        <h4>When does the challenge start?</h4>
-        <p>Timeline and key dates are TBA. Apply or partner with us to get updates as soon as they're announced.</p>
-      </div>
+  <section class="block" id="faq">
+    <div class="block-head">
+      <span class="section-num">09 — Questions</span>
+      <h2>Good things to <em>ask.</em></h2>
     </div>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Can I add multiple children?<span class="plus"></span></summary>
+        <div class="answer">Yes. Each child gets their own year, their own adventures, and their own book — so every kid ends up with a shelf that's truly theirs.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What if we miss an adventure?<span class="plus"></span></summary>
+        <div class="answer">There's no pressure and no penalty. The adventures are a menu, not a checklist — do the ones that fit your year, and the book celebrates what you actually did together.</div>
+      </details>
+      <details class="faq-item">
+        <summary>How many adventures are there?<span class="plus"></span></summary>
+        <div class="answer">Dozens, across every season — from rainbow hunts to backyard campouts to acts of kindness. New ones are added throughout the year.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can grandparents participate?<span class="plus"></span></summary>
+        <div class="answer">Absolutely. Grandparents (and anyone you invite) can add photos, voice memories, and notes to your child's year.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I buy previous years?<span class="plus"></span></summary>
+        <div class="answer">Starting a little late is completely fine. You can begin with this year and, when we launch, build backward to capture the ages you've already lived.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What ages is this best for?<span class="plus"></span></summary>
+        <div class="answer">It shines from the toddler years through the tween years — any age where a child is growing and changing faster than you can hold on to.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I reorder books?<span class="plus"></span></summary>
+        <div class="answer">Yes — order extra hardcover copies anytime for grandparents, co-parents, or keepsakes.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final" id="waitlist">
+    <span class="marker">— start the tradition —</span>
+    <h2>One day they'll be too big to hold your hand. You'll always have <span class="underline">this book.</span></h2>
+    <p>Join the waitlist and be first to start your child's adventure when we open.</p>
+    <form class="hero-form" data-waitlist novalidate>
+      <input type="email" name="email" placeholder="Your email address" aria-label="Email address" required />
+      <button type="submit" class="btn-primary">Start your child's adventure →</button>
+    </form>
+    <div class="form-success" data-success><span class="tick">✓</span> You're on the list! We'll be in touch before the first birthday.</div>
+    <p class="hero-note">Founding families get early access &amp; launch pricing.</p>
   </section>
 
   <!-- FOOTER -->
   <footer>
-    <div class="footer-grid">
-      <div>
-        <p class="footer-tagline">Glowe Play. Play with purpose.</p>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-mark">G</div>
+          Glowe Play
+        </div>
+        <p class="footer-tagline">Capture one unforgettable year between birthdays.</p>
       </div>
-      <div>
-        <h4>Contact</h4>
-        <a href="mailto:hello@gloweplay.com">hello@gloweplay.com</a>
-        <p>Mobile, Alabama</p>
-      </div>
-      <div>
-        <h4>Follow</h4>
-        <a href="#">Instagram</a>
-        <a href="#">Facebook</a>
+      <div class="footer-cols">
+        <div>
+          <h4>Company</h4>
+          <a href="mailto:hello@gloweplay.com">Contact</a>
+          <a href="#faq">FAQ</a>
+          <a href="#waitlist">Join the waitlist</a>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+        <div>
+          <h4>Follow</h4>
+          <a href="#">Instagram</a>
+          <a href="#">TikTok</a>
+          <a href="#">Pinterest</a>
+        </div>
       </div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 Glowe Play</span>
       <span>Hosted by <a href="https://cg-co.com" rel="noopener noreferrer">CG &amp; Co</a></span>
-      <span>Pilot launching soon ✦</span>
+      <span>Coming soon ✦</span>
     </div>
   </footer>
 
 </div>
+
+<script>
+  // Waitlist forms — client-side success state.
+  // TODO: wire the fetch() below to your email provider (Mailchimp, ConvertKit,
+  // Formspree, etc.) to actually store the address.
+  document.querySelectorAll('form[data-waitlist]').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = form.querySelector('input[type="email"]');
+      if (!input.value || !input.checkValidity()) {
+        input.focus();
+        return;
+      }
+      // Example endpoint hookup:
+      // fetch('/api/waitlist', { method: 'POST', headers: {'Content-Type':'application/json'},
+      //   body: JSON.stringify({ email: input.value }) });
+      var success = form.parentElement.querySelector('[data-success]');
+      form.style.display = 'none';
+      if (success) success.classList.add('show');
+    });
+  });
+
+  // Reveal on scroll.
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.14 });
+  document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+</script>
 
 </body>
 </html>
