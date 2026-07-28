@@ -11,6 +11,6 @@
    Row Level Security. NEVER put the "service_role" secret key here.
    ──────────────────────────────────────────────────────────── */
 window.GLOWE_SUPABASE = {
-  url: "YOUR_SUPABASE_PROJECT_URL",   // e.g. https://abcdefgh.supabase.co
-  anonKey: "YOUR_SUPABASE_ANON_KEY"   // the anon / public key
+  url: "https://rjufqwngmfnpkigtaukj.supabase.co",
+  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqdWZxd25nbWZucGtpZ3RhdWtqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUyMDk2MzQsImV4cCI6MjEwMDc4NTYzNH0.nlGL4NMXpBxpsc-X4VUp_qLCP5WrFnR_ya62aAtDVNQ"
 };
