@@ -327,6 +327,16 @@
         else el.innerHTML = '<img src="' + u + '" alt="">';
       });
     }
+    function uploadErr(err) {
+      client.auth.getUser().then(function (u) {
+        var user = u.data && u.data.user;
+        alert('Upload failed: ' + (err.message || err) +
+          '\n\nSigned in as: ' + (user ? user.email : '(none)') +
+          '\nYour id:     ' + (user ? user.id : '(none)') +
+          '\nChild owner: ' + (child ? child.owner : '(unknown)') +
+          '\nOwner match: ' + (user && child && user.id === child.owner ? 'YES' : 'NO'));
+      }).catch(function () { alert('Upload failed: ' + (err.message || err)); });
+    }
     function uploadFile(b, kind, file) {
       var wrap = document.getElementById('bm-mem'); wrap.classList.add('mem-busy');
       var ext = ((file.name.split('.').pop()) || 'dat').toLowerCase().replace(/[^a-z0-9]/g, '') || 'dat';
@@ -335,7 +345,7 @@
         .then(function (up) { if (up.error) throw up.error; return client.from('memories').insert({ child_id: childId, badge_id: b.id, kind: kind, url: path }); })
         .then(function (r) { if (r.error) throw r.error; return loadMemories(); })
         .then(function () { renderMem(b); buildBook(); })
-        .catch(function (err) { alert('Upload failed: ' + (err.message || err)); })
+        .catch(uploadErr)
         .finally(function () { wrap.classList.remove('mem-busy'); });
     }
 
@@ -543,7 +553,7 @@
         .then(function (up) { if (up.error) throw up.error; return client.from('memories').insert({ child_id: childId, badge_id: '__cover__', kind: kind, url: path }); })
         .then(function (r) { if (r.error) throw r.error; return loadMemories(); })
         .then(function () { renderPage(); })
-        .catch(function (err) { alert('Upload failed: ' + (err.message || err)); })
+        .catch(uploadErr)
         .finally(function () { tb.classList.remove('mem-busy'); });
     }
     document.querySelectorAll('[data-cover]').forEach(function (inp) {
