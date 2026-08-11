@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=12" />
+<link rel="stylesheet" href="styles.css?v=13" />
 <style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -61,6 +61,7 @@
   <!-- Book -->
   <section id="sec-book" hidden>
     <div class="flipbook">
+      <input type="file" id="cv-slot-input" accept="image/*" hidden>
       <div class="flip-stage" id="flip-stage"></div>
       <div class="flip-nav">
         <button class="flip-arrow" id="flip-prev" type="button" aria-label="Previous page">←</button>
@@ -487,15 +488,15 @@
       return f(start) + ' – ' + f(end);
     }
     function cvCircle(url) {
-      return url ? '<div class="cv-circle"><img src="' + e(url) + '" alt=""></div>'
-                 : '<div class="cv-circle empty"><span>📷</span></div>';
+      return url ? '<div class="cv-circle" data-slot="photo"><img src="' + e(url) + '" alt=""></div>'
+                 : '<div class="cv-circle empty" data-slot="photo"><span>📷</span></div>';
     }
     function cvDraw(url) {
-      return url ? '<div class="cv-draw"><img src="' + e(url) + '" alt=""></div>'
-                 : '<div class="cv-draw empty"><span>✏️ drawing</span></div>';
+      return url ? '<div class="cv-draw" data-slot="drawing"><img src="' + e(url) + '" alt=""></div>'
+                 : '<div class="cv-draw empty" data-slot="drawing"><span>✏️ drawing</span></div>';
     }
     function cvPoly(url, cls) {
-      return '<div class="cv-poly ' + cls + (url ? '' : ' empty') + '"><span class="cv-tape"></span>' +
+      return '<div class="cv-poly ' + cls + (url ? '' : ' empty') + '" data-slot="photo"><span class="cv-tape"></span>' +
         (url ? '<img src="' + e(url) + '" alt="">' : '<span class="lbl">📷 photo</span>') + '</div>';
     }
     function renderCover() {
@@ -549,6 +550,18 @@
     }
     document.querySelectorAll('[data-cover]').forEach(function (inp) {
       inp.addEventListener('change', function () { var f = inp.files && inp.files[0]; if (f) coverUpload(inp.getAttribute('data-cover'), f); inp.value = ''; });
+    });
+
+    // Click a slot on the cover to upload straight into it.
+    var pendingCoverKind = 'photo';
+    var slotInput = document.getElementById('cv-slot-input');
+    document.getElementById('flip-stage').addEventListener('click', function (ev) {
+      var slot = ev.target.closest('[data-slot]'); if (!slot || !slot.classList.contains('empty')) return;
+      pendingCoverKind = slot.getAttribute('data-slot') === 'drawing' ? 'drawing' : 'photo';
+      slotInput.value = ''; slotInput.click();
+    });
+    slotInput.addEventListener('change', function () {
+      var f = slotInput.files && slotInput.files[0]; if (f) coverUpload(pendingCoverKind, f);
     });
   })();
 </script>
