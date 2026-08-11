@@ -327,16 +327,7 @@
         else el.innerHTML = '<img src="' + u + '" alt="">';
       });
     }
-    function uploadErr(err) {
-      client.auth.getUser().then(function (u) {
-        var user = u.data && u.data.user;
-        alert('Upload failed: ' + (err.message || err) +
-          '\n\nSigned in as: ' + (user ? user.email : '(none)') +
-          '\nYour id:     ' + (user ? user.id : '(none)') +
-          '\nChild owner: ' + (child ? child.owner : '(unknown)') +
-          '\nOwner match: ' + (user && child && user.id === child.owner ? 'YES' : 'NO'));
-      }).catch(function () { alert('Upload failed: ' + (err.message || err)); });
-    }
+    function uploadErr(err) { alert('Upload failed: ' + (err.message || err)); }
     function uploadFile(b, kind, file) {
       var wrap = document.getElementById('bm-mem'); wrap.classList.add('mem-busy');
       var ext = ((file.name.split('.').pop()) || 'dat').toLowerCase().replace(/[^a-z0-9]/g, '') || 'dat';
