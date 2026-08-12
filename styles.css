@@ -1915,3 +1915,13 @@
   .cover .cv-circle.empty, .cover .cv-poly.empty, .cover .cv-draw.empty { cursor: pointer; }
   .cover .cv-draw.empty:hover { border-color: var(--coral); }
   .cover .cv-circle.empty:hover, .cover .cv-poly.empty:hover { outline: 2px solid var(--coral); outline-offset: 2px; }
+
+  /* ─── Upload-from-phone QR modal ─── */
+  .qr-card { text-align: center; }
+  .qr-box { width: 244px; max-width: 82%; margin: 16px auto 4px; padding: 12px; background: #FCFCFA; border: 2px solid var(--ink); border-radius: 16px; }
+  .qr-box svg { width: 100%; height: auto; display: block; }
+  .qr-hint { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 12px auto 0; max-width: 30ch; }
+  .qr-status { margin-top: 14px; font-weight: 800; font-size: 14px; color: var(--ink-soft); display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .qr-status.ok { color: #2f7a2f; }
+  .qr-spin { width: 16px; height: 16px; border-radius: 50%; border: 2.5px solid var(--line); border-top-color: var(--coral); animation: spin 0.8s linear infinite; display: inline-block; }
+  .mem-upload#cover-phone, .mem-upload[data-phone] { border-color: var(--bay); }

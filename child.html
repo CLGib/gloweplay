@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=13" />
+<link rel="stylesheet" href="styles.css?v=14" />
 <style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -73,12 +73,26 @@
       <div class="cv-uploads">
         <label class="mem-upload"><input type="file" accept="image/*" data-cover="drawing" hidden>✏️ Add drawing</label>
         <label class="mem-upload"><input type="file" accept="image/*" data-cover="photo" hidden>📷 Add photo</label>
+        <button type="button" class="mem-upload" id="cover-phone">📱 From phone</button>
       </div>
       <span class="cv-themes-label">Cover theme</span>
       <div class="cv-themes" id="cv-themes"></div>
     </div>
   </section>
 </main>
+
+<!-- Upload-from-phone QR modal -->
+<div class="badge-modal qr-modal" id="qr-modal" hidden role="dialog" aria-modal="true">
+  <div class="badge-modal-backdrop" data-qr-close></div>
+  <div class="badge-modal-card qr-card">
+    <button class="badge-modal-close" type="button" data-qr-close aria-label="Close">×</button>
+    <span class="bm-kicker">Upload from your phone</span>
+    <h2 class="bm-title">Scan with your phone</h2>
+    <div class="qr-box" id="qr-box" aria-label="QR code to upload a photo"></div>
+    <p class="qr-hint">Open your phone camera, point it at the code, then take or choose a photo. It'll appear here automatically.</p>
+    <p class="qr-status" id="qr-status"><span class="qr-spin"></span> Waiting for your photo…</p>
+  </div>
+</div>
 
 <!-- Badge detail modal -->
 <div class="badge-modal" id="badge-modal" hidden role="dialog" aria-modal="true" aria-labelledby="bm-title">
@@ -101,6 +115,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script src="js/supabase-config.js?v=11"></script>
 <script src="js/app.js?v=11"></script>
 <script src="js/covers.js?v=11"></script>
@@ -298,7 +313,12 @@
         if (k === 'text') return '<div class="mem-textrow"><textarea data-kind="text" rows="2" placeholder="' + meta.icon + ' Write it here…"></textarea><button type="button" class="mem-btn" data-add-text>Add</button></div>';
         return '<label class="mem-upload"><input type="file" accept="' + meta.accept + '" data-kind="' + k + '" hidden>' + meta.icon + ' Add ' + meta.label + '</label>';
       }).join('');
+      // "From phone" for badges that collect a photo or drawing (image)
+      var imgKind = badgeMedia(b).indexOf('photo') !== -1 ? 'photo' : (badgeMedia(b).indexOf('drawing') !== -1 ? 'drawing' : null);
+      if (imgKind) add.innerHTML += '<button type="button" class="mem-upload" data-phone data-kind="' + imgKind + '">📱 From phone</button>';
 
+      var pb = add.querySelector('[data-phone]');
+      if (pb) pb.addEventListener('click', function () { startPhoneUpload(b.id, pb.getAttribute('data-kind')); });
       add.querySelectorAll('input[type=file]').forEach(function (inp) {
         inp.addEventListener('change', function () {
           var f = inp.files && inp.files[0]; if (!f) return;
@@ -563,6 +583,48 @@
     slotInput.addEventListener('change', function () {
       var f = slotInput.files && slotInput.files[0]; if (f) coverUpload(pendingCoverKind, f);
     });
+
+    // ── Upload from phone (QR handoff) ──
+    var qrModal = document.getElementById('qr-modal'), qrPoll = null;
+    function closeQr() { qrModal.hidden = true; if (qrPoll) { clearInterval(qrPoll); qrPoll = null; } }
+    qrModal.querySelectorAll('[data-qr-close]').forEach(function (el) { el.addEventListener('click', closeQr); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !qrModal.hidden) closeQr(); });
+
+    function startPhoneUpload(badgeId, kind) {
+      if (!window.qrcode) { alert('QR generator not loaded — check your connection and try again.'); return; }
+      client.auth.getUser().then(function (u) {
+        var uid = u.data && u.data.user && u.data.user.id;
+        return client.from('upload_sessions').insert({ owner: uid, child_id: childId, badge_id: badgeId, kind: kind || 'photo' }).select().single();
+      }).then(function (res) {
+        if (!res || res.error || !res.data) { alert('Could not start phone upload' + (res && res.error ? ': ' + res.error.message : '') + '\n(Did you run supabase/phone-upload.sql?)'); return; }
+        var token = res.data.id;
+        var url = location.origin + '/phone-upload.html?t=' + token;
+        var status = document.getElementById('qr-status');
+        status.innerHTML = '<span class="qr-spin"></span> Waiting for your photo…'; status.className = 'qr-status';
+        var qr = window.qrcode(0, 'M'); qr.addData(url); qr.make();
+        document.getElementById('qr-box').innerHTML = qr.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+        qrModal.hidden = false;
+        if (qrPoll) clearInterval(qrPoll);
+        var started = Date.now();
+        qrPoll = setInterval(function () {
+          if (Date.now() - started > 15 * 60 * 1000) { clearInterval(qrPoll); qrPoll = null; return; }
+          client.from('upload_sessions').select('status').eq('id', token).single().then(function (r) {
+            if (r && r.data && r.data.status === 'done') {
+              clearInterval(qrPoll); qrPoll = null;
+              status.innerHTML = '✓ Got it!'; status.className = 'qr-status ok';
+              loadMemories().then(function () {
+                if (badgeId === '__cover__') { renderPage(); }
+                else { var b = BADGES.find(function (x) { return x.id === badgeId; }); if (b) { renderMem(b); } buildBook(); }
+                setTimeout(closeQr, 1000);
+              });
+            }
+          });
+        }, 2500);
+      });
+    }
+
+    var coverPhoneBtn = document.getElementById('cover-phone');
+    if (coverPhoneBtn) coverPhoneBtn.addEventListener('click', function () { startPhoneUpload('__cover__', 'photo'); });
   })();
 </script>
 

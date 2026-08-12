@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Add a photo — Glowe Play</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --cream:#FFF8F0; --ink:#243B6B; --ink-soft:#55618C; --coral:#F25F5C; --coral-deep:#DC4A47; --sun:#F4C542; --white:#FCFCFA; --line:rgba(36,59,107,.14); }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Nunito',system-ui,sans-serif; background:var(--cream); color:var(--ink); min-height:100vh; display:grid; place-items:center; padding:24px; -webkit-font-smoothing:antialiased; }
+  .card { width:100%; max-width:420px; background:var(--white); border:2px solid var(--ink); border-radius:22px; box-shadow:0 10px 0 var(--ink); padding:28px 24px 32px; text-align:center; }
+  .logo { display:inline-flex; align-items:center; gap:9px; font-weight:800; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); margin-bottom:18px; }
+  .logo .sun { color:var(--sun); }
+  h1 { font-family:'Fraunces',serif; font-weight:500; font-size:28px; margin-bottom:8px; }
+  p.sub { color:var(--ink-soft); font-size:15px; margin-bottom:24px; }
+  .drop { border:2px dashed var(--line); border-radius:16px; padding:40px 16px; display:block; cursor:pointer; }
+  .drop .ic { font-size:44px; }
+  .drop .t { font-weight:800; margin-top:8px; }
+  .drop .h { font-size:13px; color:var(--ink-soft); margin-top:4px; }
+  #preview { width:100%; border-radius:14px; border:1.5px solid var(--ink); display:none; margin-bottom:16px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; font-family:'Nunito',sans-serif; font-weight:800; font-size:16px; padding:16px; border:none; border-radius:999px; background:var(--coral); color:#fff; cursor:pointer; margin-top:16px; }
+  .btn:disabled { opacity:.6; }
+  .btn.secondary { background:transparent; color:var(--ink); text-decoration:underline; box-shadow:none; margin-top:8px; }
+  .msg { margin-top:16px; font-weight:700; font-size:14px; min-height:1px; }
+  .msg.error { color:var(--coral-deep); }
+  .done { text-align:center; }
+  .done .big { font-size:56px; }
+  .done h1 { margin-top:8px; }
+  input[type=file] { display:none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo"><span class="sun">☀︎</span> Glowe Play</div>
+
+  <div id="stage-pick">
+    <h1>Add a photo</h1>
+    <p class="sub">Snap or choose a photo — it'll appear on your computer in a moment.</p>
+    <label class="drop" id="drop">
+      <div class="ic">📷</div>
+      <div class="t">Take or choose a photo</div>
+      <div class="h">JPG, PNG — we'll shrink it for you</div>
+      <input type="file" id="file" accept="image/*" capture="environment" />
+    </label>
+    <img id="preview" alt="preview" />
+    <button class="btn" id="send" disabled>Send to the book →</button>
+    <button class="btn secondary" id="retake" style="display:none">Choose a different photo</button>
+    <p class="msg" id="msg" role="status" aria-live="polite"></p>
+  </div>
+
+  <div id="stage-done" class="done" style="display:none">
+    <div class="big">🎉</div>
+    <h1>Sent!</h1>
+    <p class="sub">Your photo is on its way to the book. You can close this tab and check your computer.</p>
+    <button class="btn" id="another">Send another</button>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var token = new URLSearchParams(location.search).get('t');
+    var fileEl = document.getElementById('file');
+    var preview = document.getElementById('preview');
+    var sendBtn = document.getElementById('send');
+    var retake = document.getElementById('retake');
+    var msg = document.getElementById('msg');
+    var dataUrl = null;
+
+    if (!token) { msg.textContent = 'This link is missing its code — generate a new QR on your computer.'; msg.className = 'msg error'; sendBtn.style.display = 'none'; document.getElementById('drop').style.display = 'none'; }
+
+    function resize(file, cb) {
+      var img = new Image();
+      img.onload = function () {
+        var max = 1600, w = img.width, h = img.height;
+        if (w > max || h > max) { if (w >= h) { h = Math.round(h * max / w); w = max; } else { w = Math.round(w * max / h); h = max; } }
+        var c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        cb(c.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = function () { cb(null); };
+      var fr = new FileReader();
+      fr.onload = function () { img.src = fr.result; };
+      fr.readAsDataURL(file);
+    }
+
+    fileEl.addEventListener('change', function () {
+      var f = fileEl.files && fileEl.files[0]; if (!f) return;
+      msg.textContent = 'Preparing…'; msg.className = 'msg';
+      resize(f, function (url) {
+        if (!url) { msg.textContent = "Couldn't read that photo — try another."; msg.className = 'msg error'; return; }
+        dataUrl = url; preview.src = url; preview.style.display = 'block';
+        document.getElementById('drop').style.display = 'none';
+        retake.style.display = 'block'; sendBtn.disabled = false; msg.textContent = '';
+      });
+    });
+
+    retake.addEventListener('click', function () { fileEl.value = ''; fileEl.click(); });
+
+    sendBtn.addEventListener('click', function () {
+      if (!dataUrl) return;
+      sendBtn.disabled = true; var o = sendBtn.textContent; sendBtn.textContent = 'Sending…'; msg.textContent = '';
+      fetch('/api/phone-upload', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token, dataUrl: dataUrl })
+      }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok) { msg.textContent = res.d.error || 'Upload failed.'; msg.className = 'msg error'; sendBtn.disabled = false; sendBtn.textContent = o; return; }
+          document.getElementById('stage-pick').style.display = 'none';
+          document.getElementById('stage-done').style.display = 'block';
+        }).catch(function (err) { msg.textContent = 'Network error — try again.'; msg.className = 'msg error'; sendBtn.disabled = false; sendBtn.textContent = o; });
+    });
+
+    document.getElementById('another').addEventListener('click', function () { location.reload(); });
+  })();
+</script>
+</body>
+</html>
