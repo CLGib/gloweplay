@@ -1851,7 +1851,7 @@
   .mem-item blockquote { font-family: 'Caveat', cursive; font-size: 18px; line-height: 1.15; color: var(--ink); border-left: 2px solid var(--sun); padding-left: 10px; margin: 0; width: auto; }
   .mem-item:has(blockquote) { width: 100%; }
   .mem-add { display: flex; flex-wrap: wrap; gap: 8px; }
-  .mem-upload { display: inline-flex; align-items: center; gap: 6px; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--ink); background: var(--cream); color: var(--ink); cursor: pointer; }
+  .mem-upload { display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 800; line-height: 1; padding: 11px 16px; border-radius: 999px; border: 1.5px solid var(--ink); background: var(--cream); color: var(--ink); cursor: pointer; -webkit-appearance: none; appearance: none; margin: 0; }
   .mem-upload:hover { background: var(--cream-deep); }
   .mem-textrow { display: flex; gap: 8px; width: 100%; align-items: flex-start; }
   .mem-textrow textarea { flex: 1; padding: 10px 12px; border: 1.5px solid var(--ink); border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--ink); background: var(--white); resize: vertical; }
@@ -1918,8 +1918,14 @@
 
   /* ─── Upload-from-phone QR modal ─── */
   .qr-card { text-align: center; }
-  .qr-box { width: 244px; max-width: 82%; margin: 16px auto 4px; padding: 12px; background: #FCFCFA; border: 2px solid var(--ink); border-radius: 16px; }
+  .qr-box { width: 300px; max-width: 88%; margin: 16px auto 4px; padding: 16px; background: #fff; border: 2px solid var(--ink); border-radius: 16px; }
   .qr-box svg { width: 100%; height: auto; display: block; }
+  .qr-fallback { margin: 14px auto 0; max-width: 340px; }
+  .qr-fallback-label { display: block; font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 6px; }
+  .qr-linkrow { display: flex; gap: 6px; }
+  .qr-link { flex: 1 1 auto; min-width: 0; font-family: 'Nunito', sans-serif; font-size: 12px; padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--cream); color: var(--ink); }
+  .qr-copy { flex: 0 0 auto; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 12px; padding: 8px 14px; border: 1.5px solid var(--ink); border-radius: 10px; background: var(--ink); color: #fff; cursor: pointer; }
+  .qr-copy:hover { background: var(--bay); }
   .qr-hint { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 12px auto 0; max-width: 30ch; }
   .qr-status { margin-top: 14px; font-weight: 800; font-size: 14px; color: var(--ink-soft); display: flex; align-items: center; justify-content: center; gap: 8px; }
   .qr-status.ok { color: #2f7a2f; }

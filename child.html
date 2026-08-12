@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=14" />
+<link rel="stylesheet" href="styles.css?v=15" />
 <style> body.auth-pending .app-wrap, body.auth-pending .badge-modal { visibility: hidden; } </style>
 </head>
 <body class="auth-pending">
@@ -90,6 +90,13 @@
     <h2 class="bm-title">Scan with your phone</h2>
     <div class="qr-box" id="qr-box" aria-label="QR code to upload a photo"></div>
     <p class="qr-hint">Open your phone camera, point it at the code, then take or choose a photo. It'll appear here automatically.</p>
+    <div class="qr-fallback">
+      <span class="qr-fallback-label">Camera won't scan? Send this link to your phone:</span>
+      <div class="qr-linkrow">
+        <input class="qr-link" id="qr-link" type="text" readonly aria-label="Upload link" />
+        <button type="button" class="qr-copy" id="qr-copy">Copy</button>
+      </div>
+    </div>
     <p class="qr-status" id="qr-status"><span class="qr-spin"></span> Waiting for your photo…</p>
   </div>
 </div>
@@ -602,7 +609,15 @@
         var status = document.getElementById('qr-status');
         status.innerHTML = '<span class="qr-spin"></span> Waiting for your photo…'; status.className = 'qr-status';
         var qr = window.qrcode(0, 'M'); qr.addData(url); qr.make();
-        document.getElementById('qr-box').innerHTML = qr.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+        document.getElementById('qr-box').innerHTML = qr.createSvgTag({ cellSize: 8, margin: 4, scalable: true });
+        var linkEl = document.getElementById('qr-link'); if (linkEl) linkEl.value = url;
+        var copyBtn = document.getElementById('qr-copy');
+        if (copyBtn) copyBtn.onclick = function () {
+          if (linkEl) { linkEl.focus(); linkEl.select(); }
+          var done = function () { copyBtn.textContent = 'Copied!'; setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1500); };
+          if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(url).then(done, function () { try { document.execCommand('copy'); done(); } catch (e) {} }); }
+          else { try { document.execCommand('copy'); done(); } catch (e) {} }
+        };
         qrModal.hidden = false;
         if (qrPoll) clearInterval(qrPoll);
         var started = Date.now();
